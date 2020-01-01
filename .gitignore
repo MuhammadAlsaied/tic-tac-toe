@@ -1,0 +1,28 @@
+
+# NetBeans specific #
+server/nbproject/private/
+server/build/
+server/nbbuild/
+server/dist/
+server/nbdist/
+server/nbactions.xml
+server/nb-configuration.xml
+
+client/nbproject/private/
+client/build/
+client/nbbuild/
+client/dist/
+client/nbdist/
+client/nbactions.xml
+client/nb-configuration.xml
+
+
+# Class Files #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+
