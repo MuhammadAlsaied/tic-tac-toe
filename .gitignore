@@ -16,6 +16,9 @@ client/nbdist/
 client/nbactions.xml
 client/nb-configuration.xml
 
+# Intellij IDEA specific #
+.idea/
+/client/.idea/
 
 # Class Files #
 *.class
@@ -24,5 +27,6 @@ client/nb-configuration.xml
 *.jar
 *.war
 *.ear
+
 
 
