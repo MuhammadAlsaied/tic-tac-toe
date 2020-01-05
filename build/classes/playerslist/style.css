@@ -1,0 +1,124 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 3, 2020, 11:27:47 AM
+    Author     : hp
+*/
+@font-face {
+    font-family: 'walterturncoat';
+    src: url('walterturncoat.ttf');
+}
+@font-face{
+    font-family: 'digitalNumber';
+    src: url('digitalNumber.ttf');
+}
+#stack
+{
+    -fx-background-image: url(back.jpg);
+    -fx-background-repeat: stretch;   
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-font-family: "Walter Turncoat";
+    -fx-font-style: normal;
+    -fx-font-weight: normal;
+    -fx-font-size: 30px;
+    -fx-line-height: 42px;
+    -fx-display: flex;
+    -fx-align-items: flex-end;
+    -fx-text-transform: capitalize;
+    -fx-color: #FFFFFF;
+}
+#vbox{
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-border-color: black;
+    -fx-fill-width: false; 
+    -fx-alignment: CENTER;
+
+}
+#rec
+{
+
+    -fx-background-image: url("back1.jpg");
+    -fx-background-repeat: no-repeat;   
+    -fx-background-position: center center;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+}
+Label
+{
+    -fx-text-fill: white
+}
+#lose
+{
+    -fx-background-color: linear-gradient(to left, rgba(255, 255, 255, 0.8) -20.08%, #FFD369 22.14%, #FFD369 79.16%, rgba(255, 255, 255, 0.58) 117.68%);
+    
+    -fx-opacity: 0.76;
+    -fx-border-radius: 22px;
+    -fx-alignment: BASELINE_CENTER;
+    -fx-background-radius: 22px;
+    -fx-text-fill:#FFFFFF
+}
+#over
+{
+    -fx-background-image: url("win.png");
+    -fx-background-repeat: no-repeat;   
+    -fx-background-position: center center;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-background-size:cover;
+    -fx-border-radius: 127.5px;
+
+}
+#back{
+    -fx-background-color: linear-gradient(to left, rgba(255, 255, 255, 0.4018) -3.46%, rgba(255, 211, 105, 0.82) 19.17%, rgba(153, 192, 86, 0.82) 45.04%, rgba(153, 192, 86, 0.82) 78.45%, rgba(255, 255, 255, 0.4838) 100%);
+    -fx-border-radius: 22px;
+    -fx-alignment: BASELINE_CENTER;
+    -fx-background-radius: 22px;
+    -fx-font-size: 20px;
+    -fx-text-fill:#FFFFFF
+}
+#playAgain{
+    -fx-background-color: linear-gradient(to left, rgba(255, 255, 255, 0.4018) -3.46%, rgba(255, 211, 105, 0.82) 19.17%, rgba(153, 192, 86, 0.82) 45.04%, rgba(153, 192, 86, 0.82) 78.45%, rgba(255, 255, 255, 0.4838) 100%);
+    -fx-border-radius: 22px;
+    -fx-alignment: BASELINE_CENTER;
+    -fx-background-radius: 22px;
+    -fx-font-size: 20px;
+    -fx-text-fill:#FFFFFF
+}
+#back:selected {
+    -fx-background-color:
+        -fx-focus-color,
+        linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
+        linear-gradient(to bottom, derive(-fx-color,-15%) 0%, derive(-fx-color,-10%) 50%, derive(-fx-color,-8%) 98%, derive(-fx-color,-12%) 100%);
+    -fx-border-size: 10px;
+    -fx-border-color: #000000;
+    -fx-text-fill:#000000;
+}
+#playAgain:selected {
+    -fx-background-color:
+        -fx-focus-color,
+        linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
+        linear-gradient(to bottom, derive(-fx-color,-15%) 0%, derive(-fx-color,-10%) 50%, derive(-fx-color,-8%) 98%, derive(-fx-color,-12%) 100%);
+    -fx-border-size: 10px;
+    -fx-border-color: #000000;
+    -fx-text-fill:#000000;
+}
+Circle{
+    -fx-background-color: green;
+}
+#scoreLabel{
+    -fx-font-family: "Digital Numbers";
+    -fx-font-style: normal;
+    -fx-font-weight: normal;
+    -fx-font-size: 30px;
+    -fx-line-height: 42px;
+    -fx-display: flex;
+    -fx-align-items: flex-end;
+    -fx-text-transform: capitalize;
+    -fx-color: #FFFFFF;
+}
+
