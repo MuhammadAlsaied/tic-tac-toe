@@ -19,6 +19,7 @@ client/nb-configuration.xml
 # Intellij IDEA specific #
 .idea/
 /client/.idea/
+/client/tic-tac-toe.iml
 
 # Class Files #
 *.class
