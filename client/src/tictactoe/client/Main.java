@@ -1,15 +1,10 @@
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import imports.Login;
-import imports.Signup;
-import imports.UserDetails;
+package tictactoe.client;
 
+import com.google.gson.JsonObject;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.Socket;
-import java.sql.Connection;
 
 public class Main
 {
@@ -17,7 +12,7 @@ public class Main
     private JsonObject data;
     private Socket s;
     private DataInputStream dataInputStream;
-    private PrintStream printStream;
+    private DataOutputStream dataOutputStream;
 
     Main()
     {
@@ -32,12 +27,12 @@ public class Main
             jsonObject.addProperty("type", "signup");
             jsonObject.add("data", data);
 
-            s = new Socket("127.0.0.1", 4800);
+            s = new Socket(Config.SERVER_IP, Config.PORT);
             dataInputStream = new DataInputStream(s.getInputStream());
-            printStream = new PrintStream(s.getOutputStream());
+            dataOutputStream = new DataOutputStream(s.getOutputStream());
             String str = jsonObject.toString();
             System.out.println(str);
-            printStream.println(str);
+            dataOutputStream.write(str.getBytes());
 
         } catch (IOException e)
         {
@@ -47,7 +42,7 @@ public class Main
 
     public static void main(String[] args)
     {
-
+        new Main();
     }
 
 

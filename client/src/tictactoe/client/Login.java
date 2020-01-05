@@ -1,4 +1,4 @@
-package imports;
+package tictactoe.client;
 
 public class Login
 {
