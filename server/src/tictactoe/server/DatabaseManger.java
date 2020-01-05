@@ -1,14 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package tie.project;
+package tictactoe.server;
 
 import java.sql.*;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,7 +11,7 @@ public class DatabaseManger {
     private Connection connection;
     private Statement statment;
     private ResultSet resultSet;
-    private Vector<UserDetails> usersVecDetails = new Vector();
+    private Vector<Player> usersVecDetails = new Vector();
     
     
     public DatabaseManger() throws ClassNotFoundException, SQLException{
@@ -117,7 +110,7 @@ public class DatabaseManger {
             resultSet = statment.executeQuery("SELECT * FROM sign_up");
             
             while(resultSet.next()){
-                UserDetails user = new UserDetails();
+                Player user = new Player();
                 
                 user.setId(resultSet.getInt("id"));
                 user.setFirstName(resultSet.getString("first_name"));
