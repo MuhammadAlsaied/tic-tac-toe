@@ -30,10 +30,11 @@ public class DatabaseManger {
     }
     
     // Done and tested.
-    private void signUp(String first_name, String last_name, String email, String password) throws SQLException {
+    public boolean signUp(String first_name, String last_name, String email, String password) throws SQLException {
         
         if (isEmailExists(email)) {
             System.out.println("Your email is already registered..");
+	    return false;
         }
         else {
             try {
@@ -51,6 +52,7 @@ public class DatabaseManger {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+		return true;
         }
     }
     
@@ -78,7 +80,7 @@ public class DatabaseManger {
     }
     
     // Done and tested.
-    private void signIn(String email, String password){
+    public void signIn(String email, String password){
         if (email != null && password != null){
             try {
                 establishConnection();
