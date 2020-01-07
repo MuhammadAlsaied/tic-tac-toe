@@ -15,7 +15,6 @@ public class DatabaseManger {
     private Statement statment;
     private ResultSet resultSet;
     private Vector<Player> usersVecDetails = new Vector();
-    private boolean online = false;
 
     public DatabaseManger() throws ClassNotFoundException, SQLException {
         // Here to establish the connecection once creating an instance.
@@ -117,10 +116,6 @@ public class DatabaseManger {
             return playerSignIn;
         }
         return playerSignIn;
-    }
-    
-    public boolean isOnline(){
-        return online;
     }
 
     /* to test the database connetion and getting some data.
