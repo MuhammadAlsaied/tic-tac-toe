@@ -30,9 +30,10 @@ public class Server {
             serverSocket = new ServerSocket(Config.PORT);
             while (true) {
                 Socket socket = serverSocket.accept();
-                User user = null;
+                Player player = new Player();
+                User user = new User(socket, player);
                 unloggedInUsers.add(socket);
-                new ClientThread(socket).start();
+                new ClientThread(user).start();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -66,8 +67,8 @@ public class Server {
         private DataInputStream dataInputStream;
         private PrintStream printStream;
 
-        public ClientThread(Socket socket) { // user instead of socket and add a flag to th user to be online
-            this.socket = socket;
+        public ClientThread(User userClientThread) {
+            this.socket = userClientThread.socket;
             try {
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 printStream = new PrintStream(socket.getOutputStream());
