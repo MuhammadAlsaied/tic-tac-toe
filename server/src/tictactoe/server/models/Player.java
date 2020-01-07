@@ -87,11 +87,5 @@ public class Player {
             return false;
         }
         return true;
-    }
-    
-    // Checking if the user is signedIn
-    public boolean isSignedIn() throws ClassNotFoundException, SQLException {
-        DatabaseManger checkSignedIn = new DatabaseManger();
-        return checkSignedIn.isOnline();
-    }    
+    }   
 }

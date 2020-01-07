@@ -82,34 +82,41 @@ public class DatabaseManger {
         return false;
     }
 
-    // Done and tested.
-    public boolean signIn(String email, String password) {
+    // Done and tested. return player with data
+    public Player signIn(String email, String password) {
+        Player playerSignIn = null;
         if (email != null && password != null) {
             try {
                 establishConnection();
                 statment = connection.createStatement();
-                resultSet = statment.executeQuery("SELECT first_name FROM player WHERE email='" + email + "' AND password='" + password + "';");
+                resultSet = statment.executeQuery("SELECT * FROM player WHERE email='" + email + "' AND password='" + password + "';");
 
                 if (resultSet.first() == true) {
                     statment.close();
                     connection.close();
                     System.out.println("Login succssed..");
-                    online = true;
-                    return true;
+                    
+                    playerSignIn.setId(resultSet.getInt("id"));
+                    playerSignIn.setFirstName(resultSet.getString("first_name"));
+                    playerSignIn.setLastName(resultSet.getString("last_name"));
+                    playerSignIn.setEmail(resultSet.getString("email"));
+                    playerSignIn.setImg(resultSet.getString("image"));
+                    
+                    return playerSignIn;
                 } else {
                     statment.close();
                     connection.close();
                     System.out.println("Login failed.");
-                    return false;
+                    return playerSignIn;
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         } else {
             System.out.println("Empty fields..");
-            return false;
+            return playerSignIn;
         }
-        return false;
+        return playerSignIn;
     }
     
     public boolean isOnline(){

@@ -30,7 +30,7 @@ public class Server {
             serverSocket = new ServerSocket(Config.PORT);
             while (true) {
                 Socket socket = serverSocket.accept();
-                Player player = new Player();
+                Player player = null;
                 User user = new User(socket, player);
                 unloggedInUsers.add(socket);
                 new ClientThread(user).start();
@@ -41,7 +41,7 @@ public class Server {
 
     }
 
-    private class User {
+    public class User {
 
         private final Socket socket;
         private final Player player;
@@ -66,6 +66,7 @@ public class Server {
         private final Socket socket;
         private DataInputStream dataInputStream;
         private PrintStream printStream;
+        private User user;
 
         public ClientThread(User userClientThread) {
             this.socket = userClientThread.socket;
@@ -85,7 +86,7 @@ public class Server {
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
 
-                        jsonHandler.handle(request);
+                        jsonHandler.handle(request, user);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -93,15 +94,6 @@ public class Server {
             }
         }
 
-    }
-    
-    // Checking if the user is online
-    public boolean isOnline(Player isOnlinePlayer) throws ClassNotFoundException, SQLException{
-        if (isOnlinePlayer.isSignedIn()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public static void main(String[] args) {

@@ -2,6 +2,7 @@ package tictactoe.server;
 
 import com.google.gson.JsonObject;
 import java.sql.SQLException;
+import tictactoe.server.Server.User;
 import tictactoe.server.db.DatabaseManger;
 
 /**
@@ -20,7 +21,7 @@ public class JsonHandler {
         }
     }
 
-    void handle(JsonObject request) { // to take a new param (user)
+    void handle(JsonObject request, User user) { // to take a new param (user)
         String rquestType = request.get("type").getAsString();
 
         JsonObject requestData = request.getAsJsonObject("data");
