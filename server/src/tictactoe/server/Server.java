@@ -1,5 +1,6 @@
 package tictactoe.server;
 
+import tictactoe.server.models.Player;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.DataInputStream;
@@ -7,8 +8,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  *
@@ -18,13 +19,12 @@ public class Server {
 
     private ServerSocket serverSocket;
 
-    private final ArrayList<User> OnlinePlayers = new ArrayList<>();
-    private final ArrayList<Socket> unloggedInUsers = new ArrayList<>();
-    private DatabaseManger databaseManger;
+    private final HashMap<Integer, User> OnlinePlayers = new HashMap<>();
+    private final HashSet<Socket> unloggedInUsers = new HashSet<>();
+    JsonHandler jsonHandler = new JsonHandler();
 
     public Server() {
         try {
-            databaseManger = new DatabaseManger();
 
             serverSocket = new ServerSocket(Config.PORT);
             while (true) {
@@ -80,28 +80,9 @@ public class Server {
                 try {
                     String line = dataInputStream.readLine();
                     if (line != null) {
-                        System.out.println(line);
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
 
-                        String rquestType = request.get("type").getAsString();
-
-                        JsonObject requestData = request.getAsJsonObject("data");
-                        switch (rquestType) {
-                            case "signup":
-                                System.out.println(rquestType);
-                                String firstName = requestData.get("firstName").getAsString();
-                                String lastName = requestData.get("lastName").getAsString();
-                                String email = requestData.get("email").getAsString();
-                                String password = requestData.get("password").getAsString();
-                                 {
-                                    try {
-                                        databaseManger.signUp(firstName, lastName, email, password);
-                                    } catch (SQLException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-                                break;
-                        }
+                        jsonHandler.handle(request);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
