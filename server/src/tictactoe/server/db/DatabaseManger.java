@@ -15,6 +15,7 @@ public class DatabaseManger {
     private Statement statment;
     private ResultSet resultSet;
     private Vector<Player> usersVecDetails = new Vector();
+    private boolean online = false;
 
     public DatabaseManger() throws ClassNotFoundException, SQLException {
         // Here to establish the connecection once creating an instance.
@@ -40,7 +41,6 @@ public class DatabaseManger {
             System.out.println("Your email is already registered..");
             return false;
         } else {
-
             try {
                 establishConnection();
 
@@ -83,7 +83,7 @@ public class DatabaseManger {
     }
 
     // Done and tested.
-    public void signIn(String email, String password) {
+    public boolean signIn(String email, String password) {
         if (email != null && password != null) {
             try {
                 establishConnection();
@@ -94,17 +94,26 @@ public class DatabaseManger {
                     statment.close();
                     connection.close();
                     System.out.println("Login succssed..");
+                    online = true;
+                    return true;
                 } else {
                     statment.close();
                     connection.close();
                     System.out.println("Login failed.");
+                    return false;
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         } else {
             System.out.println("Empty fields..");
+            return false;
         }
+        return false;
+    }
+    
+    public boolean isOnline(){
+        return online;
     }
 
     /* to test the database connetion and getting some data.

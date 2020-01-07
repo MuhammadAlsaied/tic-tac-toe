@@ -1,5 +1,8 @@
 package tictactoe.server.models;
 
+import java.sql.SQLException;
+import tictactoe.server.db.DatabaseManger;
+
 /**
  *
  * @author asoliman
@@ -84,6 +87,11 @@ public class Player {
             return false;
         }
         return true;
+    }
+    
+    public boolean isSignedIn() throws ClassNotFoundException, SQLException {
+        DatabaseManger checkSignedIn = new DatabaseManger();
+        return checkSignedIn.isOnline();
     }
     
     

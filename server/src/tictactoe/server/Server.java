@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -28,8 +29,8 @@ public class Server {
 
             serverSocket = new ServerSocket(Config.PORT);
             while (true) {
-		// new user obj, user = null
                 Socket socket = serverSocket.accept();
+                User user = null;
                 unloggedInUsers.add(socket);
                 new ClientThread(socket).start();
             }
@@ -91,6 +92,15 @@ public class Server {
             }
         }
 
+    }
+    
+    // Checking if the user is online
+    public boolean isOnline(Player isOnlinePlayer) throws ClassNotFoundException, SQLException{
+        if (isOnlinePlayer.isSignedIn()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static void main(String[] args) {
