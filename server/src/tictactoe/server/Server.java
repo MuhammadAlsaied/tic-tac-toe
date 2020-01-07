@@ -28,6 +28,7 @@ public class Server {
 
             serverSocket = new ServerSocket(Config.PORT);
             while (true) {
+		// new user obj, user = null
                 Socket socket = serverSocket.accept();
                 unloggedInUsers.add(socket);
                 new ClientThread(socket).start();
@@ -64,7 +65,7 @@ public class Server {
         private DataInputStream dataInputStream;
         private PrintStream printStream;
 
-        public ClientThread(Socket socket) {
+        public ClientThread(Socket socket) { // user instead of socket and add a flag to th user to be online
             this.socket = socket;
             try {
                 dataInputStream = new DataInputStream(socket.getInputStream());
