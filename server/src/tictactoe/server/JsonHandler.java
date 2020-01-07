@@ -20,7 +20,7 @@ public class JsonHandler {
         }
     }
 
-    void handle(JsonObject request) {
+    void handle(JsonObject request) { // to take a new param (user)
         String rquestType = request.get("type").getAsString();
 
         JsonObject requestData = request.getAsJsonObject("data");
