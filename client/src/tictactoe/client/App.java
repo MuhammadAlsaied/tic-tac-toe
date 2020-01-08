@@ -1,11 +1,14 @@
 package tictactoe.client;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -16,34 +19,42 @@ public class App extends Application {
 
     HashMap<String, Pane> screens = new HashMap<>();
     Scene mainScene;
-
-    private JsonObject jsonObject;
-    private JsonObject data;
     private Socket s;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
+    private JsonHandler jsonHandler;
 
     public App() {
+        jsonHandler = new JsonHandler(this);
         try {
-            data = new JsonObject();
-            data.addProperty("firstName", "mohummad");
-            data.addProperty("lastName", "saied");
-            data.addProperty("email", "saied@gmail.com");
-            data.addProperty("password", "298347923");
-            jsonObject = new JsonObject();
-            jsonObject.addProperty("type", "signup");
-            jsonObject.add("data", data);
-
             s = new Socket(Config.SERVER_IP, Config.PORT);
             dataInputStream = new DataInputStream(s.getInputStream());
             dataOutputStream = new DataOutputStream(s.getOutputStream());
-            String str = jsonObject.toString();
-            System.out.println(str);
-            dataOutputStream.write(str.getBytes());
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (true) {
+                    try {
+                        String line = dataInputStream.readLine();
+                        if (line != null) {
+                            JsonObject obj = JsonParser.parseString(line).getAsJsonObject();
+                            jsonHandler.handle(obj);
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+            }
+        });
+    }
+
+    public DataOutputStream getDataOutputStream() {
+        return dataOutputStream;
     }
 
     private void addScreens() {

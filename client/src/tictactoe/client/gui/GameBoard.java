@@ -145,7 +145,7 @@ public class GameBoard extends Application {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Noone Win");
             a.setHeaderText("");
-            a.setContentText("Noone Win");
+            a.setContentText("Draw! No winner :/");
             a.show();
             start(primaryStage);
         }
