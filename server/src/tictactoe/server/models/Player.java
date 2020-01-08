@@ -15,6 +15,7 @@ public class Player {
     private String email;
     private String img;
     private String password;
+    private Game currentGame;
 
     public int getId() {
         return id;
@@ -88,4 +89,15 @@ public class Player {
         }
         return true;
     }   
+    
+    public void setCurrentGame(Game currentGame) {
+        this.currentGame = currentGame;
+    }
+
+    public Game getCurrentGame() {
+        return currentGame;
+    }
+
+    
+    
 }

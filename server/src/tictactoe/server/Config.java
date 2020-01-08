@@ -9,6 +9,6 @@ public abstract class Config {
     public static final String DB_USERNAME = "root";
     public static final String DB_NAME = "tictactoe";
     public static final String DB_PASSWORD = "";
-    
+ 
     
 }
