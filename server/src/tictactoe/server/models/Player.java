@@ -15,6 +15,7 @@ public class Player {
     private String img;
     private String password;
     private int points;
+    private Game currentGame;
 
     public int getId() {
         return id;
@@ -105,5 +106,13 @@ public class Player {
         obj.addProperty("points", points);
 
         return obj;
+    }
+
+    public void setCurrentGame(Game currentGame) {
+        this.currentGame = currentGame;
+    }
+
+    public Game getCurrentGame() {
+        return currentGame;
     }
 }

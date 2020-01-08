@@ -97,7 +97,7 @@ public class Server {
                     String line = dataInputStream.readLine();
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
-
+                        System.out.println(line);
                         jsonHandler.handle(request, user);
                     }
                 } catch (IOException ex) {
