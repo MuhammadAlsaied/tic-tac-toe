@@ -94,13 +94,14 @@ public class DatabaseManger {
                     statment.close();
                     connection.close();
                     System.out.println("Login succssed..");
-                    
+
                     playerSignIn.setId(resultSet.getInt("id"));
                     playerSignIn.setFirstName(resultSet.getString("first_name"));
                     playerSignIn.setLastName(resultSet.getString("last_name"));
                     playerSignIn.setEmail(resultSet.getString("email"));
                     playerSignIn.setImg(resultSet.getString("image"));
-                    
+                    playerSignIn.setPoints(resultSet.getInt("points"));
+
                     return playerSignIn;
                 } else {
                     statment.close();

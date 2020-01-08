@@ -1,5 +1,6 @@
 package tictactoe.server;
 
+import com.google.gson.JsonArray;
 import tictactoe.server.models.Player;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -8,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -20,9 +20,9 @@ public class Server {
 
     private ServerSocket serverSocket;
 
-    private final HashMap<Integer, User> OnlinePlayers = new HashMap<>();
+    private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
     private final HashSet<Socket> unloggedInUsers = new HashSet<>();
-    JsonHandler jsonHandler = new JsonHandler();
+    JsonHandler jsonHandler = new JsonHandler(this);
 
     public Server() {
         try {
@@ -44,10 +44,20 @@ public class Server {
     public class User {
 
         private final Socket socket;
-        private final Player player;
+        private Player player;
+        private PrintStream printStream;
 
         public User(Socket socket, Player player) {
             this.socket = socket;
+            this.player = player;
+            try {
+                printStream = new PrintStream(socket.getOutputStream());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        public void setPlayer(Player player) {
             this.player = player;
         }
 
@@ -59,20 +69,22 @@ public class Server {
             return player;
         }
 
+        public PrintStream getPrintStream() {
+            return printStream;
+        }
+
     }
 
     private class ClientThread extends Thread {
 
         private final Socket socket;
         private DataInputStream dataInputStream;
-        private PrintStream printStream;
         private User user;
 
         public ClientThread(User userClientThread) {
             this.socket = userClientThread.socket;
             try {
                 dataInputStream = new DataInputStream(socket.getInputStream());
-                printStream = new PrintStream(socket.getOutputStream());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -94,6 +106,22 @@ public class Server {
             }
         }
 
+    }
+
+    public JsonArray getOnlinePlayersAsJson() {
+        JsonArray players = new JsonArray();
+        onlinePlayers.forEach((key, value) -> {
+            players.add(value.player.asJson());
+        });
+        return players;
+    }
+
+    public void addToOnlinePlayers(int id, User user) {
+        onlinePlayers.put(id, user);
+    }
+
+    public void removeFromOnlinePlayers(int id) {
+        onlinePlayers.remove(id);
     }
 
     public static void main(String[] args) {

@@ -1,9 +1,11 @@
 package tictactoe.server;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.sql.SQLException;
 import tictactoe.server.Server.User;
 import tictactoe.server.db.DatabaseManger;
+import tictactoe.server.models.Player;
 
 /**
  *
@@ -11,35 +13,80 @@ import tictactoe.server.db.DatabaseManger;
  */
 public class JsonHandler {
 
-    private DatabaseManger databaseManger;
+    private DatabaseManger databaseManager;
+    private final Server server;
 
-    public JsonHandler() {
+    public JsonHandler(Server server) {
+        this.server = server;
         try {
-            this.databaseManger = new DatabaseManger();
+            this.databaseManager = new DatabaseManger();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    void handle(JsonObject request, User user) { // to take a new param (user)
-        String rquestType = request.get("type").getAsString();
+    void handle(JsonObject request, User user) {
+        String requestType = request.get("type").getAsString();
 
         JsonObject requestData = request.getAsJsonObject("data");
-        switch (rquestType) {
+        JsonObject response = null;
+        switch (requestType) {
             case "signup":
-                System.out.println(rquestType);
-                String firstName = requestData.get("firstName").getAsString();
-                String lastName = requestData.get("lastName").getAsString();
-                String email = requestData.get("email").getAsString();
-                String password = requestData.get("password").getAsString();
-                 {
-                    try {
-                        databaseManger.signUp(firstName, lastName, email, password);
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                }
+                response = handleSignup(requestData, user);
+                break;
+            case "signin":
+                response = handleSignin(requestData, user);
                 break;
         }
+        if (response != null) {
+            user.getPrintStream().println(response.toString());
+
+        }
+    }
+
+    private JsonObject handleSignup(JsonObject requestData, User user) {
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("data", data);
+
+        String firstName = requestData.get("firstName").getAsString();
+        String lastName = requestData.get("lastName").getAsString();
+        String email = requestData.get("email").getAsString();
+        String password = requestData.get("password").getAsString();
+        {
+            try {
+                boolean success = databaseManager.signUp(firstName, lastName, email, password);
+                if (success) {
+                    response.addProperty("type", "signup-success");
+                } else {
+                    response.addProperty("type", "signup-error");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return response;
+    }
+
+    private JsonObject handleSignin(JsonObject requestData, User user) {
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("data", data);
+
+        String email = requestData.get("email").getAsString();
+        String password = requestData.get("password").getAsString();
+        Player player = databaseManager.signIn(email, password);
+        if (player == null) {
+            response.addProperty("type", "signin-error");
+            data.addProperty("msg", "wrong email or password");
+        } else {
+            user.setPlayer(player);
+            JsonArray onlineUsers = server.getOnlinePlayersAsJson();
+            server.addToOnlinePlayers(player.getId(), user);
+            response.addProperty("type", "signin-success");
+            data.add("online-players", onlineUsers);
+            data.add("my-data", player.asJson());
+        }
+        return response;
     }
 }

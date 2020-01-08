@@ -40,7 +40,7 @@ public class App extends Application {
             String str = jsonObject.toString();
             System.out.println(str);
             dataOutputStream.write(str.getBytes());
-
+            
         } catch (IOException e) {
             e.printStackTrace();
         }

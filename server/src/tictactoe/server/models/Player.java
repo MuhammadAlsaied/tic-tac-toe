@@ -1,20 +1,20 @@
 package tictactoe.server.models;
 
-import java.sql.SQLException;
-import tictactoe.server.db.DatabaseManger;
+import com.google.gson.JsonObject;
 
 /**
  *
  * @author asoliman
  */
 public class Player {
-    
+
     private int id;
     private String firstName;
     private String lastName;
     private String email;
     private String img;
     private String password;
+    private int points;
 
     public int getId() {
         return id;
@@ -64,6 +64,14 @@ public class Player {
         this.password = password;
     }
 
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -87,5 +95,15 @@ public class Player {
             return false;
         }
         return true;
-    }   
+    }
+
+    public JsonObject asJson() {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("id", id);
+        obj.addProperty("firstName", firstName);
+        obj.addProperty("lastName", firstName);
+        obj.addProperty("points", points);
+
+        return obj;
+    }
 }
