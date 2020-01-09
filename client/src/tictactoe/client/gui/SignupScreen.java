@@ -2,6 +2,7 @@ package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -23,6 +24,7 @@ import tictactoe.client.App;
 public class SignupScreen extends StackPane {
 
     private final App app;
+    private ToggleButton signup;
 
     public SignupScreen(App app) {
         this.app = app;
@@ -56,8 +58,9 @@ public class SignupScreen extends StackPane {
         label1.setGraphic(new ImageView(image));
 
 //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
-        ToggleButton signup = new ToggleButton("SIGN UP");
+        signup = new ToggleButton("SIGN UP");
         signup.setId("signup");
+        
         signup.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -75,7 +78,7 @@ public class SignupScreen extends StackPane {
                     a.show();
                 } else if (password.getText().equals(repassword.getText())) {
                     signup.setText("Loading...");
-                    //signup.setDisable(true);
+                    signup.setDisable(true);
                     JsonObject jsonObject = new JsonObject();
                     JsonObject data = new JsonObject();
                     data.addProperty("firstName", name.getText());
@@ -107,6 +110,20 @@ public class SignupScreen extends StackPane {
         setId("stack");
         getChildren().addAll(rec, box);
 
+        
     }
+//        =====================Signup methods==============================
+        public void signupFailed(){
+            app.showAlert("Signup failed", "This email is already registered, please enter another email.");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    signup.setText("SIGN UP");
+                    signup.setDisable(false);
+                }
+            });
+
+        }
+//        =================================================================
 
 }
