@@ -5,6 +5,7 @@ import tictactoe.server.models.Player;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
@@ -45,13 +46,13 @@ public class Server {
 
         private final Socket socket;
         private Player player;
-        private PrintStream printStream;
+        private DataOutputStream dataOutputStream;
 
         public User(Socket socket, Player player) {
             this.socket = socket;
             this.player = player;
             try {
-                printStream = new PrintStream(socket.getOutputStream());
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -69,8 +70,8 @@ public class Server {
             return player;
         }
 
-        public PrintStream getPrintStream() {
-            return printStream;
+        public DataOutputStream getDataOutputStream() {
+            return dataOutputStream;
         }
 
     }
@@ -81,8 +82,9 @@ public class Server {
         private DataInputStream dataInputStream;
         private User user;
 
-        public ClientThread(User userClientThread) {
-            this.socket = userClientThread.socket;
+        public ClientThread(User user) {
+            this.socket = user.socket;
+            this.user = user;
             try {
                 dataInputStream = new DataInputStream(socket.getInputStream());
             } catch (IOException ex) {
@@ -94,7 +96,7 @@ public class Server {
         public void run() {
             while (true) {
                 try {
-                    String line = dataInputStream.readLine();
+                    String line = dataInputStream.readUTF();
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
                         System.out.println(line);

@@ -2,8 +2,6 @@ package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -63,14 +61,13 @@ public class SignupScreen extends StackPane {
         signup.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(password.getText().isEmpty()){
+                if (password.getText().isEmpty()) {
                     Alert a = new Alert(Alert.AlertType.INFORMATION);
                     a.setTitle("Password Validation");
                     a.setHeaderText("");
                     a.setContentText("Password can't be empty!");
                     a.show();
-                }
-                else if (!password.getText().equals(repassword.getText())) {
+                } else if (!password.getText().equals(repassword.getText())) {
                     Alert a = new Alert(Alert.AlertType.INFORMATION);
                     a.setTitle("Password Validation");
                     a.setHeaderText("");
@@ -88,9 +85,9 @@ public class SignupScreen extends StackPane {
                     jsonObject.addProperty("type", "signup");
                     jsonObject.add("data", data);
                     try {
-                                            System.out.println(jsonObject);
+                        System.out.println(jsonObject);
 
-                        app.getDataOutputStream().write(jsonObject.toString().getBytes());
+                        app.getDataOutputStream().writeUTF(jsonObject.toString());
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

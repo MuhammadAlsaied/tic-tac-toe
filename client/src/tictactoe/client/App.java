@@ -37,9 +37,10 @@ public class App extends Application {
 
                 while (true) {
                     try {
-                        String line = dataInputStream.readLine();
+                        String line = dataInputStream.readUTF();
                         if (line != null) {
                             JsonObject obj = JsonParser.parseString(line).getAsJsonObject();
+                            System.out.println(obj);
                             jsonHandler.handle(obj);
                         }
                     } catch (IOException ex) {
@@ -48,7 +49,7 @@ public class App extends Application {
                 }
 
             }
-        });
+        }).start();
     }
 
     public DataOutputStream getDataOutputStream() {

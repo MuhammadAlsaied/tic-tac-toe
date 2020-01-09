@@ -1,6 +1,5 @@
 
 # NetBeans specific #
-server/nbproject/project.properties
 server/nbproject/private/
 server/build/
 server/nbbuild/
@@ -10,7 +9,6 @@ server/nbactions.xml
 server/nb-configuration.xml
 
 
-client/nbproject/project.properties
 client/nbproject/private/
 client/build/
 client/nbbuild/

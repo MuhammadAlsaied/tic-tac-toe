@@ -2,6 +2,7 @@ package tictactoe.server;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.sql.SQLException;
 import tictactoe.server.Server.User;
 import tictactoe.server.db.DatabaseManger;
@@ -39,7 +40,11 @@ public class JsonHandler {
                 break;
         }
         if (response != null) {
-            user.getPrintStream().println(response.toString());
+            try {
+                user.getDataOutputStream().writeUTF(response.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 
         }
     }
