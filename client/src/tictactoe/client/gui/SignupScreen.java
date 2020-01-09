@@ -60,7 +60,6 @@ public class SignupScreen extends StackPane {
 //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
         signup = new ToggleButton("SIGN UP");
         signup.setId("signup");
-        
         signup.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -113,7 +112,7 @@ public class SignupScreen extends StackPane {
         
     }
 //        =====================Signup methods==============================
-        public void signupFailed(){
+        public void showSignupFailedPopup(){
             app.showAlert("Signup failed", "This email is already registered, please enter another email.");
             Platform.runLater(new Runnable() {
                 @Override
@@ -122,7 +121,6 @@ public class SignupScreen extends StackPane {
                     signup.setDisable(false);
                 }
             });
-
         }
 //        =================================================================
 

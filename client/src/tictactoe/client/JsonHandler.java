@@ -29,7 +29,7 @@ public class JsonHandler {
         switch (requestType) {
             case "signup-error":
                 SignupScreen signupScreen =(SignupScreen) app.screens.get("signup");
-                signupScreen.signupFailed();
+                signupScreen.showSignupFailedPopup();
                 break;
             case "signup-success":
                 app.showAlert("Welcome :D", "Sign up successful.\nLogin to play :D");
@@ -40,7 +40,7 @@ public class JsonHandler {
             case "signin-success":
                 break;
             case "signin-error":
-                app.showAlert("Could not login", "Check your email and password");
+                app.showAlert("Could not login", requestData.get("msg").getAsString());
                 break;
         }
     }
