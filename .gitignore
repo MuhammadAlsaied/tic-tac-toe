@@ -27,10 +27,5 @@ client/nb-configuration.xml
 # Class Files #
 *.class
 
-# Package Files #
-*.jar
-*.war
-*.ear
-
 # Connection specific
 server/src/tictactoe/server/Config.java
