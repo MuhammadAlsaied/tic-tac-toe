@@ -15,13 +15,14 @@ import java.util.HashSet;
 
 /**
  *
- * @author muhammad
+ * @author muhammad and Ayman Magdy
  */
 public class Server {
 
     private ServerSocket serverSocket;
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
+    private final HashMap<Integer, Player> playersInvitations = new HashMap<>();
     private final HashSet<Socket> unloggedInUsers = new HashSet<>();
     JsonHandler jsonHandler = new JsonHandler(this);
 
@@ -56,6 +57,11 @@ public class Server {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+        
+        public User(){
+            this.player = new Player();
+            this.socket = new Socket();
         }
 
         public void setPlayer(Player player) {
@@ -124,6 +130,51 @@ public class Server {
 
     public void removeFromOnlinePlayers(int id) {
         onlinePlayers.remove(id);
+    }
+    
+    public boolean isOnlinePlayer(Player playerToCheck){
+        if (onlinePlayers.containsKey(playerToCheck.getId())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public JsonArray getInvitationsPlayersAsJson() {
+        JsonArray invitationPlayers = new JsonArray();
+        playersInvitations.forEach((key, value) -> {
+            invitationPlayers.add(value.asJson());
+        });
+        return invitationPlayers;
+    }
+    
+    public void addToInvitationsPlayers(Player firstPlayer, Player secondPlayer) {
+        int firstPlayerID = firstPlayer.getId();
+        int secondPlayerID = secondPlayer.getId();
+        
+        playersInvitations.put(firstPlayerID, firstPlayer);
+        playersInvitations.put(secondPlayerID, secondPlayer);
+    }
+    
+    public void removeFromInvitedPlayers(int firstPlayerID, int secondPlayerID) {
+        playersInvitations.remove(firstPlayerID);
+        playersInvitations.remove(secondPlayerID);
+    }
+    
+    public boolean isBusyPlayer(Player playerToCheck){
+        if (playersInvitations.containsKey(playerToCheck.getId())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean isFreePlayer(Player playerToCheck){
+        if (!playersInvitations.containsKey(playerToCheck.getId())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static void main(String[] args) {

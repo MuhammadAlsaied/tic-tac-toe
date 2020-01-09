@@ -3,7 +3,7 @@ import com.google.gson.JsonObject;
 
 /**
  *
- * @author muhammad
+ * @author muhammad and Ayman Magdy
  */
 
 enum Status {

@@ -6,16 +6,18 @@ import java.io.IOException;
 import java.sql.SQLException;
 import tictactoe.server.Server.User;
 import tictactoe.server.db.DatabaseManger;
+import tictactoe.server.models.Game;
 import tictactoe.server.models.Player;
 
 /**
  *
- * @author muhammad
+ * @author muhammad and Ayman Magdy
  */
 public class JsonHandler {
 
     private DatabaseManger databaseManager;
     private final Server server;
+    
 
     public JsonHandler(Server server) {
         this.server = server;
@@ -37,6 +39,10 @@ public class JsonHandler {
                 break;
             case "signin":
                 response = handleSignin(requestData, user);
+                break;
+            case "invitation":
+                Player invitingPlayer = new Player();
+                response = handleInvitation(user.getPlayer(), invitingPlayer);
                 break;
         }
         if (response != null) {
@@ -92,6 +98,41 @@ public class JsonHandler {
             data.add("online-players", onlineUsers);
             data.add("my-data", player.asJson());
         }
+        return response;
+    }
+    
+    private JsonObject handleInvitation(Player inviter, Player invited){
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("invitation", data);
+        
+        if (!server.isOnlinePlayer(invited)) {
+            response.addProperty("type", "invitation-error");
+            data.addProperty("msg", "the invited player is not online");
+        }
+        
+        if (invited.getCurrentGame() != null) {
+            response.addProperty("type", "invitation-error");
+            data.addProperty("msg", "user is playing with someone else at the moment");
+        }
+        
+        if (server.isBusyPlayer(invited)) {
+            response.addProperty("type", "invitation-error");
+            data.addProperty("msg", "user is playing with is busy");
+        }
+        
+        if (server.isOnlinePlayer(invited) && server.isFreePlayer(invited) && invited.getCurrentGame() == null) {
+            Game playNewGame = new Game(inviter, invited);
+            inviter.setCurrentGame(playNewGame);
+            invited.setCurrentGame(playNewGame);
+            JsonArray palyersPlaying = server.getInvitationsPlayersAsJson();
+            server.addToInvitationsPlayers(inviter, invited);
+            response.addProperty("invitation", "invitation-succeed");
+            data.add("invited-players", palyersPlaying);
+            data.add("inviter-player", inviter.asJson());
+            data.add("invited-player", invited.asJson());
+        } 
+        
         return response;
     }
 }
