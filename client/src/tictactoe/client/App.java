@@ -62,6 +62,7 @@ public class App extends Application {
         screens.put("signin", new SigninScreen(this));
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
+        screens.put("main", new MainScreen(this));
     }
 
     public void setScreen(String screenName) {
