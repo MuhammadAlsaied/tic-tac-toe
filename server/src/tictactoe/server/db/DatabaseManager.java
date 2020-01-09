@@ -9,14 +9,14 @@ import tictactoe.server.models.Player;
  *
  * @author asoliman
  */
-public class DatabaseManger {
+public class DatabaseManager {
 
     private Connection connection;
     private Statement statment;
     private ResultSet resultSet;
     private Vector<Player> usersVecDetails = new Vector();
 
-    public DatabaseManger() throws ClassNotFoundException, SQLException {
+    public DatabaseManager() throws ClassNotFoundException, SQLException {
         // Here to establish the connecection once creating an instance.
         establishConnection();
 
@@ -91,17 +91,18 @@ public class DatabaseManger {
                 resultSet = statment.executeQuery("SELECT * FROM player WHERE email='" + email + "' AND password='" + password + "';");
 
                 if (resultSet.first() == true) {
-                    statment.close();
-                    connection.close();
-                    System.out.println("Login succssed..");
 
+                    System.out.println("Login successed..");
+                    
+                    playerSignIn = new Player();
                     playerSignIn.setId(resultSet.getInt("id"));
                     playerSignIn.setFirstName(resultSet.getString("first_name"));
                     playerSignIn.setLastName(resultSet.getString("last_name"));
                     playerSignIn.setEmail(resultSet.getString("email"));
                     playerSignIn.setImg(resultSet.getString("image"));
                     playerSignIn.setPoints(resultSet.getInt("points"));
-
+                    statment.close();
+                    connection.close();
                     return playerSignIn;
                 } else {
                     statment.close();

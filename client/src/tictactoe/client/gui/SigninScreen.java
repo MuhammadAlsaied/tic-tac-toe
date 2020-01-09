@@ -1,11 +1,15 @@
 package tictactoe.client.gui;
 
+import com.google.gson.JsonObject;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 
@@ -39,8 +43,40 @@ public class SigninScreen extends StackPane {
         password.setFocusTraversable(false);
         
         password.setPromptText(" Enter your password");
+        //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
         Button signin = new Button("SIGN IN");
         signin.setId("signin");
+        
+        signin.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (password.getText().isEmpty()) {
+                    Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setTitle("Password Validation");
+                    a.setHeaderText("");
+                    a.setContentText("Password can't be empty!");
+                    a.show();
+                } else{
+                    signin.setText("Connecting...");
+                    signin.setDisable(true);
+                    JsonObject jsonObject = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    data.addProperty("email", email.getText());
+                    data.addProperty("password", password.getText());
+                    jsonObject.addProperty("type", "signin");
+                    jsonObject.add("data", data);
+                    System.out.println(jsonObject);
+                    try {
+                        System.out.println(jsonObject);
+                        app.getDataOutputStream().writeUTF(jsonObject.toString());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+//        =================================================================
+
         signin.setPrefSize(153, 47);
         
         Button newUser = new Button("New user?");

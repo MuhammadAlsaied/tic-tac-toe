@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.sql.SQLException;
 import tictactoe.server.Server.User;
-import tictactoe.server.db.DatabaseManger;
+import tictactoe.server.db.DatabaseManager;
 import tictactoe.server.models.Player;
 
 /**
@@ -14,13 +14,13 @@ import tictactoe.server.models.Player;
  */
 public class JsonHandler {
 
-    private DatabaseManger databaseManager;
+    private DatabaseManager databaseManager;
     private final Server server;
 
     public JsonHandler(Server server) {
         this.server = server;
         try {
-            this.databaseManager = new DatabaseManger();
+            this.databaseManager = new DatabaseManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
