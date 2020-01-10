@@ -1,12 +1,8 @@
 package tictactoe.client.gui;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.application.Application;
+import static javafx.application.Application.launch;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
@@ -16,16 +12,20 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import tictactoe.client.App;
 
 /**
  *
- * @author hp
+ * @author KeR
  */
-public class HardLuckScreen extends StackPane {
-
+public class NooneIsTheWinnerScreen extends StackPane {
     private final App app;
-    public HardLuckScreen(App app) {
+    
+    public NooneIsTheWinnerScreen(App app) {
         this.app = app;
         Region rec = new Region();
         rec.setPrefSize(498, 460);
@@ -34,6 +34,7 @@ public class HardLuckScreen extends StackPane {
         Region over = new Region();
         over.setId("over");
         over.setPrefSize(130, 130);
+       
 
         DropShadow e = new DropShadow();
         e.setOffsetX(0.0f);
@@ -41,7 +42,7 @@ public class HardLuckScreen extends StackPane {
         e.setBlurType(BlurType.GAUSSIAN);
         e.setColor(Color.BLACK);
 
-        Button lose = new Button("Good Luck Next Time");
+        Button lose = new Button("Noone  Is The Winner");
         lose.setId("lose");
         lose.setEffect(e);
         ToggleButton back = new ToggleButton("Back");
@@ -56,10 +57,12 @@ public class HardLuckScreen extends StackPane {
         });
         playAgain.setPrefSize(180, 20);
         playAgain.setId("playAgain");
-        HBox buttonBox = new HBox(50, back, playAgain);
+        HBox buttonBox = new HBox(50,back,playAgain);
+        
 
-        VBox vbox = new VBox(30, over, lose, buttonBox);
-        vbox.setId("vbox");
+        VBox vbox = new VBox(30, over, lose,buttonBox);
+                vbox.setId("vbox");
+
 
         getChildren().addAll(rec, vbox);
         setId("stackGameResultScreen");

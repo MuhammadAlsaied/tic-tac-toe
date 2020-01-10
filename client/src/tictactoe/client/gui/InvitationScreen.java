@@ -13,16 +13,17 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import tictactoe.client.App;
+import static javafx.application.Application.launch;
 
 /**
  *
  * @author KeR
  */
-public class Invitation extends Application {
+public class InvitationScreen extends StackPane {
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("You Are The Winner");
+ 
+    public  InvitationScreen(App app) {
 
         Region rec = new Region();
         rec.setPrefSize(498, 460);
@@ -55,21 +56,7 @@ public class Invitation extends Application {
         VBox vbox = new VBox(100, lose, buttonBox);
         vbox.setId("vbox");
 
-        StackPane stack = new StackPane();
-        stack.getChildren().addAll(rec, vbox);
-        stack.setId("stack");
-
-        Scene scene = new Scene(stack, 1350, 700);
-        scene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        getChildren().addAll(rec, vbox);
+        setId("stackInvitation");
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
 }

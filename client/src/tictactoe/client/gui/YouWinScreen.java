@@ -13,17 +13,20 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import tictactoe.client.App;
 
 /**
  *
  * @author KeR
  */
-public class YouWin extends Application {
+public class YouWinScreen extends StackPane {
+    private final App app;
     
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("You Are The Winner");
-
+    public YouWinScreen(App app) {
+        this.app = app;
         Region rec = new Region();
         rec.setPrefSize(498, 460);
         rec.setId("rec");
@@ -39,13 +42,19 @@ public class YouWin extends Application {
         e.setBlurType(BlurType.GAUSSIAN);
         e.setColor(Color.BLACK);
 
-        Button lose = new Button("You Are The Winnerz");
+        Button lose = new Button("You Are The Winner");
         lose.setId("lose");
         lose.setEffect(e);
         ToggleButton back = new ToggleButton("Back");
         back.setPrefSize(180, 20);
         back.setId("back");
         ToggleButton playAgain = new ToggleButton("Play Again");
+        playAgain.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                app.setScreen("playWithComputerEasyGameBoard");
+            }
+        });
         playAgain.setPrefSize(180, 20);
         playAgain.setId("playAgain");
         HBox buttonBox = new HBox(50,back,playAgain);
@@ -55,21 +64,7 @@ public class YouWin extends Application {
                 vbox.setId("vbox");
 
 
-        StackPane stack = new StackPane();
-        stack.getChildren().addAll(rec, vbox);
-        stack.setId("stack");
-
-        Scene scene = new Scene(stack, 1350, 700);
-        scene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        getChildren().addAll(rec, vbox);
+        setId("stackGameResultScreen");
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
 }

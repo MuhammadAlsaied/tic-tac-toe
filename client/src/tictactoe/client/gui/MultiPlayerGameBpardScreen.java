@@ -11,51 +11,40 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import static javafx.application.Application.launch;
+import tictactoe.client.App;
+import static javafx.application.Application.launch;
+import static javafx.application.Application.launch;
 
 /**
  *
  * @author KeR
  */
-public class GameBoard extends Application {
+public class MultiPlayerGameBpardScreen extends GridPane {
 
     boolean flag = true;
-    int i, j, y, x,counter;
+    int counter;
     String line;
+    boolean[] textLabelflag;
     Vector<Label> l = new Vector<>();
-
-    @Override
-    public void init() throws Exception {
-        super.init();
+    public  MultiPlayerGameBpardScreen(App app) {
+        setId("stackGameboard");
+        setPadding(new Insets(40, 0, 0, 50));
+        setHgap(150);
+        setVgap(-20);
+        setPrefSize(700, 700);
         for (int i = 0; i < 9; i++) {
             l.add(new Label("_"));
         }
-        counter=0;
-
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Game");
-        GridPane stack = new GridPane();
-        stack.setId("stackGameboard");
-        for (int i = 0; i < 9; i++) {
-            l.get(i).setText("_");
-        }
-        boolean[] textLabelflag = {true, true, true, true, true, true, true, true, true};
-        stack.setPadding(new Insets(40, 0, 0, 50));
-        stack.setHgap(150);
-        stack.setVgap(-20);
-        stack.setPrefSize(700, 700);
-        for (int i = 0; i < l.size(); i++) {
-            l.get(i).setId("label");
-        }
-        for (i = 0; i < 3; i++) {
-            for (j = 0; j < 3; j++) {
+        counter = 0;
+        resetGame();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 int x = i * 3 + j;
                 l.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        
+
                         if (flag && textLabelflag[x]) {
                             l.get(x).setText("X");
                             l.get(x).setId("x");
@@ -69,26 +58,26 @@ public class GameBoard extends Application {
                             textLabelflag[x] = false;
                             counter++;
                         }
-                        checkWinner(primaryStage);
+                        checkWinner();
                     }
                 });
-                stack.add(l.get(x), j, i);
+                add(l.get(x), j, i);
             }
         }
-        x = 0;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-            }
-        }).start();
-        Scene scene = new Scene(stack, 1350, 700);
-        scene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
-    private void checkWinner(Stage primaryStage) {
-        for (x = 0; x < 8; x++) {
+    void resetGame() {
+        for (int i = 0; i < 9; i++) {
+            l.get(i).setText("_");
+        }
+        textLabelflag = new boolean[]{true, true, true, true, true, true, true, true, true};
+        for (int i = 0; i < l.size(); i++) {
+            l.get(i).setId("label");
+        }
+    }
+
+    private void checkWinner() {
+        for (int x = 0; x < 8; x++) {
             line = null;
             switch (x) {
                 case 0:
@@ -124,8 +113,8 @@ public class GameBoard extends Application {
                     a.setHeaderText("");
                     a.setContentText("X is the winner");
                     a.show();
-                    start(primaryStage);
                     counter = 0;
+                    resetGame();
                     break;
                 }
                 case "OOO": {
@@ -134,8 +123,8 @@ public class GameBoard extends Application {
                     a.setHeaderText("");
                     a.setContentText("O is the winner");
                     a.show();
-                    start(primaryStage);
                     counter = 0;
+                    resetGame();
                     break;
                 }
             }
@@ -147,15 +136,7 @@ public class GameBoard extends Application {
             a.setHeaderText("");
             a.setContentText("Draw! No winner :/");
             a.show();
-            start(primaryStage);
+            resetGame();
         }
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
 }

@@ -60,6 +60,13 @@ public class App extends Application {
         screens.put("signin", new SigninScreen(this));
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
+        screens.put("invitation", new InvitationScreen(this));
+        screens.put("multiPlayerGameBpard" , new MultiPlayerGameBpardScreen(this));
+        screens.put("levels",new Levels(this));
+        screens.put("youWin",new YouWinScreen(this));
+        screens.put("playWithComputerEasyGameBoard",new PlayWithComputerEasyGameBoardScreen(this));
+        screens.put("nooneIsTheWinner",new NooneIsTheWinnerScreen(this));
+        
     }
 
     public void setScreen(String screenName) {
@@ -71,7 +78,7 @@ public class App extends Application {
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
-        mainScene = new Scene(screens.get("signin"), 1350, 700);
+        mainScene = new Scene(screens.get("levels"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();

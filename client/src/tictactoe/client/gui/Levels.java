@@ -28,17 +28,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import tictactoe.client.App;
 
 /**
  *
  * @author hp
  */
-public class Levels extends Application {
+public class Levels extends StackPane {
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Good Luck Next Time");
-
+    private final App app;
+    public Levels(App app) {
+        this.app = app;
         Region rec = new Region();
         rec.setPrefSize(500, 460);
         rec.setId("rec");
@@ -51,39 +51,34 @@ public class Levels extends Application {
         e.setColor(Color.BLACK);
         
 
-        Button lose = new Button("Choose A Level");
-        lose.setId("lose");
-        lose.setEffect(e);
+        Button chooseALevel = new Button("Choose A Level");
+        chooseALevel.setId("ChooseALevel");
+        chooseALevel.setEffect(e);
+        chooseALevel.setPrefSize(332, 83);
         ToggleButton  easy = new ToggleButton("Easy");
-        easy.setPrefSize(332, 83);
-        easy.setId("back");
+        easy.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                app.setScreen("playWithComputerEasyGameBoard");
+            }
+        });
+        easy.setPrefSize(280, 83);
+        easy.setId("easyButton");
         ToggleButton normal = new ToggleButton("Normal");
-        normal.setPrefSize(332, 83);
-        normal.setId("playAgain");
+        normal.setPrefSize(280, 83);
+        normal.setId("normalButton");
         ToggleButton hard = new ToggleButton("Hard");
-        hard.setPrefSize(332, 83);
-        hard.setId("hard");
+        hard.setPrefSize(280, 83);
+        hard.setId("hardButton");
         
 
-        VBox vbox = new VBox(30,easy,normal,hard);
+        VBox vbox = new VBox(30,chooseALevel,easy,normal,hard);
                 vbox.setId("vbox");
 
 
-        StackPane stack = new StackPane();
-        stack.getChildren().addAll(rec, vbox);
-        stack.setId("stack");
+        getChildren().addAll(rec, vbox);
+        setId("stackGameResultScreen");
 
-        Scene scene = new Scene(stack, 1350, 700);
-scene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
     }
 
 }
