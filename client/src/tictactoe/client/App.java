@@ -61,12 +61,22 @@ public class App extends Application {
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("invitation", new InvitationScreen(this));
+<<<<<<< Updated upstream
         screens.put("multiPlayerGameBpard" , new MultiPlayerGameBpardScreen(this));
         screens.put("levels",new Levels(this));
         screens.put("youWin",new YouWinScreen(this));
         screens.put("playWithComputerEasyGameBoard",new PlayWithComputerEasyGameBoardScreen(this));
         screens.put("nooneIsTheWinner",new NooneIsTheWinnerScreen(this));
         
+=======
+        screens.put("multiPlayerGameBpard", new MultiPlayerGameBpardScreen(this));
+        screens.put("levels", new LevelsScreen(this));
+        screens.put("youWin", new YouWinScreen(this));
+        screens.put("playWithComputerEasyGameBoard", new PlayWithComputerEasyGameBoardScreen(this));
+        screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
+        screens.put("playWithComputerNormalGameBoard", new PlayWithComputerNormalGameBoardScreen(this));
+
+>>>>>>> Stashed changes
     }
 
     public void setScreen(String screenName) {
@@ -77,8 +87,12 @@ public class App extends Application {
     public void start(Stage primaryStage) throws InterruptedException {
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
+<<<<<<< Updated upstream
 
         mainScene = new Scene(screens.get("levels"), 1350, 700);
+=======
+        mainScene = new Scene(screens.get("playWithComputerNormalGameBoard"), 1350, 700);
+>>>>>>> Stashed changes
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();
