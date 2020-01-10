@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoe.client.gui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -31,8 +25,7 @@ import tictactoe.client.App;
  */
 public class MainScreen extends Pane {
 
-    
-    public  MainScreen(App app) {
+    public MainScreen(App app) {
         ToggleButton Acccept = new ToggleButton("play with computer");
         Acccept.setPrefSize(250, 50);
         Acccept.setId("compButton");//back
@@ -52,7 +45,7 @@ public class MainScreen extends Pane {
             Label score2 = new Label("500");
             score2.setId("scoreLabelGridPane");
             Label imglabel2 = new Label();
-            Image img2 = new Image(getClass().getResourceAsStream("k.png"));
+            Image img2 = new Image(getClass().getResourceAsStream("/images/k.png"));
             imglabel2.setGraphic(new ImageView(img2));
             Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
             cir2.setFill(Color.GREEN);
@@ -75,7 +68,7 @@ public class MainScreen extends Pane {
         send.setId("sendChatMainScreen");
         send.setLayoutX(1060);
         send.setLayoutY(600);
-          gr.setStyle("-fx-background-color: rgba(0, 0, 0, .8); -fx-background-radius: 10;");
+        gr.setStyle("-fx-background-color: rgba(0, 0, 0, .8); -fx-background-radius: 10;");
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setId("scrollPaneMainScreen");
         scrollPane.setContent(gr);
@@ -106,6 +99,6 @@ public class MainScreen extends Pane {
         text.setMaxHeight(10.5);
         getChildren().addAll(buttonBox, text, ta, send, v);
         setId("MainScreenPane");
-     
+
     }
 }

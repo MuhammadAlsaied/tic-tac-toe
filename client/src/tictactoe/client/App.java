@@ -95,7 +95,7 @@ public class App extends Application {
         mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
-        primaryStage.show();
+        primaryStage.show(); 
     }
 
     @Override
