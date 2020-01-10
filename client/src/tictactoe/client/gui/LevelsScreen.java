@@ -62,6 +62,12 @@ public class LevelsScreen extends StackPane {
         normal.setPrefSize(280, 83);
         normal.setId("normalButton");
         ToggleButton hard = new ToggleButton("Hard");
+        hard.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                app.setScreen("playWithComputerHARDGameBoard");
+            }
+        });     
         hard.setPrefSize(280, 83);
         hard.setId("hardButton");
         
