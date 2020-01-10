@@ -7,7 +7,7 @@ import tictactoe.server.models.Player;
 
 /**
  *
- * @author asoliman
+ * @author Ayman Magdy
  */
 public class DatabaseManager {
 
@@ -91,16 +91,14 @@ public class DatabaseManager {
                 resultSet = statment.executeQuery("SELECT * FROM player WHERE email='" + email + "' AND password='" + password + "';");
 
                 if (resultSet.first() == true) {
-
                     System.out.println("Login successed..");
-                    
                     playerSignIn = new Player();
                     playerSignIn.setId(resultSet.getInt("id"));
                     playerSignIn.setFirstName(resultSet.getString("first_name"));
                     playerSignIn.setLastName(resultSet.getString("last_name"));
                     playerSignIn.setEmail(resultSet.getString("email"));
                     playerSignIn.setImg(resultSet.getString("image"));
-                    playerSignIn.setPoints(resultSet.getInt("points"));
+                    playerSignIn.setPoints(resultSet.getInt("points")); 
                     statment.close();
                     connection.close();
                     return playerSignIn;

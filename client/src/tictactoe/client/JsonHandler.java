@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoe.client;
 
 import com.google.gson.JsonObject;
 import java.io.DataInputStream;
-import javafx.application.Platform;
 import tictactoe.client.gui.SignupScreen;
 
 /**
@@ -38,6 +32,7 @@ public class JsonHandler {
 
                 break;
             case "signin-success":
+                app.setScreen("main");
                 break;
             case "signin-error":
                 app.showAlert("Could not login", requestData.get("msg").getAsString());
