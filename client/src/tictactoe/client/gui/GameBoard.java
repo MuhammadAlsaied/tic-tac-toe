@@ -21,13 +21,14 @@ public class GameBoard extends Application {
     boolean flag = true;
     int i, j, y, x,counter;
     String line;
-    Vector<Label> l = new Vector<>();
+    Vector<Label> tiles = new Vector<>();
+    boolean[] textLabelflag;
 
     @Override
     public void init() throws Exception {
         super.init();
         for (int i = 0; i < 9; i++) {
-            l.add(new Label("_"));
+            tiles.add(new Label("_"));
         }
         counter=0;
 
@@ -39,32 +40,32 @@ public class GameBoard extends Application {
         GridPane stack = new GridPane();
         stack.setId("stackGameboard");
         for (int i = 0; i < 9; i++) {
-            l.get(i).setText("_");
+            tiles.get(i).setText("_");
         }
         boolean[] textLabelflag = {true, true, true, true, true, true, true, true, true};
         stack.setPadding(new Insets(40, 0, 0, 50));
         stack.setHgap(150);
         stack.setVgap(-20);
         stack.setPrefSize(700, 700);
-        for (int i = 0; i < l.size(); i++) {
-            l.get(i).setId("label");
+        for (int i = 0; i < tiles.size(); i++) {
+            tiles.get(i).setId("label");
         }
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
                 int x = i * 3 + j;
-                l.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                tiles.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
                         
                         if (flag && textLabelflag[x]) {
-                            l.get(x).setText("X");
-                            l.get(x).setId("x");
+                            tiles.get(x).setText("X");
+                            tiles.get(x).setId("x");
                             flag = false;
                             textLabelflag[x] = false;
                             counter++;
                         } else if (flag == false && textLabelflag[x]) {
-                            l.get(x).setText("O");
-                            l.get(x).setId("o");
+                            tiles.get(x).setText("O");
+                            tiles.get(x).setId("o");
                             flag = true;
                             textLabelflag[x] = false;
                             counter++;
@@ -72,7 +73,7 @@ public class GameBoard extends Application {
                         checkWinner(primaryStage);
                     }
                 });
-                stack.add(l.get(x), j, i);
+                stack.add(tiles.get(x), j, i);
             }
         }
         x = 0;
@@ -92,29 +93,29 @@ public class GameBoard extends Application {
             line = null;
             switch (x) {
                 case 0:
-                    line = l.get(0).getText() + l.get(1).getText() + l.get(2).getText();
+                    line = tiles.get(0).getText() + tiles.get(1).getText() + tiles.get(2).getText();
                     break;
                 case 1:
-                    line = l.get(3).getText() + l.get(4).getText() + l.get(5).getText();
+                    line = tiles.get(3).getText() + tiles.get(4).getText() + tiles.get(5).getText();
                     break;
                 case 2:
-                    line = l.get(6).getText() + l.get(7).getText() + l.get(8).getText();
+                    line = tiles.get(6).getText() + tiles.get(7).getText() + tiles.get(8).getText();
                     break;
                 case 3:
 
-                    line = l.get(0).getText() + l.get(3).getText() + l.get(6).getText();
+                    line = tiles.get(0).getText() + tiles.get(3).getText() + tiles.get(6).getText();
                     break;
                 case 4:
-                    line = l.get(1).getText() + l.get(4).getText() + l.get(7).getText();
+                    line = tiles.get(1).getText() + tiles.get(4).getText() + tiles.get(7).getText();
                     break;
                 case 5:
-                    line = l.get(2).getText() + l.get(5).getText() + l.get(8).getText();
+                    line = tiles.get(2).getText() + tiles.get(5).getText() + tiles.get(8).getText();
                     break;
                 case 6:
-                    line = l.get(0).getText() + l.get(4).getText() + l.get(8).getText();
+                    line = tiles.get(0).getText() + tiles.get(4).getText() + tiles.get(8).getText();
                     break;
                 case 7:
-                    line = l.get(2).getText() + l.get(4).getText() + l.get(6).getText();
+                    line = tiles.get(2).getText() + tiles.get(4).getText() + tiles.get(6).getText();
                     break;
             }
             switch (line) {
@@ -150,7 +151,12 @@ public class GameBoard extends Application {
             start(primaryStage);
         }
     }
-
+    
+    public void setTile(String side, int pos){
+        tiles.get(pos).setText(side.toUpperCase());
+        tiles.get(pos).setId(side.toLowerCase());
+        textLabelflag[pos] = false; 
+    }
     /**
      * @param args the command line arguments
      */

@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import tictactoe.client.gui.*;
@@ -60,14 +62,33 @@ public class App extends Application {
         screens.put("signin", new SigninScreen(this));
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
+        screens.put("main", new MainScreen(this));
     }
 
     public void setScreen(String screenName) {
         mainScene.setRoot(screens.get(screenName));
     }
-
+    
+    public void showAlert(String title, String msg){
+        Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Alert a = new Alert(Alert.AlertType.INFORMATION);
+                        a.setTitle(title);
+                        a.setHeaderText("");
+                        a.setContentText(msg);
+                        a.show();
+                    }
+                });
+        
+    }
+    
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
+        primaryStage.setOnCloseRequest(e->{
+            Platform.exit();
+            System.exit(0);
+        });
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
