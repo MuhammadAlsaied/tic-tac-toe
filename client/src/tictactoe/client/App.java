@@ -59,43 +59,50 @@ public class App extends Application {
     }
 
     private void addScreens() {
+        screens.put("main", new MainScreen(this));
         screens.put("signin", new SigninScreen(this));
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
-        screens.put("main", new MainScreen(this));
+        screens.put("invitation", new InvitationScreen(this));
+        screens.put("multiPlayerGameBpard", new MultiPlayerGameBpardScreen(this));
+        screens.put("levels", new LevelsScreen(this));
+        screens.put("youWin", new YouWinScreen(this));
+        screens.put("playWithComputerEasyGameBoard", new PlayWithComputerEasyGameBoardScreen(this));
+        screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
+
     }
 
     public void setScreen(String screenName) {
         mainScene.setRoot(screens.get(screenName));
     }
-    
-    public void showAlert(String title, String msg){
+
+    public void showAlert(String title, String msg) {
         Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        Alert a = new Alert(Alert.AlertType.INFORMATION);
-                        a.setTitle(title);
-                        a.setHeaderText("");
-                        a.setContentText(msg);
-                        a.show();
-                    }
-                });
-        
+            @Override
+            public void run() {
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle(title);
+                a.setHeaderText("");
+                a.setContentText(msg);
+                a.show();
+            }
+        });
+
     }
-    
+
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
-        primaryStage.setOnCloseRequest(e->{
+        primaryStage.setOnCloseRequest(e -> {
             Platform.exit();
             System.exit(0);
         });
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
-        mainScene = new Scene(screens.get("signin"), 1350, 700);
+        mainScene = new Scene(screens.get("main"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
-        primaryStage.show(); 
+        primaryStage.show();
     }
 
     @Override
