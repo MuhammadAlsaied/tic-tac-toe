@@ -23,11 +23,11 @@ import tictactoe.client.App;
 public class MainScreen extends Pane {
 
     public MainScreen(App app) {
-        ToggleButton Acccept = new ToggleButton("play with computer");
-        Acccept.setPrefSize(250, 50);
+        ToggleButton Acccept = new ToggleButton("CHALLENGE COMPUTER");
+        Acccept.setPrefSize(280, 50);
         Acccept.setId("compButton");
-        ToggleButton Decline = new ToggleButton("play with other player");
-        Decline.setPrefSize(250, 50);
+        ToggleButton Decline = new ToggleButton("CHALLENGE PLAYER");
+        Decline.setPrefSize(280, 50);
         Decline.setId("playerButton");
         HBox buttonBox = new HBox(20, Acccept, Decline);
         buttonBox.setAlignment(Pos.CENTER_LEFT);
