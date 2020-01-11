@@ -71,7 +71,7 @@ public class App extends Application {
         screens.put("playWithComputerNormalGameBoard", new PlayWithComputerNormalGameBoardScreen(this));
         screens.put("playWithComputerHARDGameBoard", new PlayWithComputerHARDGameBoardScreen(this));
         screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
-        screens.put("gameBoard", new GameBoard(this));
+        screens.put("MultiOnlinePlayers", new MultiOnlinePlayers(this));
 
     }
 
@@ -100,11 +100,11 @@ public class App extends Application {
             JsonObject data = new JsonObject();
             jsonObject.addProperty("type", "signout");
 
-            try {
-                dataOutputStream.writeUTF(jsonObject.toString());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+//            try {
+//                dataOutputStream.writeUTF(jsonObject.toString());
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
 
             Platform.exit();
             System.exit(0);
@@ -112,7 +112,7 @@ public class App extends Application {
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
-        mainScene = new Scene(screens.get("gameBoard"), 1350, 700);
+        mainScene = new Scene(screens.get("playWithComputerEasyGameBoard"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();
