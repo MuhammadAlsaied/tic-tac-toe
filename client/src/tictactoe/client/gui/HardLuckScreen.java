@@ -45,7 +45,7 @@ public class HardLuckScreen extends StackPane {
         playAgain.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                app.setScreen("playWithComputerEasyGameBoard");
+                app.setScreen("levels");
             }
         });
         playAgain.setPrefSize(180, 20);

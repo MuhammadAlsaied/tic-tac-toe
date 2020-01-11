@@ -93,7 +93,7 @@ pve:selected{
     -fx-border-color: #000000;
     -fx-text-fill:#000000;
 }
-#playerButton:selected {
+#playerButton:focused {
     -fx-background-color:
         -fx-focus-color,
         linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
@@ -215,7 +215,7 @@ ToggleButton{
     -fx-text-transform: uppercase;
     -fx-text-fill: #FFFFFF;
 }
-ToggleButton:selected {
+ToggleButton:focused {
     -fx-background-color:
         -fx-focus-color,
         linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
@@ -268,7 +268,7 @@ Label
     -fx-font-size: 20px;
     -fx-text-fill:#FFFFFF
 }
-#back:selected {
+#back:focused {
     -fx-background-color:
         -fx-focus-color,
         linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
@@ -277,7 +277,7 @@ Label
     -fx-border-color: #000000;
     -fx-text-fill:#000000;
 }
-#playAgain:selected {
+#playAgain:focused {
     -fx-background-color:
         -fx-focus-color,
         linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
@@ -328,7 +328,7 @@ textArea
     -fx-font-size: 20px;
     -fx-text-fill:#FFFFFF
 }
-#back1:selected {
+#back1:focused {
     -fx-background-color:
         -fx-focus-color,
         linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
@@ -676,7 +676,7 @@ textArea
     -fx-font-size: 20px;
     -fx-text-fill:#FFFFFF
 }
-#back1:selected {
+#back1:focused {
     -fx-background-color:
         -fx-focus-color,
         linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),

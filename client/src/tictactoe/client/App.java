@@ -65,6 +65,8 @@ public class App extends Application {
         screens.put("invitation", new InvitationScreen(this));
         screens.put("levels", new LevelsScreen(this));
         screens.put("playWithComputerEasyGameBoard", new PlayWithComputerEasyGameBoardScreen(this));
+        screens.put("playWithComputerNormalGameBoard", new PlayWithComputerNormalGameBoardScreen(this));
+        screens.put("playWithComputerHARDGameBoard", new PlayWithComputerHARDGameBoardScreen(this));
         screens.put("youWin", new YouWinScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
@@ -93,13 +95,24 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
         primaryStage.setOnCloseRequest(e -> {
+            JsonObject jsonObject = new JsonObject();
+            JsonObject data = new JsonObject();
+            jsonObject.addProperty("type", "signout");
+
+            try {
+                dataOutputStream.writeUTF(jsonObject.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
             Platform.exit();
             System.exit(0);
         });
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
-        mainScene = new Scene(screens.get("multiPlayerGameBoard"), 1350, 700);
+
+        mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();
