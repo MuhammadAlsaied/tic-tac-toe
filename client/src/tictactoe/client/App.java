@@ -71,6 +71,7 @@ public class App extends Application {
         screens.put("playWithComputerNormalGameBoard", new PlayWithComputerNormalGameBoardScreen(this));
         screens.put("playWithComputerHARDGameBoard", new PlayWithComputerHARDGameBoardScreen(this));
         screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
+        screens.put("gameBoard", new GameBoard(this));
 
     }
 
@@ -111,7 +112,7 @@ public class App extends Application {
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
-        mainScene = new Scene(screens.get("signin"), 1350, 700);
+        mainScene = new Scene(screens.get("gameBoard"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();
