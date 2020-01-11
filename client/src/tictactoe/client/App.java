@@ -62,13 +62,13 @@ public class App extends Application {
         screens.put("main", new MainScreen(this));
         screens.put("signin", new SigninScreen(this));
         screens.put("signup", new SignupScreen(this));
-        screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("invitation", new InvitationScreen(this));
-        screens.put("multiPlayerGameBpard", new MultiPlayerGameBpardScreen(this));
         screens.put("levels", new LevelsScreen(this));
-        screens.put("youWin", new YouWinScreen(this));
         screens.put("playWithComputerEasyGameBoard", new PlayWithComputerEasyGameBoardScreen(this));
+        screens.put("youWin", new YouWinScreen(this));
+        screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
+        screens.put("multiPlayerGameBoard", new MultiPlayerGameBoardScreen(this));
 
     }
 
@@ -99,7 +99,7 @@ public class App extends Application {
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
-        mainScene = new Scene(screens.get("main"), 1350, 700);
+        mainScene = new Scene(screens.get("multiPlayerGameBoard"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();

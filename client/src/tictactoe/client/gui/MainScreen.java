@@ -26,13 +26,24 @@ import tictactoe.client.App;
 public class MainScreen extends Pane {
 
     public MainScreen(App app) {
-        ToggleButton Acccept = new ToggleButton("play with computer");
-        Acccept.setPrefSize(250, 50);
-        Acccept.setId("compButton");//back
-        ToggleButton Decline = new ToggleButton("play with other player");
-        Decline.setPrefSize(250, 50);
-        Decline.setId("playerButton");//playAgain
-        HBox buttonBox = new HBox(20, Acccept, Decline);
+        //===================pve button and its event handler================
+        //PvE: Player vs environment (refers to computer/AI)
+        ToggleButton pve = new ToggleButton("play with computer");
+        pve.setPrefSize(250, 50);
+        pve.setId("pve");//back
+        pve.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                app.setScreen("levels");
+            }
+        });
+        //===================pvp button and its event handler===============
+        //PvP: Player vs Player 
+        ToggleButton pvp = new ToggleButton("play with other player");
+        pvp.setPrefSize(250, 50);
+        pvp.setId("playerButton");//playAgain
+        //======================================================================
+        HBox buttonBox = new HBox(20, pve, pvp);
         buttonBox.setAlignment(Pos.CENTER_LEFT);
         buttonBox.setLayoutX(40);
         buttonBox.setLayoutY(350);

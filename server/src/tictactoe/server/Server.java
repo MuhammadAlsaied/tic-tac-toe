@@ -51,12 +51,12 @@ public class Server {
         public User(Socket socket, Player player) {
             this.socket = socket;
             this.player = player;
-            try {
-                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                try {
+                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
             } catch (IOException ex) {
-                ex.printStackTrace();
+                    ex.printStackTrace();
+                }
             }
-        }
         
         public User(){
             this.player = new Player();
@@ -108,7 +108,7 @@ public class Server {
                         jsonHandler.handle(request, user);
                     }
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    //ex.printStackTrace();
                 }
             }
         }
