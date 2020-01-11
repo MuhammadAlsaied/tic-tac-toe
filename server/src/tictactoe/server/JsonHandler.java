@@ -17,7 +17,6 @@ public class JsonHandler {
 
     private DatabaseManager databaseManager;
     private final Server server;
-    
 
     public JsonHandler(Server server) {
         this.server = server;
@@ -94,33 +93,34 @@ public class JsonHandler {
             user.setPlayer(player);
             JsonArray onlineUsers = server.getOnlinePlayersAsJson();
             server.addToOnlinePlayers(player.getId(), user);
+            server.removeFromUnloggedInUsers(user.getSocket());
             response.addProperty("type", "signin-success");
             data.add("online-players", onlineUsers);
             data.add("my-data", player.asJson());
         }
         return response;
     }
-    
-    private JsonObject handleInvitation(Player inviter, Player invited){
+
+    private JsonObject handleInvitation(Player inviter, Player invited) {
         JsonObject response = new JsonObject();
         JsonObject data = new JsonObject();
         response.add("invitation", data);
-        
+
         if (!server.isOnlinePlayer(invited)) {
             response.addProperty("type", "invitation-error");
             data.addProperty("msg", "the invited player is not online");
         }
-        
+
         if (invited.getCurrentGame() != null) {
             response.addProperty("type", "invitation-error");
             data.addProperty("msg", "user is playing with someone else at the moment");
         }
-        
+
         if (server.isBusyPlayer(invited)) {
             response.addProperty("type", "invitation-error");
             data.addProperty("msg", "user is playing with is busy");
         }
-        
+
         if (server.isOnlinePlayer(invited) && server.isFreePlayer(invited) && invited.getCurrentGame() == null) {
             Game playNewGame = new Game(inviter, invited);
             inviter.setCurrentGame(playNewGame);
@@ -131,8 +131,8 @@ public class JsonHandler {
             data.add("invited-players", palyersPlaying);
             data.add("inviter-player", inviter.asJson());
             data.add("invited-player", invited.asJson());
-        } 
-        
+        }
+
         return response;
     }
 }

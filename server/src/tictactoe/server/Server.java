@@ -57,8 +57,8 @@ public class Server {
                 ex.printStackTrace();
             }
         }
-        
-        public User(){
+
+        public User() {
             this.player = new Player();
             this.socket = new Socket();
         }
@@ -105,7 +105,13 @@ public class Server {
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
                         System.out.println(line);
-                        jsonHandler.handle(request, user);
+                        if (request.get("type").getAsString().equals("signout")) {
+                            removeFromOnlinePlayers(user.getPlayer().getId());
+                            stop();
+                        } else {
+                            jsonHandler.handle(request, user);
+                        }
+
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -130,15 +136,19 @@ public class Server {
     public void removeFromOnlinePlayers(int id) {
         onlinePlayers.remove(id);
     }
-    
-    public boolean isOnlinePlayer(Player playerToCheck){
+
+    public void removeFromUnloggedInUsers(Socket socket) {
+        unloggedInUsers.remove(socket);
+    }
+
+    public boolean isOnlinePlayer(Player playerToCheck) {
         if (onlinePlayers.containsKey(playerToCheck.getId())) {
             return true;
         } else {
             return false;
         }
     }
-    
+
     public JsonArray getInvitationsPlayersAsJson() {
         JsonArray invitationPlayers = new JsonArray();
         playersInvitations.forEach((key, value) -> {
@@ -146,29 +156,29 @@ public class Server {
         });
         return invitationPlayers;
     }
-    
+
     public void addToInvitationsPlayers(Player firstPlayer, Player secondPlayer) {
         int firstPlayerID = firstPlayer.getId();
         int secondPlayerID = secondPlayer.getId();
-        
+
         playersInvitations.put(firstPlayerID, firstPlayer);
         playersInvitations.put(secondPlayerID, secondPlayer);
     }
-    
+
     public void removeFromInvitedPlayers(int firstPlayerID, int secondPlayerID) {
         playersInvitations.remove(firstPlayerID);
         playersInvitations.remove(secondPlayerID);
     }
-    
-    public boolean isBusyPlayer(Player playerToCheck){
+
+    public boolean isBusyPlayer(Player playerToCheck) {
         if (playersInvitations.containsKey(playerToCheck.getId())) {
             return true;
         } else {
             return false;
         }
     }
-    
-    public boolean isFreePlayer(Player playerToCheck){
+
+    public boolean isFreePlayer(Player playerToCheck) {
         if (!playersInvitations.containsKey(playerToCheck.getId())) {
             return true;
         } else {

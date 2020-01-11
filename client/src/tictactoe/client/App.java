@@ -95,13 +95,23 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
         primaryStage.setOnCloseRequest(e -> {
+            JsonObject jsonObject = new JsonObject();
+            JsonObject data = new JsonObject();
+            jsonObject.addProperty("type", "signout");
+
+            try {
+                dataOutputStream.writeUTF(jsonObject.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
             Platform.exit();
             System.exit(0);
         });
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
-        mainScene = new Scene(screens.get("playWithComputerHARDGameBoard"), 1350, 700);
+        mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();
