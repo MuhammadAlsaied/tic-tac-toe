@@ -5,8 +5,12 @@
  */
 package tictactoe.client.gui;
 
+import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,6 +29,7 @@ import tictactoe.client.App;
  * @author sabreen
  */
 public class GameBoard extends Pane {
+
     private App app;
     boolean[] textLabelflag;
     Random rand;
@@ -33,8 +38,8 @@ public class GameBoard extends Pane {
     String line;
     Vector<Label> l = new Vector<>();
 
-    public  GameBoard(App app) {
-         for (int i = 0; i < 9; i++) {
+    public GameBoard(App app) {
+        for (int i = 0; i < 9; i++) {
             l.add(new Label("_"));
         }
         flag = true;
@@ -96,7 +101,6 @@ public class GameBoard extends Pane {
         hbox.setLayoutX(70);
         hbox.setLayoutY(15);
 
-
         TextArea ta = new TextArea(" ");
         ta.setId("ta");
         ta.setLayoutX(890);
@@ -115,21 +119,31 @@ public class GameBoard extends Pane {
         Button send = new Button();
         send.setText("send");
         send.setId("send");
-         send.setOnAction(new EventHandler<ActionEvent>() {
+        send.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                
+                JsonObject response = new JsonObject();
+                JsonObject data = new JsonObject();
+                response.add("data", data);
+                response.addProperty("type", "Message_sent");
+                data.addProperty("msg", ta.getText());
+                try {
+                    app.getDataOutputStream().writeUTF(response.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
             }
         });
         send.setLayoutX(1140);
         send.setLayoutY(600);
-        getChildren().addAll(stack, hbox,text, ta, send);
+        getChildren().addAll(stack, hbox, text, ta, send);
         stack.setId("stacklolo");
 
     }
-    private void reetGame()
-    {
+
+    private void reetGame() {
         for (int i = 0; i < 9; i++) {
             l.get(i).setText("_");
         }
@@ -137,8 +151,9 @@ public class GameBoard extends Pane {
             l.get(i).setId("label");
         }
         userflag = true;
-        textLabelflag = new boolean[] {true, true, true, true, true, true, true, true, true};
+        textLabelflag = new boolean[]{true, true, true, true, true, true, true, true, true};
     }
+
     private void checkWinner() {
         for (x = 0; x < 8; x++) {
             line = null;
