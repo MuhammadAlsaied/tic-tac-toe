@@ -43,7 +43,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         for (int i = 0; i < 9; i++) {
             l.add(new Label("_"));
         }
-        turn = true;
+        turn = false;
         rand = new Random();
         counter = 0;
         resetGame();
@@ -60,7 +60,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                 l.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        if (turn && textLabelflag[x]) {
+                        if (turn && l.get(x).getText()== "_") {
                             l.get(x).setText("X");
                             l.get(x).setId("x");
                             turn = false;
@@ -105,7 +105,6 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         send.setText("send");
         send.setId("send");
         send.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent event) {
                 JsonObject response = new JsonObject();
@@ -126,15 +125,18 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         send.setLayoutY(600);
         getChildren().addAll(stack, hbox, text, ta, send);
         stack.setId("stacklolo");
+        if(!turn)
+            cpu();
     }
     
 
     void cpu() {
         PauseTransition pause = new PauseTransition(Duration.seconds(.5));
         pause.setOnFinished((ActionEvent event) -> {
-            if (counter == 1 && textLabelflag[4]) {
+            if (counter == 0 && textLabelflag[4]) {
                 cpupos = 4;
-            } else {
+            }
+            else {
                 while (!textLabelflag[cpupos] && counter < 9) {
                     cpupos = generateCpuPos();
                 }
@@ -155,10 +157,10 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         int index = 4;
         switch (line) {
             case "X__":
-                index = index2;
+                index = index3;
                 break;
             case "__X":
-                index = index2;
+                index = index1;
                 break;
             case "_X_":
                 index = index3;
@@ -356,7 +358,10 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         }
         textLabelflag = new boolean[]{true, true, true, true, true, true, true, true, true};
         counter = 0;
+        turn = false;
         fullBoardFlag = true;
+        if(!turn)
+            cpu();
 
     }
 
