@@ -7,11 +7,9 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -24,7 +22,6 @@ import tictactoe.client.App;
 public class SigninScreen extends StackPane {
     
     private final App app;
-    
     public SigninScreen(App app) {
         this.app = app;
         

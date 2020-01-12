@@ -1,8 +1,5 @@
 package tictactoe.client.gui;
 
-import javafx.application.Application;
-import static javafx.application.Application.launch;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
@@ -12,8 +9,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import tictactoe.client.App;
@@ -45,9 +40,17 @@ public class YouWinScreen extends StackPane {
         Button lose = new Button("You Are The Winner");
         lose.setId("lose");
         lose.setEffect(e);
+        //=========Back button===============
         ToggleButton back = new ToggleButton("Back");
         back.setPrefSize(180, 20);
         back.setId("back");
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                app.setScreen("levels");
+            }
+        });
+        //=========Play again button===========
         ToggleButton playAgain = new ToggleButton("Play Again");
         playAgain.setOnAction(new EventHandler<ActionEvent>() {
             @Override

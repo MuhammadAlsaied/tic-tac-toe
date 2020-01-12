@@ -72,19 +72,19 @@
     -fx-border-radius: 22px;
     -fx-alignment: BASELINE_CENTER;
     -fx-background-radius: 22px;
-    -fx-font-size: 28px;
+    -fx-font-size: 15pt;
     -fx-text-fill:#FFFFFF;
 
 }
-#compButton{
+pve{
     -fx-background-color: linear-gradient(to left, rgba(255, 255, 255, 0.4018) -3.46%, rgba(255, 211, 105, 0.82) 19.17%, rgba(153, 192, 86, 0.82) 45.04%, rgba(153, 192, 86, 0.82) 78.45%, rgba(255, 255, 255, 0.4838) 100%);
     -fx-border-radius: 22px;
     -fx-alignment: BASELINE_CENTER;
     -fx-background-radius: 22px;
-    -fx-font-size: 28px;
+    -fx-font-size: 15pt;
     -fx-text-fill:#FFFFFF
 }
-#compButton:selected{
+pve:selected{
     -fx-background-color:
         -fx-focus-color,
         linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
@@ -104,7 +104,7 @@
 }
 #MainScreenPane
 {
-    -fx-background-image: url(/images/background.png);
+    -fx-background-image: url(/images/bg.png);
     -fx-background-repeat: stretch;   
     -fx-background-size: cover;
    -fx-background-position: center center;
@@ -566,7 +566,7 @@ ToggleButton{
 }
 ToggleButton:focused {
     -fx-background-color:
-        -fx-focus-color,
+       /* -fx-focus-color,*/
         linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
         linear-gradient(to bottom, derive(-fx-color,-15%) 0%, derive(-fx-color,-10%) 50%, derive(-fx-color,-8%) 98%, derive(-fx-color,-12%) 100%);
     -fx-border-size: 10px;
@@ -703,11 +703,11 @@ Circle{
     -fx-font-size: 180px;
 }
 #x{
-    -fx-font-size: 180px;
+    -fx-font-size: 150px;
     -fx-text-fill: #FFD369;
 }
 #o{
-    -fx-font-size: 180px;
+    -fx-font-size: 150px;
     -fx-text-fill: #FFFFFF;
 }
 
@@ -723,4 +723,110 @@ TextField
 {
     -fx-font-size: 32;
 
+}
+#GridMain{
+    -fx-border-color: #000000;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+#scrollPane1{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+#scrollPane1 > .viewport{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+#send{
+    -fx-background-color: linear-gradient(to left, rgba(255, 255, 255, 0.4018) -3.46%, rgba(255, 211, 105, 0.82) 19.17%, rgba(153, 192, 86, 0.82) 45.04%, rgba(153, 192, 86, 0.82) 78.45%, rgba(255, 255, 255, 0.4838) 100%);
+    -fx-border-radius: 22px;
+    -fx-alignment: BASELINE_CENTER;
+    -fx-background-radius: 22px;
+    -fx-font-size: 20px;
+    -fx-text-fill:#FFFFFF;
+    
+}
+#send:selected {
+    -fx-background-color:
+        -fx-focus-color,
+        linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
+        linear-gradient(to bottom, derive(-fx-color,-15%) 0%, derive(-fx-color,-10%) 50%, derive(-fx-color,-8%) 98%, derive(-fx-color,-12%) 100%);
+    -fx-border-size: 10px;
+    -fx-border-color: #000000;
+    -fx-text-fill:#000000;
+}
+
+
+
+.text-area {
+    -fx-background-color: rgba(0,0,0,0.5);
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.text-area   {
+    -fx-text-fill:white;
+    -fx-font-size: 16px;
+}
+#pane
+{
+    -fx-background-image: url(/images/back2.png);
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 1960 1200;
+    -fx-background-position: center center;
+    -fx-font-family: "Walter Turncoat";
+    -fx-font-style: normal;
+    -fx-font-weight: normal;
+    -fx-font-size: 30px;
+    -fx-line-height: 42px;
+    -fx-display: flex;
+    -fx-align-items: flex-end;
+    -fx-text-transform: capitalize;
+    -fx-text-fill: #FFFFFF;
+    -fx-color: #FFFFFF;
+}
+#scrolPanePlaylistScreen{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+#scrolPanePlaylistScreen > .viewport{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+#ChallengePlayerList{
+    -fx-background-color: linear-gradient(to left, rgba(255, 255, 255, 0.4018) -3.46%, rgba(255, 211, 105, 0.82) 19.17%, rgba(153, 192, 86, 0.82) 45.04%, rgba(153, 192, 86, 0.82) 78.45%, rgba(255, 255, 255, 0.4838) 100%);
+    -fx-border-radius: 22px;
+    -fx-alignment: BASELINE_CENTER;
+    -fx-background-radius: 22px;
+    -fx-font-size: 20px;
+    -fx-text-fill:#FFFFFF;
+}
+#ChallengePlayerList:selected {
+    -fx-background-color:
+        -fx-focus-color,
+        linear-gradient(to bottom, derive(-fx-color,-22%) 0%, derive(-fx-color,-15%) 100%),
+        linear-gradient(to bottom, derive(-fx-color,-15%) 0%, derive(-fx-color,-10%) 50%, derive(-fx-color,-8%) 98%, derive(-fx-color,-12%) 100%);
+    -fx-border-size: 10px;
+    -fx-border-color: #000000;
+    -fx-text-fill:#000000;
 }

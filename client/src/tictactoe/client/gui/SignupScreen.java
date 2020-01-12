@@ -111,7 +111,7 @@ public class SignupScreen extends StackPane {
 
         
     }
-//        =====================Signup methods==============================
+//        ========================Signup methods===========================
         public void showSignupFailedPopup(){
             app.showAlert("Signup failed", "This email is already registered, please enter another email.");
             Platform.runLater(new Runnable() {
