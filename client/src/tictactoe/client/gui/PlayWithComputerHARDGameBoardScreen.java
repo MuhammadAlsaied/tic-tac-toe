@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package tictactoe.client.gui;
-
 import java.util.Random;
 import java.util.Vector;
 import javafx.animation.PauseTransition;
