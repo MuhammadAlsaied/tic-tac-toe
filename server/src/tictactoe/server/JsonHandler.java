@@ -50,7 +50,6 @@ public class JsonHandler {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-
         }
     }
 
@@ -92,8 +91,10 @@ public class JsonHandler {
         } else {
             user.setPlayer(player);
             JsonArray onlineUsers = server.getOnlinePlayersAsJson();
+            handleNewOnlinePlayer(player);
             server.addToOnlinePlayers(player.getId(), user);
             server.removeFromUnloggedInUsers(user.getSocket());
+
             response.addProperty("type", "signin-success");
             data.add("online-players", onlineUsers);
             data.add("my-data", player.asJson());
@@ -135,4 +136,14 @@ public class JsonHandler {
 
         return response;
     }
+
+    private void handleNewOnlinePlayer(Player newOnlineUser) {
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("data", data);
+        response.addProperty("type", "online-player");
+        data.add("player", newOnlineUser.asJson());
+        server.sendToAllOnlineUsers(response);
+    }
+
 }

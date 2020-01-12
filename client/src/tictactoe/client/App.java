@@ -23,6 +23,8 @@ public class App extends Application {
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
     private JsonHandler jsonHandler;
+    private boolean isActive = true;
+    private Thread th;
 
     public App() {
         jsonHandler = new JsonHandler(this);
@@ -33,13 +35,14 @@ public class App extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new Thread(new Runnable() {
+        th = new Thread(new Runnable() {
             @Override
             public void run() {
-
-                while (true) {
+                while (isActive) {
                     try {
+                        
                         String line = dataInputStream.readUTF();
+                        System.out.println(line);
                         if (line != null) {
                             JsonObject obj = JsonParser.parseString(line).getAsJsonObject();
                             System.out.println(obj);
@@ -51,7 +54,8 @@ public class App extends Application {
                 }
 
             }
-        }).start();
+        });
+        th.start();
     }
 
     public DataOutputStream getDataOutputStream() {
@@ -94,14 +98,21 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
+        
+      
         primaryStage.setOnCloseRequest(e -> {
+            isActive = false;
+            th.stop();
             JsonObject jsonObject = new JsonObject();
             JsonObject data = new JsonObject();
             jsonObject.addProperty("type", "signout");
 
             try {
                 dataOutputStream.writeUTF(jsonObject.toString());
-            } catch (IOException ex) {
+                //dataInputStream.close();
+                dataOutputStream.close();
+                s.close();
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
 

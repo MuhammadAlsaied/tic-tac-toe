@@ -86,6 +86,7 @@ public class Server {
         private final Socket socket;
         private DataInputStream dataInputStream;
         private User user;
+        private boolean isActive = true;
 
         public ClientThread(User user) {
             this.socket = user.socket;
@@ -99,19 +100,24 @@ public class Server {
 
         @Override
         public void run() {
-            while (true) {
+            System.out.println("isActive=" + isActive);
+            while (isActive) {
                 try {
                     String line = dataInputStream.readUTF();
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
                         System.out.println(line);
                         if (request.get("type").getAsString().equals("signout")) {
-                            removeFromOnlinePlayers(user.getPlayer().getId());
+                            isActive = false;
+                            dataInputStream.close();
+                            user.dataOutputStream.close();
+                            unloggedInUsers.remove(user.socket);
+                            socket.close();
+                            handleNewOfflinePlayer(user.getPlayer());
                             stop();
                         } else {
                             jsonHandler.handle(request, user);
                         }
-
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -184,6 +190,30 @@ public class Server {
         } else {
             return false;
         }
+    }
+
+    public void sendToAllOnlineUsers(JsonObject response) {
+        onlinePlayers.forEach((k, v)
+                -> {
+            try {
+                v.dataOutputStream.writeUTF(response.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    private void handleNewOfflinePlayer(Player newOfflineUser) {
+        if (newOfflineUser == null) {
+            return;
+        }
+        removeFromOnlinePlayers(newOfflineUser.getId());
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("data", data);
+        response.addProperty("type", "offline-player");
+        data.addProperty("player-id", newOfflineUser.getId());
+        sendToAllOnlineUsers(response);
     }
 
     public static void main(String[] args) {
