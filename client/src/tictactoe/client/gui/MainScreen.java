@@ -17,44 +17,39 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import tictactoe.client.App;
 
-/**
- *
- * @author KeR
- */
 public class MainScreen extends Pane {
 
     public MainScreen(App app) {
-        //===================pve button and its event handler================
-        //PvE: Player vs environment (refers to computer/AI)
-        ToggleButton pve = new ToggleButton("play with computer");
-        pve.setPrefSize(250, 50);
-        pve.setId("pve");//back
-        pve.setOnAction(new EventHandler<ActionEvent>() {
+
+        ToggleButton challengeComp = new ToggleButton("CHALLENGE COMPUTER");
+        challengeComp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 app.setScreen("levels");
             }
         });
-        //===================pvp button and its event handler===============
-        //PvP: Player vs Player 
-        ToggleButton pvp = new ToggleButton("play with other player");
-        pvp.setPrefSize(250, 50);
-        pvp.setId("playerButton");//playAgain
-        //======================================================================
-        HBox buttonBox = new HBox(20, pve, pvp);
+
+        challengeComp.setPrefSize(280, 50);
+        challengeComp.setId("compButton");
+        ToggleButton challengePlayer = new ToggleButton("CHALLENGE PLAYER");
+        challengePlayer.setPrefSize(280, 50);
+        challengePlayer.setId("playerButton");
+        HBox buttonBox = new HBox(20, challengeComp, challengePlayer);
         buttonBox.setAlignment(Pos.CENTER_LEFT);
         buttonBox.setLayoutX(40);
         buttonBox.setLayoutY(350);
         GridPane gr = new GridPane();
-        gr.setId("MainScreenGridPane");
+        gr.setId("GridMain");
+        gr.setHgap(50);
 
         for (int i = 0; i < 10; i++) {
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
             Label score2 = new Label("500");
-            score2.setId("scoreLabelGridPane");
+            score2.setId("scoreLabel");
             Label imglabel2 = new Label();
             Image img2 = new Image(getClass().getResourceAsStream("/images/k.png"));
             imglabel2.setGraphic(new ImageView(img2));
@@ -66,7 +61,7 @@ public class MainScreen extends Pane {
             gr.add(imglabel2, 1, i);
         }
 
-        gr.setPrefSize(495.2, 200.0);
+        gr.setPrefSize(495.2, 250.0);
         Button send = new Button();
         send.setText("send");
         send.setOnAction(new EventHandler<ActionEvent>() {
@@ -77,39 +72,51 @@ public class MainScreen extends Pane {
             }
         });
         send.setId("sendChatMainScreen");
-        send.setLayoutX(1060);
+        send.setLayoutX(1000);
         send.setLayoutY(600);
-        gr.setStyle("-fx-background-color: rgba(0, 0, 0, .8); -fx-background-radius: 10;");
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setId("scrollPaneMainScreen");
-        scrollPane.setContent(gr);
-        scrollPane.pannableProperty().set(true);
 
-        scrollPane.fitToWidthProperty().set(true);
+        ScrollPane scrollPane = new ScrollPane(gr);
+        scrollPane.setId("scrollPane1");
+        scrollPane.setFocusTraversable(false);
 
         scrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
         scrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
 
-        HBox hBox1 = new HBox();
-        hBox1.getChildren().add(scrollPane);
-        hBox1.setAlignment(Pos.TOP_RIGHT);
         VBox v = new VBox();
-        v.getChildren().add(hBox1);
+        v.getChildren().add(scrollPane);
         v.setLayoutX(850);
         v.setLayoutY(0);
-        TextArea ta = new TextArea("sasas");
+        TextArea ta = new TextArea(" ");
+        ta.setId("ta");
         ta.setLayoutX(730);
         ta.setLayoutY(400);
         ta.setMaxWidth(220.0);
         ta.setMaxHeight(150.0);
-        TextArea text = new TextArea("dhgdjdkd");
+
+        TextArea text = new TextArea("");
+        
+        text.setPromptText("Enter your Msg ");
         text.setLayoutX(730);
         text.setLayoutY(600);
         text.setMaxWidth(220.0);
         text.setMaxHeight(10.5);
-        getChildren().addAll(buttonBox, text, ta, send, v);
-        setId("MainScreenPane");
 
+        Image img2 = new Image(getClass().getResourceAsStream("/images/k.png"));
+        Label labelk = new Label();
+        labelk.setGraphic(new ImageView(img2));
+
+       
+        labelk.setLayoutX(700);
+        labelk.setLayoutY(20);
+        labelk.setMaxSize(50.0, 50.0);
+
+        labelk.setFont(new Font("Arial", 24));
+
+        getChildren().addAll(buttonBox, text, ta, send, v, labelk);
+        setId("MainScreenPane");
     }
+
+  
+
 }
