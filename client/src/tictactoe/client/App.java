@@ -71,8 +71,8 @@ public class App extends Application {
         screens.put("playWithComputerNormalGameBoard", new PlayWithComputerNormalGameBoardScreen(this));
         screens.put("playWithComputerHARDGameBoard", new PlayWithComputerHARDGameBoardScreen(this));
         screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
-        screens.put("gameBoard", new GameBoard(this));
         screens.put("playerList", new PlayerListScreen(this));
+        screens.put("MultiOnlinePlayers", new MultiOnlinePlayers(this));
 
     }
 
@@ -101,12 +101,11 @@ public class App extends Application {
             JsonObject data = new JsonObject();
             jsonObject.addProperty("type", "signout");
 
-            try {
-                dataOutputStream.writeUTF(jsonObject.toString());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
+//            try {
+//                dataOutputStream.writeUTF(jsonObject.toString());
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
             Platform.exit();
             System.exit(0);
         });

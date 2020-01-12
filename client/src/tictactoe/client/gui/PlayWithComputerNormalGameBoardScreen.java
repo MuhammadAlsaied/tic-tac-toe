@@ -5,15 +5,21 @@
  */
 package tictactoe.client.gui;
 
+import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import tictactoe.client.App;
 
@@ -21,7 +27,7 @@ import tictactoe.client.App;
  *
  * @author KeR
  */
-public class PlayWithComputerNormalGameBoardScreen extends GridPane {
+public class PlayWithComputerNormalGameBoardScreen extends Pane {
 
     private final App app;
     Random rand;
@@ -41,10 +47,12 @@ public class PlayWithComputerNormalGameBoardScreen extends GridPane {
         rand = new Random();
         counter = 0;
         resetGame();
-        setPadding(new Insets(40, 0, 0, 50));
-        setHgap(150);
-        setVgap(-20);
-        setPrefSize(700, 700);
+        GridPane stack = new GridPane();
+        stack.setId("stack");
+        stack.setPadding(new Insets(40, 0, 0, 50));
+        stack.setHgap(150);
+        stack.setVgap(-20);
+        stack.setPrefSize(750, 700);
         checkWinner();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -66,9 +74,58 @@ public class PlayWithComputerNormalGameBoardScreen extends GridPane {
                         checkWinner();
                     }
                 });
-                add(l.get(x), j, i);
+                stack.add(l.get(x), j, i);
             }
         }
+        //
+        setId("stackGameboard");
+        Label label1 = new Label("player1");
+        Label label2 = new Label("player2");
+
+        HBox hbox = new HBox(380, label1, label2);
+        hbox.setLayoutX(70);
+        hbox.setLayoutY(15);
+
+        TextArea ta = new TextArea(" ");
+        ta.setId("ta");
+        ta.setLayoutX(890);
+        ta.setLayoutY(400);
+        ta.setMaxWidth(220.0);
+        ta.setMaxHeight(150.0);
+
+        TextArea text = new TextArea("");
+        text.setId("text");
+        text.setPromptText("Enter your Msg ");
+        text.setLayoutX(890);
+        text.setLayoutY(600);
+        text.setMaxWidth(220.0);
+        text.setMaxHeight(10.5);
+
+        Button send = new Button();
+        send.setText("send");
+        send.setId("send");
+        send.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                JsonObject response = new JsonObject();
+                JsonObject data = new JsonObject();
+                response.add("data", data);
+                response.addProperty("type", "Message_sent");
+                data.addProperty("msg", ta.getText());
+                try {
+                    app.getDataOutputStream().writeUTF(response.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+            
+        });
+        send.setLayoutX(1140);
+        send.setLayoutY(600);
+        getChildren().addAll(stack, hbox, text, ta, send);
+        stack.setId("stacklolo");
     }
 
     void cpu() {
