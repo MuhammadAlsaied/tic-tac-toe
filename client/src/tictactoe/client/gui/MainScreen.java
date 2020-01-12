@@ -23,13 +23,19 @@ import tictactoe.client.App;
 public class MainScreen extends Pane {
 
     public MainScreen(App app) {
-        ToggleButton Acccept = new ToggleButton("CHALLENGE COMPUTER");
-        Acccept.setPrefSize(280, 50);
-        Acccept.setId("compButton");
-        ToggleButton Decline = new ToggleButton("CHALLENGE PLAYER");
-        Decline.setPrefSize(280, 50);
-        Decline.setId("playerButton");
-        HBox buttonBox = new HBox(20, Acccept, Decline);
+        ToggleButton challengeComp = new ToggleButton("CHALLENGE COMPUTER");
+        challengeComp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                app.setScreen("levels");
+            }
+        });
+        challengeComp.setPrefSize(280, 50);
+        challengeComp.setId("compButton");
+        ToggleButton challengePlayer = new ToggleButton("CHALLENGE PLAYER");
+        challengePlayer.setPrefSize(280, 50);
+        challengePlayer.setId("playerButton");
+        HBox buttonBox = new HBox(20, challengeComp, challengePlayer);
         buttonBox.setAlignment(Pos.CENTER_LEFT);
         buttonBox.setLayoutX(40);
         buttonBox.setLayoutY(350);

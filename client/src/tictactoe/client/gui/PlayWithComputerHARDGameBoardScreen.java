@@ -172,6 +172,15 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
             case "_XX":
                 index = index1;
                 break;
+            case "OO_":
+                index = index3;
+                break;
+            case "O_O":
+                index = index2;
+                break;
+            case "_OO":
+                index = index1;
+                break;
         }
         System.out.println(index);
         return index;
@@ -180,100 +189,156 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
     private int generateCpuPos() {
         String lineGenerator;
         int cpu = rand.nextInt(9);
-        for (int x = 0; x < 16; x++) {
+        for (int x = 0; x < 24; x++) {
             lineGenerator = null;
             switch (x) {
                 case 0:
                     lineGenerator = l.get(0).getText() + l.get(1).getText() + l.get(2).getText();
-                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                    if (lineGenerator.equals("OO_") || lineGenerator.equals("_OO") || lineGenerator.equals("O_O")) {
                         cpu = checkCpuPos(lineGenerator, 0, 1, 2);
+                        return cpu;
                     }
                     break;
                 case 1:
                     lineGenerator = l.get(3).getText() + l.get(4).getText() + l.get(5).getText();
-                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                    if (lineGenerator.equals("OO_") || lineGenerator.equals("_OO") || lineGenerator.equals("O_O")) {
                         cpu = checkCpuPos(lineGenerator, 3, 4, 5);
+                        return cpu;
                     }
                     break;
                 case 2:
                     lineGenerator = l.get(6).getText() + l.get(7).getText() + l.get(8).getText();
-                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                    if (lineGenerator.equals("OO_") || lineGenerator.equals("_OO") || lineGenerator.equals("O_O")) {
                         cpu = checkCpuPos(lineGenerator, 6, 7, 8);
+                        return cpu;
                     }
                     break;
                 case 3:
                     lineGenerator = l.get(0).getText() + l.get(3).getText() + l.get(6).getText();
-                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                    if (lineGenerator.equals("OO_") || lineGenerator.equals("_OO") || lineGenerator.equals("O_O")) {
                         cpu = checkCpuPos(lineGenerator, 0, 3, 6);
+                        return cpu;
                     }
                     break;
                 case 4:
                     lineGenerator = l.get(1).getText() + l.get(4).getText() + l.get(7).getText();
-                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                    if (lineGenerator.equals("OO_") || lineGenerator.equals("_OO") || lineGenerator.equals("O_O")) {
                         cpu = checkCpuPos(lineGenerator, 1, 4, 7);
+                        return cpu;
                     }
                     break;
                 case 5:
                     lineGenerator = l.get(2).getText() + l.get(5).getText() + l.get(8).getText();
-                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                    if (lineGenerator.equals("OO_") || lineGenerator.equals("_OO") || lineGenerator.equals("O_O")) {
                         cpu = checkCpuPos(lineGenerator, 2, 5, 8);
+                        return cpu;
                     }
                     break;
                 case 6:
                     lineGenerator = l.get(0).getText() + l.get(4).getText() + l.get(8).getText();
-                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                    if (lineGenerator.equals("OO_") || lineGenerator.equals("_OO") || lineGenerator.equals("O_O")) {
                         cpu = checkCpuPos(lineGenerator, 0, 4, 8);
+                        return cpu;
                     }
                     break;
                 case 7:
                     lineGenerator = l.get(2).getText() + l.get(4).getText() + l.get(6).getText();
-                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                    if (lineGenerator.equals("OO_") || lineGenerator.equals("_OO") || lineGenerator.equals("O_O")) {
                         cpu = checkCpuPos(lineGenerator, 2, 4, 6);
+                        return cpu;
                     }
                     break;
                 case 8:
                     lineGenerator = l.get(0).getText() + l.get(1).getText() + l.get(2).getText();
-                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
                         cpu = checkCpuPos(lineGenerator, 0, 1, 2);
                     }
                     break;
                 case 9:
                     lineGenerator = l.get(3).getText() + l.get(4).getText() + l.get(5).getText();
-                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
                         cpu = checkCpuPos(lineGenerator, 3, 4, 5);
                     }
                     break;
                 case 10:
                     lineGenerator = l.get(6).getText() + l.get(7).getText() + l.get(8).getText();
-                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
                         cpu = checkCpuPos(lineGenerator, 6, 7, 8);
                     }
                     break;
                 case 11:
                     lineGenerator = l.get(0).getText() + l.get(3).getText() + l.get(6).getText();
-                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
                         cpu = checkCpuPos(lineGenerator, 0, 3, 6);
                     }
                     break;
                 case 12:
                     lineGenerator = l.get(1).getText() + l.get(4).getText() + l.get(7).getText();
-                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
                         cpu = checkCpuPos(lineGenerator, 1, 4, 7);
                     }
                     break;
                 case 13:
                     lineGenerator = l.get(2).getText() + l.get(5).getText() + l.get(8).getText();
-                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
                         cpu = checkCpuPos(lineGenerator, 2, 5, 8);
                     }
                     break;
                 case 14:
                     lineGenerator = l.get(0).getText() + l.get(4).getText() + l.get(8).getText();
-                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
                         cpu = checkCpuPos(lineGenerator, 0, 4, 8);
                     }
                     break;
                 case 15:
+                    lineGenerator = l.get(2).getText() + l.get(4).getText() + l.get(6).getText();
+                    if (lineGenerator.equals("X__") || lineGenerator.equals("__X") || lineGenerator.equals("_X_")) {
+                        cpu = checkCpuPos(lineGenerator, 2, 4, 6);
+                    }
+                    break;
+                case 16:
+                    lineGenerator = l.get(0).getText() + l.get(1).getText() + l.get(2).getText();
+                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                        cpu = checkCpuPos(lineGenerator, 0, 1, 2);
+                    }
+                    break;
+                case 17:
+                    lineGenerator = l.get(3).getText() + l.get(4).getText() + l.get(5).getText();
+                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                        cpu = checkCpuPos(lineGenerator, 3, 4, 5);
+                    }
+                    break;
+                case 18:
+                    lineGenerator = l.get(6).getText() + l.get(7).getText() + l.get(8).getText();
+                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                        cpu = checkCpuPos(lineGenerator, 6, 7, 8);
+                    }
+                    break;
+                case 19:
+                    lineGenerator = l.get(0).getText() + l.get(3).getText() + l.get(6).getText();
+                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                        cpu = checkCpuPos(lineGenerator, 0, 3, 6);
+                    }
+                    break;
+                case 20:
+                    lineGenerator = l.get(1).getText() + l.get(4).getText() + l.get(7).getText();
+                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                        cpu = checkCpuPos(lineGenerator, 1, 4, 7);
+                    }
+                    break;
+                case 21:
+                    lineGenerator = l.get(2).getText() + l.get(5).getText() + l.get(8).getText();
+                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                        cpu = checkCpuPos(lineGenerator, 2, 5, 8);
+                    }
+                    break;
+                case 22:
+                    lineGenerator = l.get(0).getText() + l.get(4).getText() + l.get(8).getText();
+                    if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
+                        cpu = checkCpuPos(lineGenerator, 0, 4, 8);
+                    }
+                    break;
+                case 23:
                     lineGenerator = l.get(2).getText() + l.get(4).getText() + l.get(6).getText();
                     if (lineGenerator.equals("XX_") || lineGenerator.equals("X_X") || lineGenerator.equals("_XX")) {
                         cpu = checkCpuPos(lineGenerator, 2, 4, 6);
