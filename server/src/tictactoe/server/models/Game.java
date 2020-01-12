@@ -77,4 +77,12 @@ public class Game {
         return winnerId;
     }
     
+    public String getStatus(){
+        return gameStatus.toString();
+    }
+    
+    public String getCoordinates(){
+        return gameCoordinates.toString();
+    }
+    
 }

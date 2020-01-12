@@ -3,6 +3,7 @@ package tictactoe.server.db;
 import java.sql.*;
 import java.util.Vector;
 import tictactoe.server.Config;
+import tictactoe.server.models.Game;
 import tictactoe.server.models.Player;
 
 /**
@@ -19,7 +20,6 @@ public class DatabaseManager {
     public DatabaseManager() throws ClassNotFoundException, SQLException {
         // Here to establish the connecection once creating an instance.
         establishConnection();
-
     }
 
     private void establishConnection() throws ClassNotFoundException {
@@ -116,6 +116,33 @@ public class DatabaseManager {
             return playerSignIn;
         }
         return playerSignIn;
+    }
+    
+    public boolean saveGame(Game gameToSave) throws ClassNotFoundException{
+        boolean success = false;
+        Integer playerXId = gameToSave.getPlayerX().getId();
+        Integer playerOId = gameToSave.getPlayerO().getId();
+        String gameStatus = gameToSave.getStatus();
+        String coordinatesToSave = gameToSave.getCoordinates();
+        
+        try{
+            establishConnection();
+        
+            PreparedStatement preparedStatment = connection.prepareStatement("INSERT INTO game (player1_id, player2_id, session_status) VALUES (?, ?, ?, ?);");
+            preparedStatment.setString(1, playerXId.toString());
+            preparedStatment.setString(2, playerOId.toString());
+            preparedStatment.setString(3, gameStatus);
+            //preparedStatment.setString(4, coordinatesToSave);
+            preparedStatment.executeUpdate();
+            
+            preparedStatment.close();
+            connection.close();
+            success = true;
+        } catch (Exception ex) {
+                ex.printStackTrace();
+        }
+        
+        return success;
     }
 
     /* to test the database connetion and getting some data.
