@@ -1,8 +1,5 @@
 package tictactoe.client.gui;
 
-import javafx.application.Application;
-import static javafx.application.Application.launch;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
@@ -12,9 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import tictactoe.client.App;
-import static javafx.application.Application.launch;
 
 /**
  *
@@ -27,11 +22,9 @@ public class InvitationScreen extends StackPane {
 
         Region rec = new Region();
         rec.setPrefSize(498, 460);
-        rec.setId("rec");
+        rec.setId("regionInvitationScreen");
 
-        Region over = new Region();
-        over.setId("over");
-        over.setPrefSize(130, 130);
+
 
         DropShadow e = new DropShadow();
         e.setOffsetX(0.0f);
@@ -41,20 +34,19 @@ public class InvitationScreen extends StackPane {
         String str = new String("Kareem");
 
         Button lose = new Button(str + " Challenges you");
-        lose.setPrefSize(250, 20);
 
-        lose.setId("lose");
+        lose.setId("playerWantsToChallengeYou");
         lose.setEffect(e);
         ToggleButton Acccept = new ToggleButton("Acccept");
         Acccept.setPrefSize(200, 20);
-        Acccept.setId("back");
+        Acccept.setId("acceptInvitation");
         ToggleButton Decline = new ToggleButton("Decline");
         Decline.setPrefSize(200, 20);
-        Decline.setId("playAgain");
+        Decline.setId("declineInvitation");
         HBox buttonBox = new HBox(20, Acccept, Decline);
 
         VBox vbox = new VBox(100, lose, buttonBox);
-        vbox.setId("vbox");
+        vbox.setId("vboxInvitationScreen");
 
         getChildren().addAll(rec, vbox);
         setId("stackInvitation");
