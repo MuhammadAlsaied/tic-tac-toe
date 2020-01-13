@@ -3,6 +3,8 @@ package tictactoe.server.db;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import tictactoe.server.Config;
 import tictactoe.server.models.Game;
 import tictactoe.server.models.Player;
@@ -177,7 +179,43 @@ public class DatabaseManager {
         return allPlayers;
     }
     
-    
+    // Done and tested
+    public Player updatePlayerScore(int id, int additionalPoints) throws ClassNotFoundException {
+        Player updatedPlayer = new Player();
+        PreparedStatement pst;
+        int totalPoints = 0;
+        
+        try {
+            establishConnection();
+            statment = connection.createStatement();
+            resultSet = statment.executeQuery("SELECT * FROM player WHERE id="+id+";");
+            if (resultSet.next()){
+                updatedPlayer.setId(resultSet.getInt("id"));
+                updatedPlayer.setFirstName(resultSet.getString("first_name"));
+                updatedPlayer.setLastName(resultSet.getString("last_name"));
+                updatedPlayer.setEmail(resultSet.getString("email"));
+                totalPoints = resultSet.getInt("points");
+            }
+            
+            resultSet.close();
+            statment.close();
+            totalPoints += additionalPoints;
+            updatedPlayer.setPoints(totalPoints);
+            
+            pst = connection.prepareStatement("UPDATE player SET points=? WHERE id=?");
+            pst.setInt(1, totalPoints);           
+            pst.setInt(2, id);
+            
+            pst.executeUpdate();
+            pst.close();
+            connection.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return updatedPlayer;
+    }
     
     /* to test the database connetion and getting some data.
     public void check(){
