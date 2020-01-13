@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -40,10 +42,10 @@ public class SignupScreen extends StackPane {
         TextField nickName = new TextField();
         nickName.setPromptText("Please Enter your Nickname");
         nickName.setId("name");
-        TextField password = new PasswordField();
+        PasswordField password = new PasswordField();
         password.setPromptText("Please Enter your Password");
         password.setId("name");
-        TextField repassword = new PasswordField();
+        PasswordField repassword = new PasswordField();
         repassword.setPromptText("Please ReEnter your Password");
         repassword.setId("name");
         TextField email = new TextField();
@@ -63,6 +65,14 @@ public class SignupScreen extends StackPane {
         signup.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+                if (!email.getText().matches(regex)) {
+                    Alert emailValid = new Alert(Alert.AlertType.INFORMATION);
+                    emailValid.setTitle("Email Validation");
+                    emailValid.setHeaderText("");
+                    emailValid.setContentText("Email Must Be User@email.com!");
+                    emailValid.show();
+                }
                 if (password.getText().isEmpty()) {
                     Alert a = new Alert(Alert.AlertType.INFORMATION);
                     a.setTitle("Password Validation");
@@ -101,11 +111,18 @@ public class SignupScreen extends StackPane {
         rec.prefHeight(600);
         rec.prefWidth(450);
         rec.setId("rec");
-        VBox box1 = new VBox(30, repassword, signup);
-        VBox box = new VBox(20, label1, name, nickName, email, password, box1);
+        Label alreadyRegistered = new Label("Already Registered?");
+        alreadyRegistered.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                app.setScreen("signin");
+            }
+        });
+        alreadyRegistered.setCursor(Cursor.HAND);
+        VBox box1 = new VBox(25, repassword, signup);
+        VBox box = new VBox(18, label1, name, nickName, email, password, box1, alreadyRegistered);
         box.setId("vbox");
         box1.setId("vbox");
-        StackPane root = new StackPane();
         setId("stack");
         getChildren().addAll(rec, box);
 

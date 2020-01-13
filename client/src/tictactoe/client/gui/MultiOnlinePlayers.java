@@ -79,6 +79,7 @@ public class MultiOnlinePlayers extends Pane {
                             turn = false;
                             counter++;
                             stack.requestLayout();
+                            sendMoveToServer(x);
                             checkWinner();
                         }
                     }
