@@ -60,7 +60,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                 l.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        if (turn && l.get(x).getText()== "_") {
+                        if (turn && l.get(x).getText() == "_") {
                             l.get(x).setText("X");
                             l.get(x).setId("x");
                             turn = false;
@@ -119,24 +119,23 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                 }
 
             }
-            
+
         });
         send.setLayoutX(1140);
         send.setLayoutY(600);
         getChildren().addAll(stack, hbox, text, ta, send);
         stack.setId("stacklolo");
-        if(!turn)
+        if (!turn) {
             cpu();
+        }
     }
-    
 
     void cpu() {
         PauseTransition pause = new PauseTransition(Duration.seconds(.5));
         pause.setOnFinished((ActionEvent event) -> {
             if (counter == 0 && textLabelflag[4]) {
                 cpupos = 4;
-            }
-            else {
+            } else {
                 while (!textLabelflag[cpupos] && counter < 9) {
                     cpupos = generateCpuPos();
                 }
@@ -360,8 +359,9 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         counter = 0;
         turn = false;
         fullBoardFlag = true;
-        if(!turn)
+        if (!turn) {
             cpu();
+        }
 
     }
 
@@ -371,7 +371,6 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
             switch (x) {
                 case 0:
                     line = l.get(0).getText() + l.get(1).getText() + l.get(2).getText();
-
                     break;
                 case 1:
                     line = l.get(3).getText() + l.get(4).getText() + l.get(5).getText();
@@ -380,7 +379,6 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                     line = l.get(6).getText() + l.get(7).getText() + l.get(8).getText();
                     break;
                 case 3:
-
                     line = l.get(0).getText() + l.get(3).getText() + l.get(6).getText();
                     break;
                 case 4:
