@@ -1,6 +1,7 @@
 package tictactoe.server.db;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Vector;
 import tictactoe.server.Config;
 import tictactoe.server.models.Game;
@@ -118,6 +119,7 @@ public class DatabaseManager {
         return playerSignIn;
     }
     
+    // Done and tested
     public boolean saveGame(Game gameToSave) throws ClassNotFoundException{
         boolean success = false;
         Integer playerXId = gameToSave.getPlayerX().getId();
@@ -144,7 +146,39 @@ public class DatabaseManager {
         
         return success;
     }
-
+    
+    // Done and tested
+    public ArrayList<Player> getAllPlayers() throws SQLException{
+        ArrayList<Player> allPlayers = new ArrayList<>();
+        
+        try {
+            establishConnection();
+            statment = connection.createStatement();
+            resultSet = statment.executeQuery("SELECT * FROM player;");
+            
+            while (resultSet.next()) {
+                Player tempPlayer = new Player();
+                
+                tempPlayer.setId(resultSet.getInt("id"));
+                tempPlayer.setFirstName(resultSet.getString("first_name"));
+                tempPlayer.setLastName(resultSet.getString("last_name"));
+                tempPlayer.setEmail(resultSet.getString("email"));
+                tempPlayer.setImg(resultSet.getString("image"));
+                tempPlayer.setPoints(resultSet.getInt("points"));
+                
+                allPlayers.add(tempPlayer);
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+            statment.close();
+            connection.close();
+        
+        return allPlayers;
+    }
+    
+    
+    
     /* to test the database connetion and getting some data.
     public void check(){
         try{
