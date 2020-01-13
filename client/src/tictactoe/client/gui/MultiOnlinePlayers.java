@@ -28,7 +28,7 @@ import tictactoe.client.App;
  * @author KeR
  */
 public class MultiOnlinePlayers extends Pane {
-
+    GridPane stack;
     private final App app;
     Random rand;
     boolean turn;
@@ -39,22 +39,30 @@ public class MultiOnlinePlayers extends Pane {
     private boolean isEnded = false;
 
     public MultiOnlinePlayers(App app) {
-
+        stack = new GridPane();
         this.app = app;
         setId("stackGameboard");
         for (int i = 0; i < 9; i++) {
             l.add(new Label("_"));
         }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int x = i * 3 + j;
+                stack.add(l.get(x), j, i);
+            }
+
+        }
         turn = true;
         rand = new Random();
         counter = 0;
         resetGame();
-        GridPane stack = new GridPane();
+        
         stack.setId("stack");
         stack.setPadding(new Insets(40, 0, 0, 50));
         stack.setHgap(150);
         stack.setVgap(-20);
         stack.setPrefSize(750, 700);
+        l.get(1).setText("K");
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 int x = i * 3 + j;
@@ -70,21 +78,14 @@ public class MultiOnlinePlayers extends Pane {
                             currentLabel.setId("x");
                             turn = false;
                             counter++;
-                            checkWinner();
-                        }
-                        if (turn == false && currentLabel.getText().equals("_")) {
-                            currentLabel.setText("O");
-                            currentLabel.setId("o");
-                            turn = true;
-                            counter++;
+                            stack.requestLayout();
                             checkWinner();
                         }
                     }
                 });
-                stack.add(l.get(x), j, i);
+                
             }
         }
-        drawBoard();
         setId("stackGameboard");
         Label label1 = new Label("player1");
         Label label2 = new Label("player2");
@@ -215,14 +216,6 @@ public class MultiOnlinePlayers extends Pane {
         }
     }
 
-    private void drawBoard() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                int x = i * 3 + j;
-            }
-
-        }
-    }
 
     public void getMoveFromServer(String position) {
         int moveFromServer = 0;
@@ -255,13 +248,14 @@ public class MultiOnlinePlayers extends Pane {
                 moveFromServer = 8;
                 break;
         }
+        int x = rand.nextInt(9);
         if (turn == false) {
             counter++;
             l.get(moveFromServer).setText("O");
             l.get(moveFromServer).setId("o");
             checkWinner();
-            drawBoard();
             turn = true;
+            stack.requestLayout();
         }
     }
 
