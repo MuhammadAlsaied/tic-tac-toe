@@ -16,7 +16,7 @@ public class Player {
     private String password;
     private int points;
     private Game currentGame;
-
+    private boolean isOnline = false;
     public int getId() {
         return id;
     }
@@ -103,9 +103,18 @@ public class Player {
         obj.addProperty("id", id);
         obj.addProperty("firstName", firstName);
         obj.addProperty("lastName", firstName);
+        obj.addProperty("email", email);
         obj.addProperty("points", points);
 
         return obj;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean isOnline) {
+        this.isOnline = isOnline;
     }
 
     public void setCurrentGame(Game currentGame) {

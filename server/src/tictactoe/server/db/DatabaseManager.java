@@ -1,7 +1,11 @@
 package tictactoe.server.db;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import tictactoe.server.Config;
 import tictactoe.server.models.Player;
 
@@ -98,7 +102,7 @@ public class DatabaseManager {
                     playerSignIn.setLastName(resultSet.getString("last_name"));
                     playerSignIn.setEmail(resultSet.getString("email"));
                     playerSignIn.setImg(resultSet.getString("image"));
-                    playerSignIn.setPoints(resultSet.getInt("points")); 
+                    playerSignIn.setPoints(resultSet.getInt("points"));
                     statment.close();
                     connection.close();
                     return playerSignIn;
@@ -118,6 +122,18 @@ public class DatabaseManager {
         return playerSignIn;
     }
 
+    Collection<Player> getAllPlayers() {
+        Collection<Player> players = new ArrayList<>();
+        try {
+            establishConnection();
+            statment = connection.createStatement();
+            resultSet = statment.executeQuery("SELECT * FROM player");
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return players;
+    }
     /* to test the database connetion and getting some data.
     public void check(){
         try{

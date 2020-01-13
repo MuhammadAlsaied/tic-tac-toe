@@ -92,7 +92,7 @@ public class JsonHandler {
             user.setPlayer(player);
             JsonArray onlineUsers = server.getOnlinePlayersAsJson();
             handleNewOnlinePlayer(player);
-            server.addToOnlinePlayers(player.getId(), user);
+            server.addToOnlinePlayers(player.getId());
             server.removeFromUnloggedInUsers(user.getSocket());
 
             response.addProperty("type", "signin-success");

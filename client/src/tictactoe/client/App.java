@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.TreeMap;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -17,7 +18,13 @@ import tictactoe.client.gui.*;
 
 public class App extends Application {
 
+    private Player myData;
     HashMap<String, Pane> screens = new HashMap<>();
+    TreeMap<Integer, Player> onlinePlayers = new TreeMap((o1, o2) -> {
+        Player p1 = (Player) o1;
+        Player p2 = (Player) o1;
+        return p1.getPoints() - p2.getPoints();
+    });
     Scene mainScene;
     private Socket s;
     private DataInputStream dataInputStream;
@@ -40,7 +47,7 @@ public class App extends Application {
             public void run() {
                 while (isActive) {
                     try {
-                        
+
                         String line = dataInputStream.readUTF();
                         System.out.println(line);
                         if (line != null) {
@@ -73,7 +80,6 @@ public class App extends Application {
         screens.put("youWin", new YouWinScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
-
         screens.put("playerList", new PlayerListScreen(this));
         screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));
 
@@ -99,8 +105,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
-        
-      
+
         primaryStage.setOnCloseRequest(e -> {
             isActive = false;
             th.stop();
@@ -123,11 +128,18 @@ public class App extends Application {
         addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
 
-
         mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();
+    }
+
+    public Player getMyData() {
+        return myData;
+    }
+
+    public void setMyData(Player myData) {
+        this.myData = myData;
     }
 
     @Override

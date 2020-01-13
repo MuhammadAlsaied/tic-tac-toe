@@ -35,6 +35,12 @@ public class MainScreen extends Pane {
         challengeComp.setPrefSize(280, 50);
         challengeComp.setId("compButton");
         ToggleButton challengePlayer = new ToggleButton("CHALLENGE PLAYER");
+        challengePlayer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                app.setScreen("playerList");
+            }
+        });
         challengePlayer.setPrefSize(280, 50);
         challengePlayer.setId("playerButton");
         HBox buttonBox = new HBox(20, challengeComp, challengePlayer);

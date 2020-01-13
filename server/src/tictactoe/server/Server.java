@@ -11,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 
 /**
  *
@@ -20,14 +21,24 @@ public class Server {
 
     private ServerSocket serverSocket;
 
-    private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
+    private final TreeMap<Integer, User> players = new TreeMap((o1, o2) -> {
+        Player p1 = (Player) o1;
+        Player p2 = (Player) o2;
+        if (p1.isOnline() && !p2.isOnline()) {
+            return 1;
+        }
+        if (!p1.isOnline() && p2.isOnline()) {
+            return -1;
+        }
+        return p1.getPoints() - p2.getPoints();
+    });
+
     private final HashMap<Integer, Player> playersInvitations = new HashMap<>();
     private final HashSet<Socket> unloggedInUsers = new HashSet<>();
     JsonHandler jsonHandler = new JsonHandler(this);
 
     public Server() {
         try {
-
             serverSocket = new ServerSocket(Config.PORT);
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -51,12 +62,12 @@ public class Server {
         public User(Socket socket, Player player) {
             this.socket = socket;
             this.player = player;
-                try {
-                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            try {
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
             } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                ex.printStackTrace();
             }
+        }
 
         public User() {
             this.player = new Player();
@@ -127,33 +138,27 @@ public class Server {
 
     }
 
-    public JsonArray getOnlinePlayersAsJson() {
-        JsonArray players = new JsonArray();
-        onlinePlayers.forEach((key, value) -> {
-            players.add(value.player.asJson());
+    public JsonArray getPlayersAsJson() {
+        JsonArray jsonPlayers = new JsonArray();
+        //players.forEach();
+        players.forEach((key, value) -> {
+            jsonPlayers.add(value.player.asJson());
         });
-        return players;
+        return jsonPlayers;
     }
 
     public void addToOnlinePlayers(int id, User user) {
-        onlinePlayers.put(id, user);
+        players.get(id).player.setOnline(true);
     }
 
     public void removeFromOnlinePlayers(int id) {
-        onlinePlayers.remove(id);
+        players.get(id).player.setOnline(false);
     }
 
     public void removeFromUnloggedInUsers(Socket socket) {
         unloggedInUsers.remove(socket);
     }
 
-    public boolean isOnlinePlayer(Player playerToCheck) {
-        if (onlinePlayers.containsKey(playerToCheck.getId())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public JsonArray getInvitationsPlayersAsJson() {
         JsonArray invitationPlayers = new JsonArray();
@@ -193,7 +198,7 @@ public class Server {
     }
 
     public void sendToAllOnlineUsers(JsonObject response) {
-        onlinePlayers.forEach((k, v)
+        players.forEach((k, v)
                 -> {
             try {
                 v.dataOutputStream.writeUTF(response.toString());
