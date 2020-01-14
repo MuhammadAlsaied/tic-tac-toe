@@ -31,10 +31,9 @@ public class MultiOnlinePlayers extends Pane {
     GridPane stack;
     private final App app;
     Random rand;
-    boolean turn;
-//, fullBoardFlag;
+    public static boolean turn = true;
     int counter, cpupos;
-    String line;
+    private String line,player1Letter,player2Letter;
     Vector<Label> l = new Vector<>();
     private boolean isEnded = false;
 
@@ -50,19 +49,23 @@ public class MultiOnlinePlayers extends Pane {
                 int x = i * 3 + j;
                 stack.add(l.get(x), j, i);
             }
-
         }
-        turn = true;
+        if(turn){
+            player1Letter = "X";
+            player2Letter = "O";
+        }
+        else{
+            player1Letter = "O";
+            player2Letter = "X";
+        }
         rand = new Random();
         counter = 0;
         resetGame();
-        
         stack.setId("stack");
         stack.setPadding(new Insets(40, 0, 0, 50));
         stack.setHgap(150);
         stack.setVgap(-20);
         stack.setPrefSize(750, 700);
-        l.get(1).setText("K");
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 int x = i * 3 + j;
@@ -74,8 +77,8 @@ public class MultiOnlinePlayers extends Pane {
                         }
                         Label currentLabel = (Label) event.getSource();
                         if (turn && currentLabel.getText().equals("_")) {
-                            currentLabel.setText("X");
-                            currentLabel.setId("x");
+                            currentLabel.setText(player1Letter);
+                            currentLabel.setId(player1Letter);
                             turn = false;
                             counter++;
                             stack.requestLayout();
@@ -143,7 +146,6 @@ public class MultiOnlinePlayers extends Pane {
             l.get(i).setId("label");
         }
         counter = 0;
-        //fullBoardFlag = true;
     }
 
     private void checkWinner() {
@@ -179,7 +181,6 @@ public class MultiOnlinePlayers extends Pane {
             }
             switch (line) {
                 case "XXX": {
-                   // fullBoardFlag = false;
                     turn = true;
                     isEnded = true;
                     PauseTransition pause = new PauseTransition(Duration.seconds(2));
@@ -192,7 +193,6 @@ public class MultiOnlinePlayers extends Pane {
                     return;
                 }
                 case "OOO": {
-                    //fullBoardFlag = false;
                     turn = true;
                     isEnded = true;
                     PauseTransition pause = new PauseTransition(Duration.seconds(2));
@@ -249,11 +249,10 @@ public class MultiOnlinePlayers extends Pane {
                 moveFromServer = 8;
                 break;
         }
-        int x = rand.nextInt(9);
         if (turn == false) {
             counter++;
-            l.get(moveFromServer).setText("O");
-            l.get(moveFromServer).setId("o");
+            l.get(moveFromServer).setText(player2Letter);
+            l.get(moveFromServer).setId(player2Letter);
             checkWinner();
             turn = true;
             stack.requestLayout();
