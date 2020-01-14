@@ -1,22 +1,24 @@
 package tictactoe.server.models;
 import com.google.gson.JsonObject;
+import tictactoe.server.models.Enums.*;
+
 
 /**
  *
  * @author muhammad and Ayman Magdy
  */
 
-enum Status {
-   inProgress, terminated, finished;
-}
-
-enum Position {
-    upper_left, up, upper_right, left, center, right, lower_left, lower_right, down
-}
-
-enum Move {
-    X, O
-}
+//enum Status {
+//   inProgress, terminated, finished;
+//}
+//
+//enum Position {
+//    upper_left, up, upper_right, left, center, right, lower_left, lower_right, down
+//}
+//
+//enum Move {
+//    X, O
+//}
 
 public class Game {
     private Player playerX;
@@ -79,6 +81,22 @@ public class Game {
     
     public String getStatus(){
         return gameStatus.toString();
+    }
+    
+    public Status getGameStatus() {
+        return gameStatus;
+    }
+
+    public void setGameStatus(Status gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+    
+    public JsonObject getGameCoordinates() {
+        return gameCoordinates;
+    }
+
+    public void setGameCoordinates(JsonObject gameCoordinates) {
+        this.gameCoordinates = gameCoordinates;
     }
     
     public String getCoordinates(){

@@ -422,14 +422,14 @@ Circle{
     -fx-color: #FFFFFF;
 }
 #label{
-    -fx-font-size: 180px;
+    -fx-font-size: 200px;
 }
 #x{
-    -fx-font-size: 180px;
+    -fx-font-size: 200px;
     -fx-text-fill: #FFD369;
 }
 #o{
-    -fx-font-size: 180px;
+    -fx-font-size: 200px;
     -fx-text-fill: #FFFFFF;
 }
 
@@ -772,12 +772,12 @@ Circle{
 #label{
     -fx-font-size: 180px;
 }
-#x{
-    -fx-font-size: 150px;
+#X{
+    -fx-font-size: 180px;
     -fx-text-fill: #FFD369;
 }
-#o{
-    -fx-font-size: 150px;
+#O{
+    -fx-font-size: 180px;
     -fx-text-fill: #FFFFFF;
 }
 

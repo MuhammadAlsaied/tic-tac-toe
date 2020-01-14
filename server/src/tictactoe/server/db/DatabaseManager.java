@@ -1,11 +1,15 @@
 package tictactoe.server.db;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tictactoe.server.Config;
+import tictactoe.server.models.Enums;
+import tictactoe.server.models.Enums.Status;
 import tictactoe.server.models.Game;
 import tictactoe.server.models.Player;
 
@@ -122,21 +126,21 @@ public class DatabaseManager {
     }
     
     // Done and tested
-    public boolean saveGame(Game gameToSave) throws ClassNotFoundException{
+    public boolean insertGame(Game gameToSave) throws ClassNotFoundException{
         boolean success = false;
         Integer playerXId = gameToSave.getPlayerX().getId();
         Integer playerOId = gameToSave.getPlayerO().getId();
         String gameStatus = gameToSave.getStatus();
-        String coordinatesToSave = gameToSave.getCoordinates();
+        String coordinatesToSave = gameToSave.getCoordinates().toString();
         
         try{
             establishConnection();
         
-            PreparedStatement preparedStatment = connection.prepareStatement("INSERT INTO game (player1_id, player2_id, session_status) VALUES (?, ?, ?, ?);");
+            PreparedStatement preparedStatment = connection.prepareStatement("INSERT INTO game (player1_id, player2_id, session_status, coordinates) VALUES (?, ?, ?, ?);");
             preparedStatment.setString(1, playerXId.toString());
             preparedStatment.setString(2, playerOId.toString());
             preparedStatment.setString(3, gameStatus);
-            //preparedStatment.setString(4, coordinatesToSave);
+            preparedStatment.setString(4, coordinatesToSave);
             preparedStatment.executeUpdate();
             
             preparedStatment.close();
@@ -215,6 +219,31 @@ public class DatabaseManager {
         }
         
         return updatedPlayer;
+    }
+    
+    // Done and tested
+     public Game getTerminatedGame(int firstPlayerId, int secondPlayerId) throws SQLException{
+        Game terminatedGame = null;
+        Player firstPlayer = new Player();
+        Player secondPlayer = new Player();
+        
+        try {
+            establishConnection();
+            statment = connection.createStatement();
+            resultSet = statment.executeQuery("select * from game where player1_id ='" + firstPlayerId + "' and player2_id ='" + secondPlayerId + "';");
+            if (resultSet.last()){
+                terminatedGame = new Game(null, null);
+                Status gameStatus = Enums.Status.valueOf(resultSet.getString("session_status"));
+                String coordinatesDB = resultSet.getString("coordinates");
+                JsonObject request = JsonParser.parseString(coordinatesDB).getAsJsonObject();
+                terminatedGame.setGameStatus(gameStatus);
+                terminatedGame.setGameCoordinates(request);
+                
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+       return terminatedGame;
     }
     
     /* to test the database connetion and getting some data.
