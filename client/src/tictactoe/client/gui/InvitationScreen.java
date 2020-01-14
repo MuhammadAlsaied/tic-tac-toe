@@ -1,5 +1,7 @@
 package tictactoe.client.gui;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
@@ -37,13 +39,20 @@ public class InvitationScreen extends StackPane {
 
         lose.setId("playerWantsToChallengeYou");
         lose.setEffect(e);
-        ToggleButton Acccept = new ToggleButton("Acccept");
-        Acccept.setPrefSize(200, 20);
-        Acccept.setId("acceptInvitation");
+        ToggleButton accept = new ToggleButton("Acccept");
+        accept.setPrefSize(200, 20);
+        accept.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                MultiOnlinePlayers.turn = false;
+                app.setScreen("multiOnlinePlayers");
+            }
+        });
+        accept.setId("acceptInvitation");
         ToggleButton Decline = new ToggleButton("Decline");
         Decline.setPrefSize(200, 20);
         Decline.setId("declineInvitation");
-        HBox buttonBox = new HBox(20, Acccept, Decline);
+        HBox buttonBox = new HBox(20, accept, Decline);
 
         VBox vbox = new VBox(100, lose, buttonBox);
         vbox.setId("vboxInvitationScreen");

@@ -32,7 +32,7 @@ public class MultiPlayerGameBpardScreen extends GridPane {
         setPadding(new Insets(40, 0, 0, 50));
         setHgap(150);
         setVgap(-20);
-        setPrefSize(700, 700);
+        setPrefSize(750, 700);
         for (int i = 0; i < 9; i++) {
             l.add(new Label("_"));
         }
