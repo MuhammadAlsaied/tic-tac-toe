@@ -10,6 +10,15 @@
     font-family: 'digitalNumber';
     src: url('/css/digitalNumber.ttf');
 }
+#rectBack
+{
+    -fx-background-image: url("/images/back1.jpg");
+    -fx-background-repeat: no-repeat;   
+    -fx-background-position: center center;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+     -fx-background-radius: 127.5px;
+}
 #acceptInvitation:focused {
     -fx-background-color:
         -fx-focus-color,
