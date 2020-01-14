@@ -1,6 +1,7 @@
 package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
+import com.sun.javafx.scene.control.skin.FXVK;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -35,24 +36,27 @@ public class SigninScreen extends StackPane {
 
         TextField email = new TextField();
         email.setPromptText(" Enter your Email");
-        email.setId("email");
         email.setPrefSize(324, 36);
         email.setFocusTraversable(false);
 
         PasswordField password = new PasswordField();
         password.setPrefSize(324, 36);
         password.setFocusTraversable(false);
-
         password.setPromptText(" Enter your password");
         //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
         Button signin = new Button("SIGN IN");
-        signin.setId("signin");
-
+        signin.setId("signinButton");
+        
         signin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-                if (!email.getText().matches(regex)) {
+                if (email.getText().isEmpty()) {
+                    email.setPromptText("You Cannot Leave E-Mail Empty");
+                    email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+                    email.setPrefSize(324, 50);
+                }
+                else if (!email.getText().matches(regex)) {
                     Alert emailValid = new Alert(Alert.AlertType.INFORMATION);
                     emailValid.setTitle("Email Validation");
                     emailValid.setHeaderText("");
@@ -60,12 +64,11 @@ public class SigninScreen extends StackPane {
                     emailValid.show();
                 }
                 if (password.getText().isEmpty()) {
-                    Alert a = new Alert(Alert.AlertType.INFORMATION);
-                    a.setTitle("Password Validation");
-                    a.setHeaderText("");
-                    a.setContentText("Password can't be empty!");
-                    a.show();
-                } else {
+                    password.setPromptText("You Cannot Leave Password Empty");
+                    password.setStyle("-fx-font-size: 16px;");
+                    password.setPrefSize(324, 50);
+                }
+                else {
                     signin.setText("Connecting...");
                     signin.setDisable(true);
                     JsonObject jsonObject = new JsonObject();

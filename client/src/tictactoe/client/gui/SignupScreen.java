@@ -112,6 +112,7 @@ public class SignupScreen extends StackPane {
         rec.prefWidth(450);
         rec.setId("rec");
         Label alreadyRegistered = new Label("Already Registered?");
+        alreadyRegistered.setId("alreadyRegisteredLabel");
         alreadyRegistered.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
