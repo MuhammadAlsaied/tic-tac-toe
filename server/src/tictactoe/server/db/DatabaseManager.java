@@ -41,32 +41,65 @@ public class DatabaseManager {
     }
 
     // Done and tested.
-    public boolean signUp(String first_name, String last_name, String email, String password) throws SQLException {
-
+    private Player signUp(String first_name, String last_name, String email, String password) throws SQLException, ClassNotFoundException {
+        Player newPlayer = null;
+        
         if (isEmailExists(email)) {
             System.out.println("Your email is already registered..");
-            return false;
-        } else {
+        }
+        else {
             try {
                 establishConnection();
 
-                PreparedStatement preparedStatment = connection.prepareStatement("INSERT INTO player (first_name, last_name, email, password) VALUES (?, ?, ?, ?);");
+                PreparedStatement preparedStatment = connection.prepareStatement("INSERT INTO player (first_name, last_name, email, password) VALUES (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
                 preparedStatment.setString(1, first_name);
                 preparedStatment.setString(2, last_name);
                 preparedStatment.setString(3, email);
                 preparedStatment.setString(4, password);
                 preparedStatment.executeUpdate();
+                
+                newPlayer = getLastPlayer();
 
                 preparedStatment.close();
                 connection.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
             }
-            return true;
         }
+        return newPlayer;
+    }
+    
+    // Done and tested
+    public Player getLastPlayer(){
+        Player lastPlayer = new Player();
+        
+        try{
+            establishConnection();
+                statment = connection.createStatement();
+                resultSet = statment.executeQuery("SELECT * FROM player ORDER BY id DESC LIMIT 0, 1");
+                
+                if (resultSet.first()) {
+                    int newUserId = Integer.parseInt(resultSet.getString("id"));
+                    lastPlayer.setId(newUserId);
+                    lastPlayer.setFirstName(resultSet.getString("first_name"));
+                    lastPlayer.setLastName(resultSet.getString("last_name"));
+                    lastPlayer.setPoints(0);
+                    lastPlayer.setEmail(resultSet.getString("email"));
+                    lastPlayer.setCurrentGame(null);
+                } else {
+                    throw new SQLException("Getting the last user failed");
+                }
+                
+                statment.close();
+                connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return lastPlayer;
     }
 
-    //chcek if the email exists in the DB;
+    //chcek if the email exists in the DB, done and tested;
     public boolean isEmailExists(String email) throws SQLException {
 
         try {
@@ -224,8 +257,6 @@ public class DatabaseManager {
     // Done and tested
      public Game getTerminatedGame(int firstPlayerId, int secondPlayerId) throws SQLException{
         Game terminatedGame = null;
-        Player firstPlayer = new Player();
-        Player secondPlayer = new Player();
         
         try {
             establishConnection();
