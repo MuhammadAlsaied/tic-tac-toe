@@ -49,6 +49,7 @@ public class App extends Application {
                         ex.printStackTrace();
                     }
                 }
+
             }
         }).start();
     }
@@ -71,7 +72,7 @@ public class App extends Application {
         screens.put("playWithComputerHARDGameBoard", new PlayWithComputerHARDGameBoardScreen(this));
         screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
         screens.put("playerList", new PlayerListScreen(this));
-        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));
+        screens.put("MultiOnlinePlayers", new MultiOnlinePlayers(this));
 
     }
 
@@ -112,6 +113,7 @@ public class App extends Application {
         primaryStage.setTitle("TIC TAC TOE!");
 
         mainScene = new Scene(screens.get("signup"), 1350, 700);
+        mainScene = new Scene(screens.get("playerList"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.show();

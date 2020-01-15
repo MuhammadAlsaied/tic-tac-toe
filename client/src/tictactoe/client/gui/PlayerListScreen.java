@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import tictactoe.client.App;
@@ -24,6 +25,12 @@ public class PlayerListScreen extends Pane {
     {  
         GridPane gr = new GridPane();
         gr.setHgap(50);
+        Region rectBack = new Region();
+        rectBack.setPrefSize(498, 460);
+        rectBack.setId("rectBack");
+        rectBack.setLayoutX(400.0);
+        rectBack.setLayoutY(150.0);
+        rectBack.setMaxHeight(450.0);
         for(int i=0 ; i<9 ; i++)
         {
             ToggleButton invite2 = new ToggleButton("Challenge");
@@ -50,6 +57,7 @@ public class PlayerListScreen extends Pane {
         scrollPane.setMaxHeight(450.0);
         
         setId("stack");
+        getChildren().add(rectBack);
         getChildren().add(scrollPane);
 
         
