@@ -27,6 +27,7 @@ public class Game {
     private JsonObject gameCoordinates;
     private Status gameStatus;
     private Move nextMove;
+    private int gameId;
     
     
     public Game(Player player1, Player player2){
@@ -103,4 +104,19 @@ public class Game {
         return gameCoordinates.toString();
     }
     
+    public void setGameId(int gameId){
+        this.gameId = gameId;
+    }
+    
+    public int getGameId(){
+        return gameId;
+    }
+    
+    public int getPlayerXId(){
+        return playerX.getId();
+    }
+    
+    public int getPlayerOId(){
+        return playerO.getId();
+   }
 }
