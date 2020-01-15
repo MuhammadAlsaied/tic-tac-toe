@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import tictactoe.server.Server.User;
 import tictactoe.server.db.DatabaseManager;
-import tictactoe.server.models.Game;
 import tictactoe.server.models.Player;
 
 /**
@@ -21,7 +20,7 @@ public class JsonHandler {
     public JsonHandler(Server server) {
         this.server = server;
         try {
-            this.databaseManager = new DatabaseManager();
+            this.databaseManager = server.getDatabaseManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -37,11 +36,10 @@ public class JsonHandler {
                 response = handleSignup(requestData, user);
                 break;
             case "signin":
-                response = handleSignin(requestData, user);
+                response = handleSignin(requestData);
                 break;
             case "invitation":
-                Player invitingPlayer = new Player();
-                response = handleInvitation(user.getPlayer(), invitingPlayer);
+                response = handleInvitation(request, user);
                 break;
         }
         if (response != null) {
@@ -65,20 +63,27 @@ public class JsonHandler {
         String password = requestData.get("password").getAsString();
         {
             try {
-                boolean success = databaseManager.signUp(firstName, lastName, email, password);
-                if (success) {
+                Player player = null;
+                try {
+                    player = databaseManager.signUp(firstName, lastName, email, password);
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                if (player != null) {
                     response.addProperty("type", "signup-success");
+                    server.addNewOfflinePlayer(player);
                 } else {
                     response.addProperty("type", "signup-error");
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
+
         }
         return response;
     }
 
-    private JsonObject handleSignin(JsonObject requestData, User user) {
+    private JsonObject handleSignin(JsonObject requestData) {
         JsonObject response = new JsonObject();
         JsonObject data = new JsonObject();
         response.add("data", data);
@@ -90,49 +95,36 @@ public class JsonHandler {
             response.addProperty("type", "signin-error");
             data.addProperty("msg", "wrong email or password");
         } else {
-            user.setPlayer(player);
-            JsonArray onlineUsers = server.getOnlinePlayersAsJson();
-            server.addToOnlinePlayers(player.getId(), user);
-            server.removeFromUnloggedInUsers(user.getSocket());
+            JsonArray onlineUsers = server.getSortedOnlinePlayersAsJson();
+            JsonArray offlineUsers = server.getSortedOfflinePlayersAsJson();
+
+            server.addToOnlinePlayers(player.getId());
             response.addProperty("type", "signin-success");
             data.add("online-players", onlineUsers);
+            data.add("offline-players", offlineUsers);
             data.add("my-data", player.asJson());
         }
         return response;
     }
 
-    private JsonObject handleInvitation(Player inviter, Player invited) {
-        JsonObject response = new JsonObject();
-        JsonObject data = new JsonObject();
-        response.add("invitation", data);
+    private JsonObject handleInvitation(JsonObject request, User user) {
+        JsonObject reqData = request.get("data").getAsJsonObject();
+        User opponentUser = server.getOnlinePlayerById(reqData.get("invited_player_id").getAsInt());
 
-        if (!server.isOnlinePlayer(invited)) {
-            response.addProperty("type", "invitation-error");
-            data.addProperty("msg", "the invited player is not online");
+        if (opponentUser.getPlayer().isOnline() && opponentUser.getPlayer().getCurrentGame() == null) {
+            JsonObject response = new JsonObject();
+            JsonObject data = new JsonObject();
+            response.add("data", data);
+            response.addProperty("type", "invitation");
+
+            data.addProperty("inviter_player_id", user.getPlayer().getId());
+            try {
+                opponentUser.getDataOutputStream().writeUTF(response.toString());
+            } catch (IOException iOException) {
+                iOException.printStackTrace();
+            }
         }
 
-        if (invited.getCurrentGame() != null) {
-            response.addProperty("type", "invitation-error");
-            data.addProperty("msg", "user is playing with someone else at the moment");
-        }
-
-        if (server.isBusyPlayer(invited)) {
-            response.addProperty("type", "invitation-error");
-            data.addProperty("msg", "user is playing with is busy");
-        }
-
-        if (server.isOnlinePlayer(invited) && server.isFreePlayer(invited) && invited.getCurrentGame() == null) {
-            Game playNewGame = new Game(inviter, invited);
-            inviter.setCurrentGame(playNewGame);
-            invited.setCurrentGame(playNewGame);
-            JsonArray palyersPlaying = server.getInvitationsPlayersAsJson();
-            server.addToInvitationsPlayers(inviter, invited);
-            response.addProperty("invitation", "invitation-succeed");
-            data.add("invited-players", palyersPlaying);
-            data.add("inviter-player", inviter.asJson());
-            data.add("invited-player", invited.asJson());
-        }
-
-        return response;
+        return null;
     }
 }
