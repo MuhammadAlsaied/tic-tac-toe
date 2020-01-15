@@ -63,13 +63,15 @@ public class JsonHandler {
         String password = requestData.get("password").getAsString();
         {
             try {
-                boolean success = databaseManager.signUp(firstName, lastName, email, password);
-                if (success) {
+                Player player = null;
+                try {
+                    player = databaseManager.signUp(firstName, lastName, email, password);
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                if (player != null) {
                     response.addProperty("type", "signup-success");
-                    Player player = new Player(); //databaseManager.getPlayerById()
                     server.addNewOfflinePlayer(player);
-//                    data.add("offline-players", offlineUsers);        //TODO
-//                    data.add("my-data", player.asJson());
                 } else {
                     response.addProperty("type", "signup-error");
                 }
@@ -78,9 +80,6 @@ public class JsonHandler {
             }
 
         }
-        JsonArray onlineUsers = server.getSortedOnlinePlayersAsJson();
-        JsonArray offlineUsers = server.getSortedOfflinePlayersAsJson();
-
         return response;
     }
 

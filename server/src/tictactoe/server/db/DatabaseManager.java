@@ -8,9 +8,8 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tictactoe.server.Config;
-import tictactoe.server.models.Enums;
-import tictactoe.server.models.Enums.Status;
 import tictactoe.server.models.Game;
+import tictactoe.server.models.Game.Status;
 import tictactoe.server.models.Player;
 
 /**
@@ -41,7 +40,7 @@ public class DatabaseManager {
     }
 
     // Done and tested.
-    private Player signUp(String first_name, String last_name, String email, String password) throws SQLException, ClassNotFoundException {
+    public Player signUp(String first_name, String last_name, String email, String password) throws SQLException, ClassNotFoundException {
         Player newPlayer = null;
 
         if (isEmailExists(email)) {
@@ -260,7 +259,7 @@ public class DatabaseManager {
             resultSet = statment.executeQuery("select * from game where player1_id ='" + firstPlayerId + "' and player2_id ='" + secondPlayerId + "';");
             if (resultSet.last()) {
                 terminatedGame = new Game(null, null);
-                Status gameStatus = Enums.Status.valueOf(resultSet.getString("session_status"));
+                Status gameStatus = Status.valueOf(resultSet.getString("session_status"));
                 String coordinatesDB = resultSet.getString("coordinates");
                 JsonObject request = JsonParser.parseString(coordinatesDB).getAsJsonObject();
                 terminatedGame.setGameStatus(gameStatus);

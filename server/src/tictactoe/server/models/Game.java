@@ -1,35 +1,21 @@
 package tictactoe.server.models;
-import com.google.gson.JsonObject;
-import tictactoe.server.models.Enums.*;
 
+import com.google.gson.JsonObject;
 
 /**
  *
  * @author muhammad and Ayman Magdy
  */
-
-//enum Status {
-//   inProgress, terminated, finished;
-//}
-//
-//enum Position {
-//    upper_left, up, upper_right, left, center, right, lower_left, lower_right, down
-//}
-//
-//enum Move {
-//    X, O
-//}
-
 public class Game {
+
     private Player playerX;
     private Player playerO;
     private int winnerId;
     private JsonObject gameCoordinates;
     private Status gameStatus;
     private Move nextMove;
-    
-    
-    public Game(Player player1, Player player2){
+
+    public Game(Player player1, Player player2) {
         this.playerX = player1;
         this.playerO = player2;
         gameStatus = Status.inProgress;
@@ -44,17 +30,18 @@ public class Game {
         gameCoordinates.addProperty("lower", "-");
         gameCoordinates.addProperty("lower_right", "-");
     }
-    
+
     public void setNextMove(Position key, Move value) {
         if (gameCoordinates.get(key.toString()).toString().equals("-")) {
             gameCoordinates.addProperty(key.toString(), value.toString());
-            if ( value.equals(Move.O))
+            if (value.equals(Move.O)) {
                 nextMove = Move.X;
-            else
+            } else {
                 nextMove = Move.O;
+            }
         }
     }
-    
+
     public void setPlayerX(Player playerX) {
         this.playerX = playerX;
     }
@@ -62,7 +49,7 @@ public class Game {
     public Player getPlayerX() {
         return playerX;
     }
-    
+
     public void setPlayerO(Player playerO) {
         this.playerO = playerO;
     }
@@ -78,11 +65,11 @@ public class Game {
     public int getWinnerId() {
         return winnerId;
     }
-    
-    public String getStatus(){
+
+    public String getStatus() {
         return gameStatus.toString();
     }
-    
+
     public Status getGameStatus() {
         return gameStatus;
     }
@@ -90,7 +77,7 @@ public class Game {
     public void setGameStatus(Status gameStatus) {
         this.gameStatus = gameStatus;
     }
-    
+
     public JsonObject getGameCoordinates() {
         return gameCoordinates;
     }
@@ -98,9 +85,20 @@ public class Game {
     public void setGameCoordinates(JsonObject gameCoordinates) {
         this.gameCoordinates = gameCoordinates;
     }
-    
-    public String getCoordinates(){
+
+    public String getCoordinates() {
         return gameCoordinates.toString();
     }
-    
+
+    public static enum Status {
+        inProgress, terminated, finished;
+    }
+
+    public static enum Position {
+        upper_left, up, upper_right, left, center, right, lower_left, lower_right, down
+    }
+
+    public static enum Move {
+        X, O
+    }
 }
