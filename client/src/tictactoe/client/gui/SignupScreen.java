@@ -66,27 +66,38 @@ public class SignupScreen extends StackPane {
             @Override
             public void handle(ActionEvent event) {
                 String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-                if (!email.getText().matches(regex)) {
-                    Alert emailValid = new Alert(Alert.AlertType.INFORMATION);
-                    emailValid.setTitle("Email Validation");
-                    emailValid.setHeaderText("");
-                    emailValid.setContentText("Email Must Be User@email.com!");
-                    emailValid.show();
+                if (nickName.getText().isEmpty()) {
+                    nickName.setPromptText("You Cannot Leave Name Empty");
+                    nickName.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+                    nickName.setPrefSize(324, 45);
+                }
+                if (name.getText().isEmpty()) {
+                    name.setPromptText("You Cannot Leave Name Empty");
+                    name.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+                    name.setPrefSize(324, 45);
+                }
+                if (email.getText().isEmpty()) {
+                    email.setPromptText("You Cannot Leave E-Mail Empty");
+                    email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+                    email.setPrefSize(324, 45);
+                }
+                else if (!email.getText().matches(regex)) {
+                    email.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
                     showSignupButton();
                 }
                 if (password.getText().isEmpty()) {
-                    Alert a = new Alert(Alert.AlertType.INFORMATION);
-                    a.setTitle("Password Validation");
-                    a.setHeaderText("");
-                    a.setContentText("Password can't be empty!");
-                    a.show();
+                    password.setPromptText("You Cannot Leave Password Empty");
+                    password.setStyle("-fx-font-size: 16px;");
+                    password.setPrefSize(324, 45);
                     showSignupButton();
-                } else if (!password.getText().equals(repassword.getText())) {
-                    Alert a = new Alert(Alert.AlertType.INFORMATION);
-                    a.setTitle("Password Validation");
-                    a.setHeaderText("");
-                    a.setContentText("Passwords don't match");
-                    a.show();
+                }
+                if(repassword.getText().isEmpty()){
+                    repassword.setPromptText("You Must Retype Your Password");
+                    repassword.setStyle("-fx-font-size: 16px;");
+                    repassword.setPrefSize(324, 45);
+                }
+                else if (!password.getText().equals(repassword.getText())) {
+                    repassword.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
                     showSignupButton();
                 } else if (password.getText().equals(repassword.getText())) {
                     signup.setText("Loading...");
@@ -113,7 +124,7 @@ public class SignupScreen extends StackPane {
         Region rec = new Region();
         rec.prefHeight(600);
         rec.prefWidth(450);
-        rec.setId("rec");
+        rec.setId("recSignin");
         Label alreadyRegistered = new Label("Already Registered?");
         alreadyRegistered.setId("alreadyRegisteredLabel");
         alreadyRegistered.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -127,32 +138,32 @@ public class SignupScreen extends StackPane {
         VBox box = new VBox(18, label1, name, nickName, email, password, box1, alreadyRegistered);
         box.setId("vbox");
         box1.setId("vbox");
-        setId("stack");
+        setId("stackSignin");
         getChildren().addAll(rec, box);
 
-        
     }
 //        =====================Signup methods==============================
-        public void showSignupFailedPopup(){
-            app.showAlert("Signup failed", "This email is already registered, please enter another email.");
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    signup.setText("SIGN UP");
-                    signup.setDisable(false);
-                }
-            });
-        }
-        
-        public void showSignupButton(){
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    signup.setText("SIGN UP");
-                    signup.setDisable(false);
-                }
-            });
-        }
+
+    public void showSignupFailedPopup() {
+        app.showAlert("Signup failed", "This email is already registered, please enter another email.");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                signup.setText("SIGN UP");
+                signup.setDisable(false);
+            }
+        });
+    }
+
+    public void showSignupButton() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                signup.setText("SIGN UP");
+                signup.setDisable(false);
+            }
+        });
+    }
 //        =================================================================
 
 }

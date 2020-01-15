@@ -1,7 +1,6 @@
 package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
-import com.sun.javafx.scene.control.skin.FXVK;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,13 +10,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import sun.security.util.Password;
 import tictactoe.client.App;
 
 /**
@@ -44,7 +43,7 @@ public class SigninScreen extends StackPane {
         password.setFocusTraversable(false);
         password.setPromptText(" Enter your password");
         //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
-        Button signin = new Button("SIGN IN");
+        ToggleButton signin = new ToggleButton("SIGN IN");
         signin.setId("signinButton");
         
         signin.setOnAction(new EventHandler<ActionEvent>() {
