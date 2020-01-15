@@ -41,7 +41,7 @@ public class DatabaseManager {
     }
 
     // Done and tested.
-    private Player signUp(String first_name, String last_name, String email, String password) throws SQLException, ClassNotFoundException {
+    public Player signUp(String first_name, String last_name, String email, String password) throws SQLException, ClassNotFoundException {
         Player newPlayer = null;
 
         if (isEmailExists(email)) {

@@ -72,6 +72,7 @@ public class SignupScreen extends StackPane {
                     emailValid.setHeaderText("");
                     emailValid.setContentText("Email Must Be User@email.com!");
                     emailValid.show();
+                    showSignupButton();
                 }
                 if (password.getText().isEmpty()) {
                     Alert a = new Alert(Alert.AlertType.INFORMATION);
@@ -79,12 +80,14 @@ public class SignupScreen extends StackPane {
                     a.setHeaderText("");
                     a.setContentText("Password can't be empty!");
                     a.show();
+                    showSignupButton();
                 } else if (!password.getText().equals(repassword.getText())) {
                     Alert a = new Alert(Alert.AlertType.INFORMATION);
                     a.setTitle("Password Validation");
                     a.setHeaderText("");
                     a.setContentText("Passwords don't match");
                     a.show();
+                    showSignupButton();
                 } else if (password.getText().equals(repassword.getText())) {
                     signup.setText("Loading...");
                     signup.setDisable(true);
@@ -132,6 +135,16 @@ public class SignupScreen extends StackPane {
 //        =====================Signup methods==============================
         public void showSignupFailedPopup(){
             app.showAlert("Signup failed", "This email is already registered, please enter another email.");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    signup.setText("SIGN UP");
+                    signup.setDisable(false);
+                }
+            });
+        }
+        
+        public void showSignupButton(){
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {

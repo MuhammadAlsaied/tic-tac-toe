@@ -13,6 +13,7 @@
 #alreadyRegisteredLabel{
     -fx-font-family: "Walter Turncoat";
     -fx-font-size: 20px;
+}
 #rectBack
 {
     -fx-background-image: url("/images/back1.jpg");

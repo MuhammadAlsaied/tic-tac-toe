@@ -40,7 +40,10 @@ public class NooneIsTheWinnerScreen extends StackPane {
         Button lose = new Button("Noone  Is The Winner");
         lose.setId("lose");
         lose.setEffect(e);
-        ToggleButton back = new ToggleButton("Back");
+        Button back = new Button("Back");
+        back.setOnAction((event) -> {
+            app.setScreen("multiOnlinePlayers");
+        });
         back.setPrefSize(180, 20);
         back.setId("back");
         ToggleButton playAgain = new ToggleButton("Play Again");
