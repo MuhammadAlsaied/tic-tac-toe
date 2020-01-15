@@ -297,7 +297,8 @@ public class MultiOnlinePlayers extends Pane {
         data.addProperty("move", moveToServer);
         try {
             app.getDataOutputStream().writeUTF(request.getAsString());
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) {
             ex.printStackTrace();
         }
     }

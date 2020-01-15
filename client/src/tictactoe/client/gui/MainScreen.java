@@ -2,6 +2,7 @@ package tictactoe.client.gui;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.TreeSet;
 import javafx.event.ActionEvent;
@@ -26,7 +27,7 @@ import tictactoe.client.App;
 import tictactoe.client.Player;
 
 public class MainScreen extends Pane {
-    
+
     Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
         int diff = o1.getPoints() - o2.getPoints();
         if (diff == 0) {
@@ -43,7 +44,9 @@ public class MainScreen extends Pane {
     private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
     private GridPane gridPane;
     private Player player;
+    App app;
     public MainScreen(App app) {
+        this.app = app;
         ToggleButton challengeComp = new ToggleButton("CHALLENGE COMPUTER");
         challengeComp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -63,7 +66,6 @@ public class MainScreen extends Pane {
         gridPane = new GridPane();
         gridPane.setId("GridMain");
         gridPane.setHgap(50);
-
 
         gridPane.setPrefSize(495.2, 250.0);
         Button send = new Button();
@@ -132,6 +134,22 @@ public class MainScreen extends Pane {
         for (int i = 0; i < 10; i++) {
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
+            invite2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.add("data", data);
+                    request.addProperty("type", "invitation");
+                    data.addProperty("invited_player_id", player.getId());
+                    try {
+                        app.getDataOutputStream().writeUTF(request.getAsString());
+                    } 
+                    catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
@@ -143,8 +161,9 @@ public class MainScreen extends Pane {
             gridPane.add(playerName, 1, i);
         }
     }
+
     public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
-        
+
         offlinePlayerList.forEach((p) -> {
             player = new Player();
             JsonObject jsonPlayer = p.getAsJsonObject();
@@ -156,6 +175,22 @@ public class MainScreen extends Pane {
         for (int i = 0; i < 10; i++) {
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
+            invite2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.add("data", data);
+                    request.addProperty("type", "invitation");
+                    data.addProperty("invited_player_id", player.getId());
+                    try {
+                        app.getDataOutputStream().writeUTF(request.getAsString());
+                    } 
+                    catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
@@ -167,6 +202,5 @@ public class MainScreen extends Pane {
             gridPane.add(playerName, 1, i);
         }
     }
-    
 
 }
