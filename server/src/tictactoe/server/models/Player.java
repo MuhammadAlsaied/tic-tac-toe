@@ -16,6 +16,7 @@ public class Player {
     private String password;
     private int points;
     private Game currentGame;
+    private boolean online = false;
 
     public int getId() {
         return id;
@@ -72,6 +73,16 @@ public class Player {
     public void setPoints(int points) {
         this.points = points;
     }
+    
+    
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
 
     @Override
     public int hashCode() {
