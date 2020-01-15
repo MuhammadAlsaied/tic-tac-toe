@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.stage.StageStyle;
 import tictactoe.client.gui.*;
 
 public class App extends Application {
@@ -126,6 +127,8 @@ public class App extends Application {
         mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
 
         pStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

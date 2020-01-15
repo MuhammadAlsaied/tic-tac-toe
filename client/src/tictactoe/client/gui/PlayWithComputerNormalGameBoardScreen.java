@@ -240,6 +240,9 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         textLabelflag = new boolean[]{true, true, true, true, true, true, true, true, true};
         counter = 0;
         fullBoardFlag = true;
+        if (turn) {
+            cpu();
+        }
 
     }
 
