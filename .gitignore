@@ -27,3 +27,4 @@ client/nb-configuration.xml
 
 # Connection specific
 server/src/tictactoe/server/Config.java
+client/src/tictactoe/client/Config.java
