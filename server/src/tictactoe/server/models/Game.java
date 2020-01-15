@@ -15,7 +15,10 @@ public class Game {
     private Status gameStatus;
     private Move nextMove;
 
-    public Game(Player player1, Player player2) {
+    private int gameId;
+    
+    
+    public Game(Player player1, Player player2){
         this.playerX = player1;
         this.playerO = player2;
         gameStatus = Status.inProgress;
@@ -90,6 +93,7 @@ public class Game {
         return gameCoordinates.toString();
     }
 
+
     public static enum Status {
         inProgress, terminated, finished;
     }
@@ -101,4 +105,20 @@ public class Game {
     public static enum Move {
         X, O
     }
+    
+    public void setGameId(int gameId){
+        this.gameId = gameId;
+    }
+    
+    public int getGameId(){
+        return gameId;
+    }
+    
+    public int getPlayerXId(){
+        return playerX.getId();
+    }
+    
+    public int getPlayerOId(){
+        return playerO.getId();
+   }
 }
