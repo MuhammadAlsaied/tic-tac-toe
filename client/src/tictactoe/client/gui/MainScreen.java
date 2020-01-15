@@ -70,8 +70,8 @@ public class MainScreen extends Pane {
             }
         });
         send.setId("sendChatMainScreen");
-        send.setLayoutX(1000);
-        send.setLayoutY(600);
+        send.setLayoutX(1050);
+        send.setLayoutY(700);
 
         ScrollPane scrollPane = new ScrollPane(gr);
         scrollPane.setId("scrollPane1");
@@ -83,20 +83,20 @@ public class MainScreen extends Pane {
 
         VBox v = new VBox();
         v.getChildren().add(scrollPane);
-        v.setLayoutX(850);
+        v.setLayoutX(930);
         v.setLayoutY(0);
         TextArea ta = new TextArea(" ");
         ta.setId("ta");
-        ta.setLayoutX(730);
-        ta.setLayoutY(400);
+        ta.setLayoutX(800);
+        ta.setLayoutY(420);
         ta.setMaxWidth(220.0);
-        ta.setMaxHeight(150.0);
+        ta.setMaxHeight(250.0);
 
         TextArea text = new TextArea("");
         
         text.setPromptText("Enter your Msg ");
-        text.setLayoutX(730);
-        text.setLayoutY(600);
+        text.setLayoutX(800);
+        text.setLayoutY(700);
         text.setMaxWidth(220.0);
         text.setMaxHeight(10.5);
 
@@ -105,7 +105,7 @@ public class MainScreen extends Pane {
         labelk.setGraphic(new ImageView(img2));
 
        
-        labelk.setLayoutX(700);
+        labelk.setLayoutX(760);
         labelk.setLayoutY(20);
         labelk.setMaxSize(50.0, 50.0);
 

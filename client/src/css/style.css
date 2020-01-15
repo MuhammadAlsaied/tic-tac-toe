@@ -13,6 +13,7 @@
 #alreadyRegisteredLabel{
     -fx-font-family: "Walter Turncoat";
     -fx-font-size: 20px;
+}
 #rectBack
 {
     -fx-background-image: url("/images/back1.jpg");
@@ -556,7 +557,7 @@ PasswordField
 {
     -fx-background-image: url("/images/back2.png");
     -fx-background-repeat: stretch;   
-    -fx-background-size: 1960 1200;
+    -fx-background-size: 1960 1300;
     -fx-background-position: center center;
     -fx-font-family: "Walter Turncoat";
     -fx-font-style: normal;
