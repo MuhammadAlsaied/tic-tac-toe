@@ -143,9 +143,9 @@ public class MainScreen extends Pane {
             gridPane.add(playerName, 1, i);
         }
     }
-    public void addPlayersToOfflineList(JsonArray onlinePlayerList) {
+    public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
         
-        onlinePlayerList.forEach((p) -> {
+        offlinePlayerList.forEach((p) -> {
             player = new Player();
             JsonObject jsonPlayer = p.getAsJsonObject();
             player.setFirstName(jsonPlayer.get("firstName").getAsString());
