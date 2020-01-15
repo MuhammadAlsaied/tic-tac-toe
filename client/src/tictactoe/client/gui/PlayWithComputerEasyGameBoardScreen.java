@@ -62,7 +62,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                     public void handle(MouseEvent event) {
                         if (turn && textLabelflag[x]) {
                             l.get(x).setText("X");
-                            l.get(x).setId("x");
+                            l.get(x).setId("X");
                             turn = false;
                             textLabelflag[x] = false;
                             counter++;
@@ -137,7 +137,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
             if (turn == false && textLabelflag[cpupos]) {
                 counter++;
                 l.get(cpupos).setText("O");
-                l.get(cpupos).setId("o");
+                l.get(cpupos).setId("O");
                 turn = true;
                 textLabelflag[cpupos] = false;
                 checkWinner();
