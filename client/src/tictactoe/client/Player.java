@@ -10,6 +10,15 @@ public class Player {
     private String email;
     private String img;
     private String password;
+    private int score;
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     Player(){
         id = 0;
