@@ -18,6 +18,7 @@ public class Game {
     public Game(Player player1, Player player2) {
         this.playerX = player1;
         this.playerO = player2;
+        nextMove = Move.X;
         gameStatus = Status.inProgress;
         this.gameCoordinates = new JsonObject();
         gameCoordinates.addProperty("upper_left", "-");
