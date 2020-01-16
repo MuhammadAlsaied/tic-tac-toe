@@ -12,7 +12,9 @@ import java.net.Socket;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 import tictactoe.server.db.DatabaseManager;
 
@@ -26,6 +28,7 @@ public class Server {
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
     private final HashMap<Integer, User> offlinePlayers = new HashMap<>();
+     public final Set<ClientThread> arr = new HashSet<ClientThread>();
 
     Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
         int diff = o1.getPoints() - o2.getPoints();
@@ -174,6 +177,18 @@ public class Server {
             }
         }
 
+        public void closeClient() {
+            try {
+                dataInputStream.close();
+                user.dataOutputStream.close();
+                socket.close();
+                stop();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
     }
 
     public JsonArray getSortedOnlinePlayersAsJson() {
@@ -246,7 +261,21 @@ public class Server {
         return onlinePlayers.get(id);
     }
 
+    private void offButton() {
+
+        for (ClientThread clientThread : arr) {
+            clientThread.closeClient();
+            try {
+                serverSocket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
     public static void main(String[] args) {
+        //online
         new Server();
     }
 }
