@@ -1,5 +1,11 @@
 package tictactoe.client.gui;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.TreeSet;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -19,10 +25,29 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import tictactoe.client.App;
+import tictactoe.client.Player;
 
 public class MainScreen extends Pane {
 
+    Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
+        int diff = o1.getPoints() - o2.getPoints();
+        if (diff == 0) {
+            if (o1.getId() < o2.getId()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+        return diff;
+    };
+
+    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
+    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
+    private GridPane gridPane;
+    private Player player;
+    App app;
     public MainScreen(App app) {
+        this.app = app;
         ToggleButton challengeComp = new ToggleButton("CHALLENGE COMPUTER");
         challengeComp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -37,29 +62,13 @@ public class MainScreen extends Pane {
         challengePlayer.setId("playerButton");
         HBox buttonBox = new HBox(20, challengeComp, challengePlayer);
         buttonBox.setAlignment(Pos.CENTER_LEFT);
-        buttonBox.setLayoutX(40);
+        buttonBox.setLayoutX(80);
         buttonBox.setLayoutY(350);
-        GridPane gr = new GridPane();
-        gr.setId("GridMain");
-        gr.setHgap(50);
+        gridPane = new GridPane();
+        gridPane.setId("GridMain");
+        gridPane.setHgap(50);
 
-        for (int i = 0; i < 10; i++) {
-            ToggleButton invite2 = new ToggleButton("Challenge");
-            invite2.setId("challengeScrolPaneMainScreen");
-            Label score2 = new Label("500");
-            score2.setId("scoreLabel");
-            Label imglabel2 = new Label();
-            Image img2 = new Image(getClass().getResourceAsStream("/images/k.png"));
-            imglabel2.setGraphic(new ImageView(img2));
-            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
-            cir2.setFill(Color.GREEN);
-            gr.add(cir2, 0, i);
-            gr.add(invite2, 3, i);
-            gr.add(score2, 2, i);
-            gr.add(imglabel2, 1, i);
-        }
-
-        gr.setPrefSize(495.2, 250.0);
+        gridPane.setPrefSize(495.2, 250.0);
         Button send = new Button();
         send.setText("send");
         send.setOnAction(new EventHandler<ActionEvent>() {
@@ -70,10 +79,40 @@ public class MainScreen extends Pane {
             }
         });
         send.setId("sendChatMainScreen");
-        send.setLayoutX(1000);
-        send.setLayoutY(600);
+        send.setLayoutX(1050);
+        send.setLayoutY(700);
+        TextArea ta = new TextArea(" ");
+        send.setOnAction(new EventHandler<ActionEvent>() {
 
-        ScrollPane scrollPane = new ScrollPane(gr);
+            @Override
+            public void handle(ActionEvent event) {
+                JsonObject response = new JsonObject();
+                JsonObject data = new JsonObject();
+                response.add("data", data);
+                response.addProperty("type", "Message_sent");
+                data.addProperty("msg", ta.getText());
+                try {
+                    app.getDataOutputStream().writeUTF(response.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+        });
+        Button exit = new Button("EXIT");
+        exit.setId("back");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(150, 50);
+        exit.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
+        ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setId("scrollPane1");
         scrollPane.setFocusTraversable(false);
 
@@ -83,20 +122,19 @@ public class MainScreen extends Pane {
 
         VBox v = new VBox();
         v.getChildren().add(scrollPane);
-        v.setLayoutX(850);
+        v.setLayoutX(930);
         v.setLayoutY(0);
-        TextArea ta = new TextArea(" ");
         ta.setId("ta");
-        ta.setLayoutX(730);
-        ta.setLayoutY(400);
+        ta.setLayoutX(800);
+        ta.setLayoutY(420);
         ta.setMaxWidth(220.0);
-        ta.setMaxHeight(150.0);
+        ta.setMaxHeight(250.0);
 
         TextArea text = new TextArea("");
-        
+
         text.setPromptText("Enter your Msg ");
-        text.setLayoutX(730);
-        text.setLayoutY(600);
+        text.setLayoutX(800);
+        text.setLayoutY(700);
         text.setMaxWidth(220.0);
         text.setMaxHeight(10.5);
 
@@ -104,17 +142,95 @@ public class MainScreen extends Pane {
         Label labelk = new Label();
         labelk.setGraphic(new ImageView(img2));
 
-       
-        labelk.setLayoutX(700);
+        labelk.setLayoutX(760);
         labelk.setLayoutY(20);
         labelk.setMaxSize(50.0, 50.0);
 
         labelk.setFont(new Font("Arial", 24));
 
-        getChildren().addAll(buttonBox, text, ta, send, v, labelk);
+        getChildren().addAll(buttonBox, text, ta, send, v, labelk,exit);
         setId("MainScreenPane");
     }
 
-  
+    public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
+        onlinePlayerList.forEach((p) -> {
+            player = new Player();
+            JsonObject jsonPlayer = p.getAsJsonObject();
+            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+            player.setPoints(jsonPlayer.get("points").getAsInt());
+            player.setId(jsonPlayer.get("id").getAsInt());
+            sortedOnlinePlayersbyPoints.add(player);
+        });
+        for (int i = 0; i < 10; i++) {
+            ToggleButton invite2 = new ToggleButton("Challenge");
+            invite2.setId("challengeScrolPaneMainScreen");
+            invite2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.add("data", data);
+                    request.addProperty("type", "invitation");
+                    data.addProperty("invited_player_id", player.getId());
+                    try {
+                        app.getDataOutputStream().writeUTF(request.getAsString());
+                    } 
+                    catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            Label score2 = new Label(Integer.toString(player.getPoints()));
+            score2.setId("scoreLabel");
+            Label playerName = new Label(player.getFirstName());
+            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
+            cir2.setFill(Color.GREEN);
+            gridPane.add(cir2, 0, i);
+            gridPane.add(invite2, 3, i);
+            gridPane.add(score2, 2, i);
+            gridPane.add(playerName, 1, i);
+        }
+    }
+
+    public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
+
+        offlinePlayerList.forEach((p) -> {
+            player = new Player();
+            JsonObject jsonPlayer = p.getAsJsonObject();
+            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+            player.setPoints(jsonPlayer.get("points").getAsInt());
+            player.setId(jsonPlayer.get("id").getAsInt());
+            sortedOfflinePlayersbyPoints.add(player);
+        });
+        for (int i = 0; i < 10; i++) {
+            ToggleButton invite2 = new ToggleButton("Challenge");
+            invite2.setId("challengeScrolPaneMainScreen");
+            invite2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.add("data", data);
+                    request.addProperty("type", "invitation");
+                    data.addProperty("invited_player_id", player.getId());
+                    try {
+                        app.getDataOutputStream().writeUTF(request.getAsString());
+                    } 
+                    catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            Label score2 = new Label(Integer.toString(player.getPoints()));
+            score2.setId("scoreLabel");
+            Label playerName = new Label(player.getFirstName());
+            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
+            cir2.setFill(Color.RED);
+            gridPane.add(cir2, 0, i);
+            gridPane.add(invite2, 3, i);
+            gridPane.add(score2, 2, i);
+            gridPane.add(playerName, 1, i);
+        }
+    }
 
 }

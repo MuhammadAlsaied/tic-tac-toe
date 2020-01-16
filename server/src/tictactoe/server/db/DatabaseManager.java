@@ -271,7 +271,40 @@ public class DatabaseManager {
         }
         return terminatedGame;
     }
-
+    
+    // Done and tested..
+    public boolean updateGame(Game gameToUpdate){
+        boolean updated = false;
+        PreparedStatement pst;
+        int playerXId = gameToUpdate.getPlayerXId();
+        int playerOId = gameToUpdate.getPlayerOId();
+        int gameId = gameToUpdate.getGameId();
+        String sessionStatus = gameToUpdate.getGameStatus().toString();
+        String coordinates = gameToUpdate.getCoordinates().toString();
+        
+        
+        try{
+            establishConnection();
+            
+            pst = connection.prepareStatement("UPDATE game SET player1_id = ?, player2_id = ?, session_status = ?, coordinates = ? WHERE id = ?;");
+            pst.setInt(1, playerXId);
+            pst.setInt(2, playerOId);
+            pst.setString(3, sessionStatus);
+            pst.setString(4, coordinates);
+            pst.setInt(5, gameId);
+            
+            pst.executeUpdate();
+            pst.close();
+            updated = true;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
+                
+        return updated;
+    }
+    
+    
     /* to test the database connetion and getting some data.
      public void check(){
      try{

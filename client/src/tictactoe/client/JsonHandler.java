@@ -1,7 +1,9 @@
 package tictactoe.client;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.DataInputStream;
+import tictactoe.client.gui.MainScreen;
 import tictactoe.client.gui.SignupScreen;
 
 /**
@@ -33,6 +35,9 @@ public class JsonHandler {
                 break;
             case "signin-success":
                 app.setScreen("main");
+                MainScreen mainScreen =(MainScreen) app.screens.get("main");
+                JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");
+                mainScreen.addPlayersToOnlineList(onlinePlayerList);
                 break;
             case "signin-error":
                 app.showAlert("Could not login", requestData.get("msg").getAsString());
