@@ -315,9 +315,9 @@ Label
     -fx-background-radius: 22px;
     -fx-text-fill:#FFFFFF
 }
-#over
+#noOneIsTheWinner
 {
-    -fx-background-image: url("/images/win.png");
+    -fx-background-image: url("/images/equal.png");
     -fx-background-repeat: no-repeat;   
     -fx-background-position: center center;
     -fx-border-style: solid;

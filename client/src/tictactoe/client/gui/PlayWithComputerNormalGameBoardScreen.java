@@ -79,12 +79,12 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         }
         //
         setId("stackGameboard");
-        Label label1 = new Label("player1");
-        Label label2 = new Label("player2");
+       Label label1 = new Label("PLAYER1");
+        Label label2 = new Label("COMPUTER");
 
-        HBox hbox = new HBox(380, label1, label2);
+        HBox hbox = new HBox(385, label1, label2);
         hbox.setLayoutX(70);
-        hbox.setLayoutY(15);
+        hbox.setLayoutY(25);
 
         TextArea ta = new TextArea(" ");
         ta.setId("ta");

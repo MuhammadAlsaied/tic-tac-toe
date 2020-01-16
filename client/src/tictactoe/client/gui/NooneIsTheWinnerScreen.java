@@ -24,10 +24,10 @@ public class NooneIsTheWinnerScreen extends StackPane {
         this.app = app;
         Region rec = new Region();
         rec.setPrefSize(498, 460);
-        rec.setId("rec");
+        rec.setId("recSignin");
 
         Region over = new Region();
-        over.setId("over");
+        over.setId("noOneIsTheWinner");
         over.setPrefSize(130, 130);
        
 
@@ -37,12 +37,12 @@ public class NooneIsTheWinnerScreen extends StackPane {
         e.setBlurType(BlurType.GAUSSIAN);
         e.setColor(Color.BLACK);
 
-        Button lose = new Button("Noone  Is The Winner");
-        lose.setId("lose");
-        lose.setEffect(e);
-        Button back = new Button("Back");
+        Button noOneWine = new Button("No one Is The Winner");
+        noOneWine.setId("lose");
+        noOneWine.setEffect(e);
+        ToggleButton back = new ToggleButton("Back");
         back.setOnAction((event) -> {
-            app.setScreen("multiOnlinePlayers");
+            app.setScreen("main");
         });
         back.setPrefSize(180, 20);
         back.setId("back");
@@ -58,7 +58,7 @@ public class NooneIsTheWinnerScreen extends StackPane {
         HBox buttonBox = new HBox(50,back,playAgain);
         
 
-        VBox vbox = new VBox(30, over, lose,buttonBox);
+        VBox vbox = new VBox(30, over, noOneWine,buttonBox);
                 vbox.setId("vbox");
 
 

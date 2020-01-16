@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.TreeSet;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -61,7 +62,7 @@ public class MainScreen extends Pane {
         challengePlayer.setId("playerButton");
         HBox buttonBox = new HBox(20, challengeComp, challengePlayer);
         buttonBox.setAlignment(Pos.CENTER_LEFT);
-        buttonBox.setLayoutX(40);
+        buttonBox.setLayoutX(80);
         buttonBox.setLayoutY(350);
         gridPane = new GridPane();
         gridPane.setId("GridMain");
@@ -80,7 +81,37 @@ public class MainScreen extends Pane {
         send.setId("sendChatMainScreen");
         send.setLayoutX(1050);
         send.setLayoutY(700);
+        TextArea ta = new TextArea(" ");
+        send.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
+            public void handle(ActionEvent event) {
+                JsonObject response = new JsonObject();
+                JsonObject data = new JsonObject();
+                response.add("data", data);
+                response.addProperty("type", "Message_sent");
+                data.addProperty("msg", ta.getText());
+                try {
+                    app.getDataOutputStream().writeUTF(response.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+        });
+        Button exit = new Button("EXIT");
+        exit.setId("back");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(150, 50);
+        exit.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
         ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setId("scrollPane1");
         scrollPane.setFocusTraversable(false);
@@ -93,7 +124,6 @@ public class MainScreen extends Pane {
         v.getChildren().add(scrollPane);
         v.setLayoutX(930);
         v.setLayoutY(0);
-        TextArea ta = new TextArea(" ");
         ta.setId("ta");
         ta.setLayoutX(800);
         ta.setLayoutY(420);
@@ -118,7 +148,7 @@ public class MainScreen extends Pane {
 
         labelk.setFont(new Font("Arial", 24));
 
-        getChildren().addAll(buttonBox, text, ta, send, v, labelk);
+        getChildren().addAll(buttonBox, text, ta, send, v, labelk,exit);
         setId("MainScreenPane");
     }
 

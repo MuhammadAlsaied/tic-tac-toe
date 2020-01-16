@@ -24,7 +24,7 @@ public class YouWinScreen extends StackPane {
         this.app = app;
         Region rec = new Region();
         rec.setPrefSize(498, 460);
-        rec.setId("rec");
+        rec.setId("recSignin");
 
         Region over = new Region();
         over.setId("over");
@@ -43,6 +43,9 @@ public class YouWinScreen extends StackPane {
         ToggleButton back = new ToggleButton("Back");
         back.setPrefSize(180, 20);
         back.setId("back");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+        });
         ToggleButton playAgain = new ToggleButton("Play Again");
         playAgain.setOnAction(new EventHandler<ActionEvent>() {
             @Override
