@@ -46,6 +46,7 @@ public class MainScreen extends Pane {
     private GridPane gridPane;
     private Player player;
     App app;
+
     public MainScreen(App app) {
         this.app = app;
         ToggleButton challengeComp = new ToggleButton("CHALLENGE COMPUTER");
@@ -104,13 +105,8 @@ public class MainScreen extends Pane {
         exit.setLayoutX(280);
         exit.setLayoutY(650);
         exit.setPrefSize(150, 50);
-        exit.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                Platform.exit();
-                System.exit(0);
-            }
+        exit.setOnAction((t) -> {
+            app.exit();
         });
         ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setId("scrollPane1");
@@ -148,20 +144,20 @@ public class MainScreen extends Pane {
 
         labelk.setFont(new Font("Arial", 24));
 
-        getChildren().addAll(buttonBox, text, ta, send, v, labelk,exit);
+        getChildren().addAll(buttonBox, text, ta, send, v, labelk, exit);
         setId("MainScreenPane");
     }
 
     public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
-        onlinePlayerList.forEach((p) -> {
+        for(int i=0; i<onlinePlayerList.size(); i++){
+            System.out.println(onlinePlayerList.get(i).toString());
             player = new Player();
-            JsonObject jsonPlayer = p.getAsJsonObject();
-            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+            JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
+            player.setFirstName(jsonPlayer.get("firstName").toString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
-            sortedOnlinePlayersbyPoints.add(player);
-        });
-        for (int i = 0; i < 10; i++) {
+            sortedOfflinePlayersbyPoints.add(player);
+
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
             invite2.setOnAction(new EventHandler<ActionEvent>() {
@@ -173,9 +169,8 @@ public class MainScreen extends Pane {
                     request.addProperty("type", "invitation");
                     data.addProperty("invited_player_id", player.getId());
                     try {
-                        app.getDataOutputStream().writeUTF(request.getAsString());
-                    } 
-                    catch (IOException ex) {
+                        app.getDataOutputStream().writeUTF(request.toString());
+                    } catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -189,20 +184,21 @@ public class MainScreen extends Pane {
             gridPane.add(invite2, 3, i);
             gridPane.add(score2, 2, i);
             gridPane.add(playerName, 1, i);
+            i++;
+
         }
     }
-
+    
     public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
-
-        offlinePlayerList.forEach((p) -> {
+        for(int i=0; i<offlinePlayerList.size(); i++){
+            System.out.println(offlinePlayerList.get(i).toString());
             player = new Player();
-            JsonObject jsonPlayer = p.getAsJsonObject();
-            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+            JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
+            player.setFirstName(jsonPlayer.get("firstName").toString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
             sortedOfflinePlayersbyPoints.add(player);
-        });
-        for (int i = 0; i < 10; i++) {
+
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
             invite2.setOnAction(new EventHandler<ActionEvent>() {
@@ -214,9 +210,9 @@ public class MainScreen extends Pane {
                     request.addProperty("type", "invitation");
                     data.addProperty("invited_player_id", player.getId());
                     try {
-                        app.getDataOutputStream().writeUTF(request.getAsString());
-                    } 
-                    catch (IOException ex) {
+                        app.getDataOutputStream().writeUTF(request.toString());
+                        System.out.println(request);
+                    } catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -230,7 +226,13 @@ public class MainScreen extends Pane {
             gridPane.add(invite2, 3, i);
             gridPane.add(score2, 2, i);
             gridPane.add(playerName, 1, i);
+            i++;
+
         }
+    }
+    
+    public void clearPlayersList(){
+        
     }
 
 }

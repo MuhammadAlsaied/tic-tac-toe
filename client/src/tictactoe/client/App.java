@@ -29,6 +29,7 @@ public class App extends Application {
     private Stage pStage;
 
     public App() {
+        addScreens();
         jsonHandler = new JsonHandler(this);
         try {
             s = new Socket(Config.SERVER_IP, Config.PORT);
@@ -87,6 +88,10 @@ public class App extends Application {
         mainScene.setRoot(screens.get(screenName));
     }
 
+    public Pane getScreen(String screen) {
+        return screens.get(screen);
+    }
+
     /////////////////////error handling methods////////////////////////////////
     public void showAlert(String title, String msg) {
         Platform.runLater(new Runnable() {
@@ -106,23 +111,19 @@ public class App extends Application {
         JsonObject data = new JsonObject();
         jsonObject.addProperty("type", "signout");
 
-            try {
-                dataOutputStream.writeUTF(jsonObject.toString());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+        try {
+            dataOutputStream.writeUTF(jsonObject.toString());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         Platform.exit();
         System.exit(0);
     }
 
-    
-    
     //////////////////////////////////////////////////////////////////////////
-
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
         pStage = primaryStage;
-        addScreens();
         primaryStage.setTitle("TIC TAC TOE!");
         mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
@@ -148,6 +149,5 @@ public class App extends Application {
     public static void main(String[] args) {
         Application.launch(args);
     }
-    
 
 }
