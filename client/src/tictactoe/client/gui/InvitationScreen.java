@@ -1,5 +1,7 @@
 package tictactoe.client.gui;
 
+import com.google.gson.JsonObject;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -18,25 +20,24 @@ import tictactoe.client.App;
  * @author KeR
  */
 public class InvitationScreen extends StackPane {
+    
+    private int challengerId;    
+    private String challengerName;
 
+    private App app;
  
     public  InvitationScreen(App app) {
-
+        this.app = app;
         Region rec = new Region();
         rec.setPrefSize(498, 460);
         rec.setId("regionInvitationScreen");
-
-
-
         DropShadow e = new DropShadow();
         e.setOffsetX(0.0f);
         e.setOffsetY(4.0f);
         e.setBlurType(BlurType.GAUSSIAN);
         e.setColor(Color.BLACK);
-        String str = new String("Kareem");
-
+        String str = new String("Challenger");
         Button lose = new Button(str + " Challenges you");
-
         lose.setId("playerWantsToChallengeYou");
         lose.setEffect(e);
         ToggleButton accept = new ToggleButton("Acccept");
@@ -46,6 +47,17 @@ public class InvitationScreen extends StackPane {
             public void handle(ActionEvent event) {
                 MultiOnlinePlayers.turn = false;
                 app.setScreen("multiOnlinePlayers");
+                JsonObject response = new JsonObject();
+                JsonObject data = new JsonObject();
+                response.add("data", data);
+                response.addProperty("type", "accept-invitation");
+                data.addProperty("inviting_player_id", challengerId);
+                try {
+                    app.getDataOutputStream().writeUTF(response.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
             }
         });
         accept.setId("acceptInvitation");
@@ -59,5 +71,11 @@ public class InvitationScreen extends StackPane {
 
         getChildren().addAll(rec, vbox);
         setId("stackInvitation");
+    }
+    
+    public void setInvitation(int challengerId, String challengerName){
+        this.challengerId = challengerId;
+        this.challengerName = challengerName;
+        app.setScreen("invitation");
     }
 }
