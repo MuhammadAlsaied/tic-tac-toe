@@ -45,7 +45,7 @@ public class Server {
 
     // private final HashSet<Socket> unloggedInUsers = new HashSet<>();
     JsonHandler jsonHandler = null;
-
+ 
     private DatabaseManager databaseManager;
 
     public Server() {
@@ -159,6 +159,7 @@ public class Server {
                         System.out.println(line);
                         if (request.get("type").getAsString().equals("signout")) {
                             //removeFromOnlinePlayers(user.getPlayer().getId());
+                            System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
                             if (user.player != null) {
                                 System.out.println(user.player.getFirstName() + " logging off");
                                 removeFromOnlinePlayers(user.player.getId());
@@ -170,10 +171,13 @@ public class Server {
                     }
                 }
             } catch (IOException ex) {
+                if (user.player != null) {
+                    System.out.println(user.player.getFirstName() + " logging off");
+                    removeFromOnlinePlayers(user.player.getId());
+                }
                 ex.printStackTrace();
             }
         }
-
     }
 
     public JsonArray getSortedOnlinePlayersAsJson() {
@@ -195,6 +199,7 @@ public class Server {
     public void addToOnlinePlayers(int id, User newUser) {
 
         User user = offlinePlayers.remove(id);
+        System.out.println("deleted user obj:" + user);
         JsonObject response = new JsonObject();
         JsonObject data = new JsonObject();
         response.addProperty("type", "online-player");
