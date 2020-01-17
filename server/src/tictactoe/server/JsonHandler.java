@@ -48,7 +48,17 @@ public class JsonHandler {
             case "decline-invitation":
                 //{"type": "decline-invitation", "data":{"inviting_player_id": 123}}
                 break;
+            case "game-move":
+                response = handleGameMove(request, user);
+                break;
+            case "game-end":
+                response = handleGameEnd(request, user);
+                break;
+            case "chat_message":
+               JsonObject respons=handleMessage(requestData,user);
+
         }
+
         if (response != null) {
             try {
                 user.getDataOutputStream().writeUTF(response.toString());
@@ -57,6 +67,20 @@ public class JsonHandler {
             }
 
         }
+    }
+
+
+    
+
+    private JsonObject handleMessage(JsonObject requestData, User user) {
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("data", data);
+//        while (true) {
+//            String message = requestData.get("msg").getAsString();
+//            server.sendToAllOnlinePlayers(requestData);
+//        }
+       return response;
     }
 
     private JsonObject handleSignup(JsonObject requestData, User user) {
@@ -117,21 +141,21 @@ public class JsonHandler {
     private JsonObject handleInvitation(JsonObject request, User user) {
         JsonObject reqData = request.get("data").getAsJsonObject();
         User opponentUser = server.getOnlinePlayerById(reqData.get("invited_player_id").getAsInt());
+        System.out.println("is oponent online" + opponentUser.getPlayer().isOnline());
+        System.out.println("does oponent has game" + opponentUser.getPlayer().getCurrentGame());
+        // if (opponentUser.getPlayer().isOnline() && opponentUser.getPlayer().getCurrentGame() == null) {
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("data", data);
+        response.addProperty("type", "invitation");
 
-        if (opponentUser.getPlayer().isOnline() && opponentUser.getPlayer().getCurrentGame() == null) {
-            JsonObject response = new JsonObject();
-            JsonObject data = new JsonObject();
-            response.add("data", data);
-            response.addProperty("type", "invitation");
-
-            data.addProperty("inviter_player_id", user.getPlayer().getId());
-            try {
-                opponentUser.getDataOutputStream().writeUTF(response.toString());
-            } catch (IOException iOException) {
-                iOException.printStackTrace();
-            }
+        data.addProperty("inviter_player_id", user.getPlayer().getId());
+        try {
+            opponentUser.getDataOutputStream().writeUTF(response.toString());
+        } catch (IOException iOException) {
+            iOException.printStackTrace();
         }
-
+        //}
         return null;
     }
 
@@ -143,7 +167,7 @@ public class JsonHandler {
             Game game = new Game(invitingPlayer.getPlayer(), user.getPlayer());
             invitingPlayer.getPlayer().setCurrentGame(game);
             user.getPlayer().setCurrentGame(game);
-            
+
             JsonObject response = new JsonObject();
             JsonObject data = new JsonObject();
             response.add("data", data);
@@ -156,6 +180,38 @@ public class JsonHandler {
                 iOException.printStackTrace();
             }
         }
+        return null;
+    }
+
+    private JsonObject handleGameMove(JsonObject request, User user) {
+        JsonObject reqData = request.get("data").getAsJsonObject();
+
+        if (user.getPlayer().getCurrentGame() != null) {
+            Game game = user.getPlayer().getCurrentGame();
+            Game.Position position = Game.Position.valueOf(reqData.get("position").getAsString());
+            Game.Move move = Game.Move.valueOf(reqData.get("move").getAsString());
+
+            Player opponentPlayer = move.equals(Game.Move.X) ? game.getPlayerO() : game.getPlayerX();
+            game.setNextMove(position, move);
+
+            JsonObject response = new JsonObject();
+            JsonObject data = new JsonObject();
+            //response.add("data", da    ta);
+            response.addProperty("type", "game-move");
+            data.addProperty("position", position.toString());
+            data.addProperty("move", move.toString());
+
+            try {
+                server.getOnlinePlayerById(opponentPlayer.getId()).
+                        getDataOutputStream().writeUTF(response.toString());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    private JsonObject handleGameEnd(JsonObject request, User user) {
         return null;
     }
 }
