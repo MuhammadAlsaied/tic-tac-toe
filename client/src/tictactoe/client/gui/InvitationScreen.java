@@ -20,14 +20,16 @@ import tictactoe.client.App;
  * @author KeR
  */
 public class InvitationScreen extends StackPane {
-    
-    private int challengerId;    
-    private String challengerName;
 
+    private int challengerId;
+    private String challengerName;
+    private MultiOnlinePlayers multiOnlinePlayers;
     private App app;
- 
-    public  InvitationScreen(App app) {
+
+    public InvitationScreen(App app) {
         this.app = app;
+        multiOnlinePlayers = (MultiOnlinePlayers) app.getScreen("multiOnlinePlayers");
+
         Region rec = new Region();
         rec.setPrefSize(498, 460);
         rec.setId("regionInvitationScreen");
@@ -40,13 +42,15 @@ public class InvitationScreen extends StackPane {
         Button lose = new Button(str + " Challenges you");
         lose.setId("playerWantsToChallengeYou");
         lose.setEffect(e);
-        ToggleButton accept = new ToggleButton("Acccept");
+        /////////////////accept button//////////////////////
+        ToggleButton accept = new ToggleButton("Accept");
         accept.setPrefSize(200, 20);
+        accept.setId("acceptInvitation");
         accept.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                MultiOnlinePlayers.turn = false;
                 app.setScreen("multiOnlinePlayers");
+                multiOnlinePlayers.turn = false;
                 JsonObject response = new JsonObject();
                 JsonObject data = new JsonObject();
                 response.add("data", data);
@@ -60,10 +64,25 @@ public class InvitationScreen extends StackPane {
 
             }
         });
-        accept.setId("acceptInvitation");
+        ///////////////////////decline button//////////////////////////
         ToggleButton Decline = new ToggleButton("Decline");
         Decline.setPrefSize(200, 20);
         Decline.setId("declineInvitation");
+        Decline.setOnAction((t) -> {
+            app.setScreen("main");
+            JsonObject response = new JsonObject();
+            JsonObject data = new JsonObject();
+            response.add("data", data);
+            response.addProperty("type", "decline-invitation");
+            data.addProperty("inviting_player_id", challengerId);
+            try {
+                app.getDataOutputStream().writeUTF(response.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        });
+        ///////////////////////////////////////////////////////////////
         HBox buttonBox = new HBox(20, accept, Decline);
 
         VBox vbox = new VBox(100, lose, buttonBox);
@@ -72,10 +91,11 @@ public class InvitationScreen extends StackPane {
         getChildren().addAll(rec, vbox);
         setId("stackInvitation");
     }
-    
-    public void setInvitation(int challengerId, String challengerName){
+
+    public void setInvitation(int challengerId, String challengerName) {
         this.challengerId = challengerId;
         this.challengerName = challengerName;
         app.setScreen("invitation");
     }
+
 }

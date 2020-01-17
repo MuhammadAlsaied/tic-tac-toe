@@ -20,8 +20,8 @@ import tictactoe.client.gui.*;
 
 public class App extends Application {
 
-    HashMap<String, Pane> screens = new HashMap<>();
-    Scene mainScene;
+    private HashMap<String, Pane> screens = new HashMap<>();
+    private Scene mainScene;
     private Socket s;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;

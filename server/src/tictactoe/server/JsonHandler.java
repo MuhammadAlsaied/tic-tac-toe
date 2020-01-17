@@ -45,6 +45,9 @@ public class JsonHandler {
             case "accept-invitation":
                 response = handleInvitationAccept(request, user);
                 break;
+            case "decline-invitation":
+                //{"type": "decline-invitation", "data":{"inviting_player_id": 123}}
+                break;
         }
         if (response != null) {
             try {
