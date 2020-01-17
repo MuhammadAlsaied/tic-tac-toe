@@ -174,13 +174,12 @@ public class Server {
                             jsonHandler.handle(request, user);
                         }
                     }
-                } catch (IOException ex){
+                }
+            } catch (IOException ex) {
 
                 ex.printStackTrace();
             }
         }
-      
-    
 
         public void closeClient() {
             try {
