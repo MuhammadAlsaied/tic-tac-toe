@@ -10,8 +10,19 @@ public class Player {
     private String email;
     private String img;
     private String password;
+    private int points;
 
-    Player(){
+    
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public Player(){
         id = 0;
         firstName = null;
         lastName = null;

@@ -10,6 +10,7 @@ CREATE TABLE player (id int(250) not null primary key auto_increment,
 create table game(id int(11) not null primary key auto_increment,
  player1_id int(11), 
  player2_id int(11), 
- session_closed json);
+ session_status ENUM ('inProgress','terminated','finished'),
+ coordinates ENUM ('upper_left', 'up', 'upper_right', 'left', 'center', 'right', 'lower_left', 'lower_right', 'down'));
 
 

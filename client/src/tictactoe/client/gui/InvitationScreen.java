@@ -1,8 +1,9 @@
 package tictactoe.client.gui;
 
-import javafx.application.Application;
-import static javafx.application.Application.launch;
-import javafx.scene.Scene;
+import com.google.gson.JsonObject;
+import java.io.IOException;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
@@ -12,51 +13,69 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import tictactoe.client.App;
-import static javafx.application.Application.launch;
 
 /**
  *
  * @author KeR
  */
 public class InvitationScreen extends StackPane {
+    
+    private int challengerId;    
+    private String challengerName;
 
+    private App app;
  
     public  InvitationScreen(App app) {
-
+        this.app = app;
         Region rec = new Region();
         rec.setPrefSize(498, 460);
-        rec.setId("rec");
-
-        Region over = new Region();
-        over.setId("over");
-        over.setPrefSize(130, 130);
-
+        rec.setId("regionInvitationScreen");
         DropShadow e = new DropShadow();
         e.setOffsetX(0.0f);
         e.setOffsetY(4.0f);
         e.setBlurType(BlurType.GAUSSIAN);
         e.setColor(Color.BLACK);
-        String str = new String("Kareem");
-
+        String str = new String("Challenger");
         Button lose = new Button(str + " Challenges you");
-        lose.setPrefSize(250, 20);
-
-        lose.setId("lose");
+        lose.setId("playerWantsToChallengeYou");
         lose.setEffect(e);
-        ToggleButton Acccept = new ToggleButton("Acccept");
-        Acccept.setPrefSize(200, 20);
-        Acccept.setId("back");
+        ToggleButton accept = new ToggleButton("Acccept");
+        accept.setPrefSize(200, 20);
+        accept.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                MultiOnlinePlayers.turn = false;
+                app.setScreen("multiOnlinePlayers");
+                JsonObject response = new JsonObject();
+                JsonObject data = new JsonObject();
+                response.add("data", data);
+                response.addProperty("type", "accept-invitation");
+                data.addProperty("inviting_player_id", challengerId);
+                try {
+                    app.getDataOutputStream().writeUTF(response.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+        });
+        accept.setId("acceptInvitation");
         ToggleButton Decline = new ToggleButton("Decline");
         Decline.setPrefSize(200, 20);
-        Decline.setId("playAgain");
-        HBox buttonBox = new HBox(20, Acccept, Decline);
+        Decline.setId("declineInvitation");
+        HBox buttonBox = new HBox(20, accept, Decline);
 
         VBox vbox = new VBox(100, lose, buttonBox);
-        vbox.setId("vbox");
+        vbox.setId("vboxInvitationScreen");
 
         getChildren().addAll(rec, vbox);
         setId("stackInvitation");
+    }
+    
+    public void setInvitation(int challengerId, String challengerName){
+        this.challengerId = challengerId;
+        this.challengerName = challengerName;
+        app.setScreen("invitation");
     }
 }

@@ -21,7 +21,7 @@ public class JsonHandler {
     public JsonHandler(Server server) {
         this.server = server;
         try {
-            this.databaseManager = new DatabaseManager();
+            this.databaseManager = server.getDatabaseManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -40,8 +40,16 @@ public class JsonHandler {
                 response = handleSignin(requestData, user);
                 break;
             case "invitation":
-                Player invitingPlayer = new Player();
-                response = handleInvitation(user.getPlayer(), invitingPlayer);
+                response = handleInvitation(request, user);
+                break;
+            case "accept-invitation":
+                response = handleInvitationAccept(request, user);
+                break;
+            case "game-move":
+                response = handleGameMove(request, user);
+                break;
+            case "game-end":
+                response = handleGameEnd(request, user);
                 break;
             case "chat_message":
                JsonObject respons=handleMessage(requestData,user);
@@ -83,15 +91,22 @@ public class JsonHandler {
         String password = requestData.get("password").getAsString();
         {
             try {
-                boolean success = databaseManager.signUp(firstName, lastName, email, password);
-                if (success) {
+                Player player = null;
+                try {
+                    player = databaseManager.signUp(firstName, lastName, email, password);
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                if (player != null) {
                     response.addProperty("type", "signup-success");
+                    server.addNewOfflinePlayer(player);
                 } else {
                     response.addProperty("type", "signup-error");
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
+
         }
         return response;
     }
@@ -109,48 +124,91 @@ public class JsonHandler {
             data.addProperty("msg", "wrong email or password");
         } else {
             user.setPlayer(player);
-            JsonArray onlineUsers = server.getOnlinePlayersAsJson();
             server.addToOnlinePlayers(player.getId(), user);
-            server.removeFromUnloggedInUsers(user.getSocket());
             response.addProperty("type", "signin-success");
+            JsonArray onlineUsers = server.getSortedOnlinePlayersAsJson();
+            JsonArray offlineUsers = server.getSortedOfflinePlayersAsJson();
             data.add("online-players", onlineUsers);
+            data.add("offline-players", offlineUsers);
             data.add("my-data", player.asJson());
         }
         return response;
     }
 
-    private JsonObject handleInvitation(Player inviter, Player invited) {
+    private JsonObject handleInvitation(JsonObject request, User user) {
+        JsonObject reqData = request.get("data").getAsJsonObject();
+        User opponentUser = server.getOnlinePlayerById(reqData.get("invited_player_id").getAsInt());
+        System.out.println("is oponent online" + opponentUser.getPlayer().isOnline());
+        System.out.println("does oponent has game" + opponentUser.getPlayer().getCurrentGame());
+        // if (opponentUser.getPlayer().isOnline() && opponentUser.getPlayer().getCurrentGame() == null) {
         JsonObject response = new JsonObject();
         JsonObject data = new JsonObject();
-        response.add("invitation", data);
+        response.add("data", data);
+        response.addProperty("type", "invitation");
 
-        if (!server.isOnlinePlayer(invited)) {
-            response.addProperty("type", "invitation-error");
-            data.addProperty("msg", "the invited player is not online");
+        data.addProperty("inviter_player_id", user.getPlayer().getId());
+        try {
+            opponentUser.getDataOutputStream().writeUTF(response.toString());
+        } catch (IOException iOException) {
+            iOException.printStackTrace();
         }
+        //}
+        return null;
+    }
 
-        if (invited.getCurrentGame() != null) {
-            response.addProperty("type", "invitation-error");
-            data.addProperty("msg", "user is playing with someone else at the moment");
+    private JsonObject handleInvitationAccept(JsonObject request, User user) {
+        JsonObject reqData = request.get("data").getAsJsonObject();
+        User invitingPlayer = server.getOnlinePlayerById(reqData.get("inviting_player_id").getAsInt());
+
+        if (invitingPlayer.getPlayer().isOnline() && invitingPlayer.getPlayer().getCurrentGame() == null) {
+            Game game = new Game(invitingPlayer.getPlayer(), user.getPlayer());
+            invitingPlayer.getPlayer().setCurrentGame(game);
+            user.getPlayer().setCurrentGame(game);
+
+            JsonObject response = new JsonObject();
+            JsonObject data = new JsonObject();
+            response.add("data", data);
+            response.addProperty("type", "accept-invitation");
+
+            data.addProperty("invited_player_id", user.getPlayer().getId());
+            try {
+                invitingPlayer.getDataOutputStream().writeUTF(response.toString());
+            } catch (IOException iOException) {
+                iOException.printStackTrace();
+            }
         }
+        return null;
+    }
 
-        if (server.isBusyPlayer(invited)) {
-            response.addProperty("type", "invitation-error");
-            data.addProperty("msg", "user is playing with is busy");
+    private JsonObject handleGameMove(JsonObject request, User user) {
+        JsonObject reqData = request.get("data").getAsJsonObject();
+
+        if (user.getPlayer().getCurrentGame() != null) {
+            Game game = user.getPlayer().getCurrentGame();
+            Game.Position position = Game.Position.valueOf(reqData.get("position").getAsString());
+            Game.Move move = Game.Move.valueOf(reqData.get("move").getAsString());
+
+            Player opponentPlayer = move.equals(Game.Move.X) ? game.getPlayerO() : game.getPlayerX();
+            game.setNextMove(position, move);
+
+            JsonObject response = new JsonObject();
+            JsonObject data = new JsonObject();
+            //response.add("data", da    ta);
+            response.addProperty("type", "game-move");
+            data.addProperty("position", position.toString());
+            data.addProperty("move", move.toString());
+
+            try {
+                server.getOnlinePlayerById(opponentPlayer.getId()).
+                        getDataOutputStream().writeUTF(response.toString());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
+        return null;
+    }
 
-        if (server.isOnlinePlayer(invited) && server.isFreePlayer(invited) && invited.getCurrentGame() == null) {
-            Game playNewGame = new Game(inviter, invited);
-            inviter.setCurrentGame(playNewGame);
-            invited.setCurrentGame(playNewGame);
-            JsonArray palyersPlaying = server.getInvitationsPlayersAsJson();
-            server.addToInvitationsPlayers(inviter, invited);
-            response.addProperty("invitation", "invitation-succeed");
-            data.add("invited-players", palyersPlaying);
-            data.add("inviter-player", inviter.asJson());
-            data.add("invited-player", invited.asJson());
-        }
-
-        return response;
+    private JsonObject handleGameEnd(JsonObject request, User user) {
+        return null;
     }
 }
