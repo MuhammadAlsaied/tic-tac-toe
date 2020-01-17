@@ -33,7 +33,7 @@ public class MultiOnlinePlayers extends Pane {
     Random rand;
     public static boolean turn = true;
     int counter, cpupos;
-    private String line,player1Letter,player2Letter, challengerName;
+    private String line,player1Letter,player2Letter, thisPlayerLetter = "X", challengerName;
     Vector<Label> l = new Vector<>();
     private boolean isEnded = false;
 
@@ -273,7 +273,7 @@ public class MultiOnlinePlayers extends Pane {
                 moveToServer = "up";
                 break;
             case 2:
-                moveToServer = "upper_righ";
+                moveToServer = "upper_right";
                 break;
             case 3:
                 moveToServer = "left";
@@ -294,7 +294,8 @@ public class MultiOnlinePlayers extends Pane {
                 moveToServer = "lower_right";
                 break;
         }
-        data.addProperty("move", moveToServer);
+        data.addProperty("move", thisPlayerLetter);
+        data.addProperty("position", moveToServer);
         try {
             System.out.println(request);
             app.getDataOutputStream().writeUTF(request.toString());
@@ -306,6 +307,7 @@ public class MultiOnlinePlayers extends Pane {
     public void invitationAccepted(int challengerId, String challengerName){
         app.setScreen("multiOnlinePlayers");
         this.challengerName = challengerName;
+        thisPlayerLetter = "O";
         turn = true;
     }
     

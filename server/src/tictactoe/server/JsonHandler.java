@@ -55,7 +55,13 @@ public class JsonHandler {
                 response = handleGameEnd(request, user);
                 break;
             case "chat_message":
-               JsonObject respons=handleMessage(requestData,user);
+//                response = handleMessage(requestData, user);
+                break;           
+            case "global_chat_message":
+                server.sendToAllOnlinePlayers(request);
+                response = null;
+                //respone = handleGlobalMessage(requestData, user);
+                break;
 
         }
 
@@ -69,18 +75,15 @@ public class JsonHandler {
         }
     }
 
-
-    
-
-    private JsonObject handleMessage(JsonObject requestData, User user) {
+    private JsonObject handleGlobalMessage(JsonObject requestData, User user) {
         JsonObject response = new JsonObject();
         JsonObject data = new JsonObject();
         response.add("data", data);
 //        while (true) {
-//            String message = requestData.get("msg").getAsString();
-//            server.sendToAllOnlinePlayers(requestData);
+            //String message = requestData.get("message").getAsString();
+            server.sendToAllOnlinePlayers(requestData);
 //        }
-       return response;
+        return response;
     }
 
     private JsonObject handleSignup(JsonObject requestData, User user) {
@@ -167,7 +170,6 @@ public class JsonHandler {
             Game game = new Game(invitingPlayer.getPlayer(), user.getPlayer());
             invitingPlayer.getPlayer().setCurrentGame(game);
             user.getPlayer().setCurrentGame(game);
-
             JsonObject response = new JsonObject();
             JsonObject data = new JsonObject();
             response.add("data", data);
@@ -196,7 +198,7 @@ public class JsonHandler {
 
             JsonObject response = new JsonObject();
             JsonObject data = new JsonObject();
-            //response.add("data", da    ta);
+            response.add("data", data);
             response.addProperty("type", "game-move");
             data.addProperty("position", position.toString());
             data.addProperty("move", move.toString());

@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.TreeSet;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -41,11 +40,12 @@ public class MainScreen extends Pane {
         return diff;
     };
 
+    private int playersListCounter;
     private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
     private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
     private GridPane gridPane;
     private Player player;
-    App app;
+    private App app;
 
     public MainScreen(App app) {
         this.app = app;
@@ -84,14 +84,13 @@ public class MainScreen extends Pane {
         send.setLayoutY(700);
         TextArea ta = new TextArea(" ");
         send.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent event) {
                 JsonObject response = new JsonObject();
                 JsonObject data = new JsonObject();
                 response.add("data", data);
-                response.addProperty("type", "Message_sent");
-                data.addProperty("msg", ta.getText());
+                response.addProperty("type", "global_chat_message");
+                data.addProperty("message", ta.getText());
                 try {
                     app.getDataOutputStream().writeUTF(response.toString());
                 } catch (IOException ex) {
@@ -148,15 +147,20 @@ public class MainScreen extends Pane {
         setId("MainScreenPane");
     }
 
+    public void clearPlayersListPane() {
+        gridPane.getChildren().clear();
+    }
+
     public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
-        for(int i=0; i<onlinePlayerList.size(); i++){
+        playersListCounter = 0;
+        for (int i = 0; i < onlinePlayerList.size(); i++) {
             System.out.println(onlinePlayerList.get(i).toString());
             player = new Player();
             JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
             player.setFirstName(jsonPlayer.get("firstName").toString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
-            sortedOfflinePlayersbyPoints.add(player);
+            sortedOnlinePlayersbyPoints.add(player);
 
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
@@ -180,17 +184,18 @@ public class MainScreen extends Pane {
             Label playerName = new Label(player.getFirstName());
             Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
             cir2.setFill(Color.GREEN);
-            gridPane.add(cir2, 0, i);
-            gridPane.add(invite2, 3, i);
-            gridPane.add(score2, 2, i);
-            gridPane.add(playerName, 1, i);
+            gridPane.add(cir2, 0, playersListCounter);
+            gridPane.add(invite2, 3, playersListCounter);
+            gridPane.add(score2, 2, playersListCounter);
+            gridPane.add(playerName, 1, playersListCounter);
             i++;
+            playersListCounter++;
 
         }
     }
-    
+
     public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
-        for(int i=0; i<offlinePlayerList.size(); i++){
+        for (int i = 0; i < offlinePlayerList.size(); i++) {
             System.out.println(offlinePlayerList.get(i).toString());
             player = new Player();
             JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
@@ -222,17 +227,13 @@ public class MainScreen extends Pane {
             Label playerName = new Label(player.getFirstName());
             Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
             cir2.setFill(Color.RED);
-            gridPane.add(cir2, 0, i);
-            gridPane.add(invite2, 3, i);
-            gridPane.add(score2, 2, i);
-            gridPane.add(playerName, 1, i);
+            gridPane.add(cir2, 0, playersListCounter);
+            gridPane.add(invite2, 3, playersListCounter);
+            gridPane.add(score2, 2, playersListCounter);
+            gridPane.add(playerName, 1, playersListCounter);
             i++;
-
+            playersListCounter++;
         }
-    }
-    
-    public void clearPlayersList(){
-        
     }
 
 }

@@ -43,10 +43,11 @@ public class JsonHandler {
                 break;
             case "signin-success":
                 app.setScreen("main");
+                mainScreen.clearPlayersListPane();
                 JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");
-//                JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
+                JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
                 mainScreen.addPlayersToOnlineList(onlinePlayerList);
-//                mainScreen.addPlayersToOfflineList(offlinePlayerList);
+                mainScreen.addPlayersToOfflineList(offlinePlayerList);
                 System.out.println(onlinePlayerList);
                 break;
             case "signin-error":

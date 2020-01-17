@@ -85,7 +85,12 @@ public class App extends Application {
     }
 
     public void setScreen(String screenName) {
-        mainScene.setRoot(screens.get(screenName));
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                mainScene.setRoot(screens.get(screenName));
+            }
+        });
     }
 
     public Pane getScreen(String screen) {

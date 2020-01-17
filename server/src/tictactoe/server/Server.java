@@ -265,7 +265,7 @@ public class Server {
         return onlinePlayers.get(id);
     }
 
-    private void offButton() {
+    public void turnOff() {
 
         for (ClientThread clientThread : arr) {
             clientThread.closeClient();
@@ -278,8 +278,9 @@ public class Server {
         }
     }
 
-    public static void main(String[] args) {
-        //online
-        new Server();
+    public static Server turnOn() {
+        Server server = new Server();
+        return server;
     }
+
 }

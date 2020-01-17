@@ -5,7 +5,10 @@
  */
 package tictactoe.server;
 
+import com.google.gson.JsonObject;
+import java.io.IOException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -20,24 +23,45 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class ServerMain1 extends Application {
 
+    private Server server;
+    private Thread serverThread;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent e) {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
+
         primaryStage.setTitle("Server Main");
         ToggleButton toggleButton = new ToggleButton("off");
         toggleButton.setId("toggleButton");
-         toggleButton.setOnAction(new EventHandler<ActionEvent>() {
+        toggleButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                if(toggleButton.getText()=="off"){
-                   toggleButton.setText("on"); 
+                if (toggleButton.getText().equals("off")) {
+                    serverThread = new Thread() {
+                        public void run() {
+                            server = new Server();
+                        }
+                    };
+                    serverThread.start();
+                    toggleButton.setText("on");
+                } else {
+                    server.turnOff();
+                    serverThread.stop();
+                    toggleButton.setText("off");
                 }
-                else
-                    toggleButton.setText("off"); 
-                
+
             }
         });
         HBox hbox = new HBox(toggleButton);
@@ -64,7 +88,7 @@ public class ServerMain1 extends Application {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(gr);
         scrollPane.setId("scrolPane");
-     
+
         scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setLayoutX(650.0);
         scrollPane.setLayoutY(100.0);
