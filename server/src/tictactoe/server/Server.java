@@ -9,8 +9,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+import tictactoe.server.db.DatabaseManager;
 
 /**
  *
@@ -21,20 +27,48 @@ public class Server {
     private ServerSocket serverSocket;
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
-    private final HashMap<Integer, Player> playersInvitations = new HashMap<>();
-    private final HashSet<Socket> unloggedInUsers = new HashSet<>();
-    JsonHandler jsonHandler = new JsonHandler(this);
+    private final HashMap<Integer, User> offlinePlayers = new HashMap<>();
+     public final Set<ClientThread> arr = new HashSet<ClientThread>();
+
+    Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
+        int diff = o1.getPoints() - o2.getPoints();
+        if (diff == 0) {
+            if (o1.getId() < o2.getId()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+        return diff;
+    };
+
+    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
+
+    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
+
+    // private final HashSet<Socket> unloggedInUsers = new HashSet<>();
+    JsonHandler jsonHandler = null;
+
+    private DatabaseManager databaseManager;
 
     public Server() {
         try {
+            this.databaseManager = new DatabaseManager();
+            this.jsonHandler = new JsonHandler(this);
+            Collection<Player> players = databaseManager.getAllPlayers();
+            sortedOfflinePlayersbyPoints.addAll(players);
+            Iterator<Player> iterator = players.iterator();
+
+            while (iterator.hasNext()) {
+                Player player = iterator.next();
+                offlinePlayers.put(player.getId(), new User(player));
+            }
 
             serverSocket = new ServerSocket(Config.PORT);
             while (true) {
                 Socket socket = serverSocket.accept();
-                Player player = null;
-                User user = new User(socket, player);
-                unloggedInUsers.add(socket);
-                new ClientThread(user).start();
+                //  unloggedInUsers.add(socket);
+                new ClientThread(new User(socket)).start();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -42,9 +76,13 @@ public class Server {
 
     }
 
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
     public class User {
 
-        private final Socket socket;
+        private Socket socket;
         private Player player;
         private DataOutputStream dataOutputStream;
 
@@ -59,8 +97,19 @@ public class Server {
         }
 
         public User() {
-            this.player = new Player();
-            this.socket = new Socket();
+        }
+
+        public User(Socket socket) {
+            this.socket = socket;
+            try {
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        public User(Player player) {
+            this.player = player;
         }
 
         public void setPlayer(Player player) {
@@ -85,108 +134,148 @@ public class Server {
 
         private final Socket socket;
         private DataInputStream dataInputStream;
+        private DataOutputStream dataOutputStream;
         private User user;
 
         public ClientThread(User user) {
-            this.socket = user.socket;
             this.user = user;
+            this.socket = user.socket;
             try {
                 dataInputStream = new DataInputStream(socket.getInputStream());
-            } catch (IOException ex) {
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
 
+        public void setUser(User user) {
+            this.user = user;
+        }
+
         @Override
         public void run() {
-            while (true) {
-                try {
+            try {
+                while (true) {
                     String line = dataInputStream.readUTF();
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
                         System.out.println(line);
                         if (request.get("type").getAsString().equals("signout")) {
-                            removeFromOnlinePlayers(user.getPlayer().getId());
-                            stop();
+                            //removeFromOnlinePlayers(user.getPlayer().getId());
+                            if (user.player != null) {
+                                System.out.println(user.player.getFirstName() + " logging off");
+                                removeFromOnlinePlayers(user.player.getId());
+                            }
+                            break;
                         } else {
                             jsonHandler.handle(request, user);
                         }
-
                     }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
                 }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        public void closeClient() {
+            try {
+                dataInputStream.close();
+                user.dataOutputStream.close();
+                socket.close();
+                stop();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
 
     }
 
-    public JsonArray getOnlinePlayersAsJson() {
+    public JsonArray getSortedOnlinePlayersAsJson() {
         JsonArray players = new JsonArray();
-        onlinePlayers.forEach((key, value) -> {
-            players.add(value.player.asJson());
+        sortedOnlinePlayersbyPoints.forEach((player) -> {
+            players.add(player.asJson());
         });
         return players;
     }
 
-    public void addToOnlinePlayers(int id, User user) {
-        onlinePlayers.put(id, user);
+    public JsonArray getSortedOfflinePlayersAsJson() {
+        JsonArray players = new JsonArray();
+        sortedOfflinePlayersbyPoints.forEach((player) -> {
+            players.add(player.asJson());
+        });
+        return players;
+    }
+
+    public void addToOnlinePlayers(int id, User newUser) {
+
+        User user = offlinePlayers.remove(id);
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.addProperty("type", "online-player");
+
+        response.add("data", data);
+        data.add("player", newUser.player.asJson());
+        sendToAllOnlinePlayers(response);
+
+        onlinePlayers.put(id, newUser);
+        sortedOfflinePlayersbyPoints.remove(user.player);
+        sortedOnlinePlayersbyPoints.add(newUser.player);
+        newUser.player.setOnline(true);
+    }
+
+    public void sendToAllOnlinePlayers(JsonObject req) {
+        onlinePlayers.forEach((key, value) -> {
+            try {
+                System.out.println("k:" + key + " v:" + value);
+                value.dataOutputStream.writeUTF(req.toString());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     public void removeFromOnlinePlayers(int id) {
-        onlinePlayers.remove(id);
+        User user = onlinePlayers.remove(id);
+        user.socket = null;
+        offlinePlayers.put(id, user);
+        sortedOnlinePlayersbyPoints.remove(user.player);
+        sortedOfflinePlayersbyPoints.add(user.player);
+        user.player.setOnline(false);
+
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.addProperty("type", "offline-player");
+
+        response.add("data", data);
+        data.add("player", user.player.asJson());
+        sendToAllOnlinePlayers(response);
     }
 
-    public void removeFromUnloggedInUsers(Socket socket) {
-        unloggedInUsers.remove(socket);
+    public void addNewOfflinePlayer(Player player) {
+        offlinePlayers.put(player.getId(), new User(player));
+
     }
 
-    public boolean isOnlinePlayer(Player playerToCheck) {
-        if (onlinePlayers.containsKey(playerToCheck.getId())) {
-            return true;
-        } else {
-            return false;
-        }
+    public User getOnlinePlayerById(int id) {
+        return onlinePlayers.get(id);
     }
 
-    public JsonArray getInvitationsPlayersAsJson() {
-        JsonArray invitationPlayers = new JsonArray();
-        playersInvitations.forEach((key, value) -> {
-            invitationPlayers.add(value.asJson());
-        });
-        return invitationPlayers;
-    }
+    private void offButton() {
 
-    public void addToInvitationsPlayers(Player firstPlayer, Player secondPlayer) {
-        int firstPlayerID = firstPlayer.getId();
-        int secondPlayerID = secondPlayer.getId();
+        for (ClientThread clientThread : arr) {
+            clientThread.closeClient();
+            try {
+                serverSocket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 
-        playersInvitations.put(firstPlayerID, firstPlayer);
-        playersInvitations.put(secondPlayerID, secondPlayer);
-    }
-
-    public void removeFromInvitedPlayers(int firstPlayerID, int secondPlayerID) {
-        playersInvitations.remove(firstPlayerID);
-        playersInvitations.remove(secondPlayerID);
-    }
-
-    public boolean isBusyPlayer(Player playerToCheck) {
-        if (playersInvitations.containsKey(playerToCheck.getId())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isFreePlayer(Player playerToCheck) {
-        if (!playersInvitations.containsKey(playerToCheck.getId())) {
-            return true;
-        } else {
-            return false;
         }
     }
 
     public static void main(String[] args) {
+        //online
         new Server();
     }
 }

@@ -43,7 +43,11 @@ public class JsonHandler {
                 Player invitingPlayer = new Player();
                 response = handleInvitation(user.getPlayer(), invitingPlayer);
                 break;
+            case "chat_message":
+               JsonObject respons=handleMessage(requestData,user);
+
         }
+
         if (response != null) {
             try {
                 user.getDataOutputStream().writeUTF(response.toString());
@@ -52,6 +56,20 @@ public class JsonHandler {
             }
 
         }
+    }
+
+
+    
+
+    private JsonObject handleMessage(JsonObject requestData, User user) {
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("data", data);
+        while (true) {
+            String message = requestData.get("msg").getAsString();
+            server.sendToAllOnlinePlayers(requestData);
+        }
+       return response;
     }
 
     private JsonObject handleSignup(JsonObject requestData, User user) {
