@@ -28,6 +28,7 @@ public class Server {
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
     private final HashMap<Integer, User> offlinePlayers = new HashMap<>();
+
     public final Set<ClientThread> arr = new HashSet<ClientThread>();
 
     Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
@@ -161,8 +162,9 @@ public class Server {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
                         System.out.println(line);
                         if (request.get("type").getAsString().equals("signout")) {
-                            //removeFromOnlinePlayers(user.getPlayer().getId());
+
                             System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
+
                             if (user.player != null) {
                                 System.out.println(user.player.getFirstName() + " logging off");
                                 removeFromOnlinePlayers(user.player.getId());
@@ -172,15 +174,13 @@ public class Server {
                             jsonHandler.handle(request, user);
                         }
                     }
-                }
-            } catch (IOException ex) {
-                if (user.player != null) {
-                    System.out.println(user.player.getFirstName() + " logging off");
-                    removeFromOnlinePlayers(user.player.getId());
-                }
+                } catch (IOException ex){
+
                 ex.printStackTrace();
             }
         }
+      
+    
 
         public void closeClient() {
             try {
@@ -214,7 +214,7 @@ public class Server {
     public void addToOnlinePlayers(int id, User newUser) {
 
         User user = offlinePlayers.remove(id);
-        System.out.println("deleted user obj:" + user);
+
         JsonObject response = new JsonObject();
         JsonObject data = new JsonObject();
         response.addProperty("type", "online-player");
