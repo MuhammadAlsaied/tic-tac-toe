@@ -116,15 +116,14 @@ public class Player {
         return p;
     }
 
-    //sets player in a json object to be used in the data key of the request json
-    public JsonObject setPlayerAsJson(String firstName, String email, String password) {
-        JsonObject data = new JsonObject();
-        data.addProperty("firstName", firstName);
-        data.addProperty("lastName", "null");
-        data.addProperty("email", email);
-        data.addProperty("password", password);
+    public JsonObject getPlayerAsJson() {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("data", data);
+        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("firstName", firstName);
+        jsonObject.addProperty("lastName", lastName);
+        jsonObject.addProperty("email", email);
+        jsonObject.addProperty("password", password);
+        jsonObject.addProperty("points", points);
         return jsonObject;
     }
 

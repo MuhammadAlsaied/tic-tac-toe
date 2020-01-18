@@ -28,12 +28,13 @@ import tictactoe.client.App;
  * @author KeR
  */
 public class MultiOnlinePlayers extends Pane {
+
     GridPane stack;
     private final App app;
     Random rand;
     public static boolean turn = true;
     int counter, cpupos;
-    private String line,player1Letter,player2Letter, thisPlayerLetter = "X", challengerName;
+    private String line, player1Letter, player2Letter, thisPlayerLetter = "X", opponenetPlayerLetter, challengerName;
     Vector<Label> l = new Vector<>();
     private boolean isEnded = false;
 
@@ -50,13 +51,12 @@ public class MultiOnlinePlayers extends Pane {
                 stack.add(l.get(x), j, i);
             }
         }
-        if(turn){
-            player1Letter = "X";
-            player2Letter = "O";
-        }
-        else{
-            player1Letter = "O";
-            player2Letter = "X";
+        if (turn) {
+            player1Letter = thisPlayerLetter;
+            player2Letter = opponenetPlayerLetter;
+        } else {
+            player1Letter = opponenetPlayerLetter;
+            player2Letter = thisPlayerLetter;
         }
         rand = new Random();
         counter = 0;
@@ -87,7 +87,7 @@ public class MultiOnlinePlayers extends Pane {
                         }
                     }
                 });
-                
+
             }
         }
         setId("stackGameboard");
@@ -132,7 +132,7 @@ public class MultiOnlinePlayers extends Pane {
                 }
 
             }
-            
+
         });
         send.setLayoutX(1140);
         send.setLayoutY(600);
@@ -217,7 +217,6 @@ public class MultiOnlinePlayers extends Pane {
         }
     }
 
-
     public void setOpponentMoveFromServer(String position) {
         int moveFromServer = 0;
         switch (position) {
@@ -251,8 +250,8 @@ public class MultiOnlinePlayers extends Pane {
         }
         if (turn == false) {
             counter++;
-            l.get(moveFromServer).setText(player2Letter);
-            l.get(moveFromServer).setId(player2Letter);
+            l.get(moveFromServer).setText(opponenetPlayerLetter);
+            l.get(moveFromServer).setId(opponenetPlayerLetter);
             checkWinner();
             turn = true;
             stack.requestLayout();
@@ -299,16 +298,40 @@ public class MultiOnlinePlayers extends Pane {
         try {
             System.out.println(request);
             app.getDataOutputStream().writeUTF(request.toString());
-        } 
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    public void invitationAccepted(int challengerId, String challengerName){
+
+    public void invitationAcceptedSetInviterSide(String challengerName) {
+        /*Inviter Side the X*/
+        System.out.println("test 1");
+        this.challengerName = challengerName;
+        System.out.println("test 2");
+
+        thisPlayerLetter = "X";
+        System.out.println("test 3");
+
+        opponenetPlayerLetter = "O";
+        System.out.println("test 4");
+
+        MultiOnlinePlayers.turn = true;
+        System.out.println("test 5");
+
+        System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
+        System.out.println("test 6");
+                app.setScreen("multiOnlinePlayers");
+
+
+    }
+
+    public void acceptInvitationInvitedSide(int challengerId, String challengerName) {
+        /*Invited Side the O*/
         app.setScreen("multiOnlinePlayers");
         this.challengerName = challengerName;
+        MultiOnlinePlayers.turn = false;
         thisPlayerLetter = "O";
-        turn = true;
+        opponenetPlayerLetter = "X";
+        System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
     }
-    
 }

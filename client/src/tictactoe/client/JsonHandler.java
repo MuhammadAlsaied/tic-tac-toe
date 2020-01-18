@@ -68,9 +68,9 @@ public class JsonHandler {
 //                String challengerName = ;
                 invitationScreen.setInvitation(challengerId, "Challenger");
                 break;
-            case "accept-invitation":
-                int ch = requestData.get("invited_player_id").getAsInt();
-                multiOnlinePlayers.invitationAccepted(ch, "challenger");
+            case "invitation-accepted":
+                /*inviter side*/
+                multiOnlinePlayers.invitationAcceptedSetInviterSide("challenger");
                 break;
         }
     }

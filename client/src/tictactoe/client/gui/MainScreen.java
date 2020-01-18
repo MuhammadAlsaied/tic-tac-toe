@@ -44,7 +44,7 @@ public class MainScreen extends Pane {
     private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
     private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
     private GridPane gridPane;
-    private Player player;
+    //private Player player;
     private App app;
 
     public MainScreen(App app) {
@@ -155,14 +155,17 @@ public class MainScreen extends Pane {
         playersListCounter = 0;
         for (int i = 0; i < onlinePlayerList.size(); i++) {
             JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
-            if (app.getCurrentPlayer().getId() == jsonPlayer.get("id").getAsInt()) {
+            System.out.println("ONLINE iteration" + jsonPlayer);
+
+            if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
                 /*skips iteration if the player is me*/
                 continue;
             }
-            player = new Player();
-            player.setFirstName(jsonPlayer.get("firstName").toString());
+            Player player = new Player();
+            player.setFirstName(jsonPlayer.get("firstName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
+
             sortedOnlinePlayersbyPoints.add(player);
 
             ToggleButton invite2 = new ToggleButton("Challenge");
@@ -176,6 +179,7 @@ public class MainScreen extends Pane {
                     request.addProperty("type", "invitation");
                     data.addProperty("invited_player_id", player.getId());
                     try {
+                        System.out.println("SENT JSON INVITATION: " + request);
                         app.getDataOutputStream().writeUTF(request.toString());
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -200,12 +204,14 @@ public class MainScreen extends Pane {
     public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
         for (int i = 0; i < offlinePlayerList.size(); i++) {
             JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
+            System.out.println("OFFLINE iteration" + jsonPlayer);
+
             if (app.getCurrentPlayer().getId() == jsonPlayer.get("id").getAsInt()) {
                 /*skips iteration if the player is me*/
                 continue;
             }
-            player = new Player();
-            player.setFirstName(jsonPlayer.get("firstName").toString());
+            Player player = new Player();
+            player.setFirstName(jsonPlayer.get("firstName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
             sortedOfflinePlayersbyPoints.add(player);

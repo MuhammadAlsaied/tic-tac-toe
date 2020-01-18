@@ -175,7 +175,7 @@ public class JsonHandler {
             JsonObject response = new JsonObject();
             JsonObject data = new JsonObject();
             response.add("data", data);
-            response.addProperty("type", "accept-invitation");
+            response.addProperty("type", "invitation-accepted");
 
             data.addProperty("invited_player_id", user.getPlayer().getId());
             try {
