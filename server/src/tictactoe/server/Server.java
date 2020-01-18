@@ -22,26 +22,30 @@ import tictactoe.server.db.DatabaseManager;
  *
  * @author muhammad and Ayman Magdy
  */
-public class Server extends Thread {
+public class Server {
 
     private ServerSocket serverSocket;
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
     private final HashMap<Integer, User> offlinePlayers = new HashMap<>();
 
-    public final Set<ClientThread> clientThreads = new HashSet<ClientThread>();
+    public final Set<ClientThread> arr = new HashSet<ClientThread>();
 
-    Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
-        int diff = o2.getPoints() - o1.getPoints();
+    Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
+        int diff = o1.getPoints() - o2.getPoints();
         if (diff == 0) {
-            diff = o1.getId() - o2.getId();
+            if (o1.getId() < o2.getId()) {
+                return 1;
+            } else {
+                return -1;
+            }
         }
         return diff;
     };
 
-    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
+    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
 
-    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
+    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
 
     // private final HashSet<Socket> unloggedInUsers = new HashSet<>();
     JsonHandler jsonHandler = null;
@@ -62,25 +66,15 @@ public class Server extends Thread {
             }
 
             serverSocket = new ServerSocket(Config.PORT);
-
+            while (true) {
+                Socket socket = serverSocket.accept();
+                //  unloggedInUsers.add(socket);
+                new ClientThread(new User(socket)).start();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
 
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                Socket socket = serverSocket.accept();
-
-                ClientThread clientThread = new ClientThread(new User(socket));
-                clientThread.start();
-                clientThreads.add(clientThread);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
     }
 
     public DatabaseManager getDatabaseManager() {
@@ -141,6 +135,7 @@ public class Server extends Thread {
 
         private final Socket socket;
         private DataInputStream dataInputStream;
+        private DataOutputStream dataOutputStream;
         private User user;
 
         public ClientThread(User user) {
@@ -148,6 +143,7 @@ public class Server extends Thread {
             this.socket = user.socket;
             try {
                 dataInputStream = new DataInputStream(socket.getInputStream());
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -178,15 +174,13 @@ public class Server extends Thread {
                             jsonHandler.handle(request, user);
                         }
                     }
-                }
-            } catch (IOException ex) {
+                } catch (IOException ex){
+
                 ex.printStackTrace();
-                if (user.player != null) {
-                    System.out.println(user.player.getFirstName() + " forcing logging off");
-                    removeFromOnlinePlayers(user.player.getId());
-                }
             }
         }
+      
+    
 
         public void closeClient() {
             try {
@@ -218,14 +212,21 @@ public class Server extends Thread {
     }
 
     public void addToOnlinePlayers(int id, User newUser) {
+
         User user = offlinePlayers.remove(id);
-        newUser.player.setOnline(true);
+
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.addProperty("type", "online-player");
+
+        response.add("data", data);
+        data.add("player", newUser.player.asJson());
+        sendToAllOnlinePlayers(response);
+
         onlinePlayers.put(id, newUser);
         sortedOfflinePlayersbyPoints.remove(user.player);
         sortedOnlinePlayersbyPoints.add(newUser.player);
         newUser.player.setOnline(true);
-        sendUpdatedPlayerList();
-        System.out.println("after adding to online players");
     }
 
     public void sendToAllOnlinePlayers(JsonObject req) {
@@ -246,37 +247,40 @@ public class Server extends Thread {
         sortedOnlinePlayersbyPoints.remove(user.player);
         sortedOfflinePlayersbyPoints.add(user.player);
         user.player.setOnline(false);
-        sendUpdatedPlayerList();
-    }
 
-    public void sendUpdatedPlayerList() {
-        JsonObject data = new JsonObject();
         JsonObject response = new JsonObject();
-        response.addProperty("type", "update-player-list");
+        JsonObject data = new JsonObject();
+        response.addProperty("type", "offline-player");
+
         response.add("data", data);
-        JsonArray onlineUsers = getSortedOnlinePlayersAsJson();
-        JsonArray offlineUsers = getSortedOfflinePlayersAsJson();
-        data.add("online-players", onlineUsers);
-        data.add("offline-players", offlineUsers);
+        data.add("player", user.player.asJson());
         sendToAllOnlinePlayers(response);
     }
 
     public void addNewOfflinePlayer(Player player) {
         offlinePlayers.put(player.getId(), new User(player));
+
     }
 
     public User getOnlinePlayerById(int id) {
         return onlinePlayers.get(id);
     }
 
-    public void turnOff() {
-        for (ClientThread clientThread : clientThreads) {
+    private void offButton() {
+
+        for (ClientThread clientThread : arr) {
             clientThread.closeClient();
+            try {
+                serverSocket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
         }
-        try {
-            serverSocket.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    }
+
+    public static void main(String[] args) {
+        //online
+        new Server();
     }
 }

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.TreeSet;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -28,7 +29,7 @@ import tictactoe.client.Player;
 
 public class MainScreen extends Pane {
 
-    Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
+    Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
         int diff = o1.getPoints() - o2.getPoints();
         if (diff == 0) {
             if (o1.getId() < o2.getId()) {
@@ -40,13 +41,11 @@ public class MainScreen extends Pane {
         return diff;
     };
 
-    private int playersListCounter;
-    private final TreeSet<Player> sortedPlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
-    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
-    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
+    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
+    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
     private GridPane gridPane;
-    //private Player player;
-    private App app;
+    private Player player;
+    App app;
 
     public MainScreen(App app) {
         this.app = app;
@@ -85,13 +84,14 @@ public class MainScreen extends Pane {
         send.setLayoutY(700);
         TextArea ta = new TextArea(" ");
         send.setOnAction(new EventHandler<ActionEvent>() {
+
             @Override
             public void handle(ActionEvent event) {
                 JsonObject response = new JsonObject();
                 JsonObject data = new JsonObject();
                 response.add("data", data);
-                response.addProperty("type", "global_chat_message");
-                data.addProperty("message", ta.getText());
+                response.addProperty("type", "Message_sent");
+                data.addProperty("msg", ta.getText());
                 try {
                     app.getDataOutputStream().writeUTF(response.toString());
                 } catch (IOException ex) {
@@ -148,26 +148,16 @@ public class MainScreen extends Pane {
         setId("MainScreenPane");
     }
 
-    public void setPlayersListCounter(int playersListCounter) {
-        this.playersListCounter = playersListCounter;
-    }
-
-    public void clearPlayersListPane() {
-        gridPane.getChildren().clear();
-    }
-
-    public void addPlayersToList(JsonArray playerList, Color color) {
-        for (int i = 0; i < playerList.size(); i++) {
-            JsonObject jsonPlayer = playerList.get(i).getAsJsonObject();
-            System.out.println("list iteration" + jsonPlayer);
-//            if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
-//                /*skips iteration if the player is me*/
-//                continue;
-//            }
-            Player player = new Player();
-            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+    public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
+        for(int i=0; i<onlinePlayerList.size(); i++){
+            System.out.println(onlinePlayerList.get(i).toString());
+            player = new Player();
+            JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
+            player.setFirstName(jsonPlayer.get("firstName").toString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
+            sortedOfflinePlayersbyPoints.add(player);
+
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
             invite2.setOnAction(new EventHandler<ActionEvent>() {
@@ -179,25 +169,70 @@ public class MainScreen extends Pane {
                     request.addProperty("type", "invitation");
                     data.addProperty("invited_player_id", player.getId());
                     try {
-                        System.out.println("SENT JSON INVITATION: " + request);
                         app.getDataOutputStream().writeUTF(request.toString());
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 }
             });
-
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
             Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
-            cir2.setFill(color);
-            gridPane.add(cir2, 0, playersListCounter);
-            gridPane.add(invite2, 3, playersListCounter);
-            gridPane.add(score2, 2, playersListCounter);
-            gridPane.add(playerName, 1, playersListCounter);
-            playersListCounter++;
+            cir2.setFill(Color.GREEN);
+            gridPane.add(cir2, 0, i);
+            gridPane.add(invite2, 3, i);
+            gridPane.add(score2, 2, i);
+            gridPane.add(playerName, 1, i);
+            i++;
+
         }
+    }
+    
+    public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
+        for(int i=0; i<offlinePlayerList.size(); i++){
+            System.out.println(offlinePlayerList.get(i).toString());
+            player = new Player();
+            JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
+            player.setFirstName(jsonPlayer.get("firstName").toString());
+            player.setPoints(jsonPlayer.get("points").getAsInt());
+            player.setId(jsonPlayer.get("id").getAsInt());
+            sortedOfflinePlayersbyPoints.add(player);
+
+            ToggleButton invite2 = new ToggleButton("Challenge");
+            invite2.setId("challengeScrolPaneMainScreen");
+            invite2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.add("data", data);
+                    request.addProperty("type", "invitation");
+                    data.addProperty("invited_player_id", player.getId());
+                    try {
+                        app.getDataOutputStream().writeUTF(request.toString());
+                        System.out.println(request);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            Label score2 = new Label(Integer.toString(player.getPoints()));
+            score2.setId("scoreLabel");
+            Label playerName = new Label(player.getFirstName());
+            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
+            cir2.setFill(Color.RED);
+            gridPane.add(cir2, 0, i);
+            gridPane.add(invite2, 3, i);
+            gridPane.add(score2, 2, i);
+            gridPane.add(playerName, 1, i);
+            i++;
+
+        }
+    }
+    
+    public void clearPlayersList(){
+        
     }
 
 }

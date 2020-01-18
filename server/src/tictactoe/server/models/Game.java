@@ -31,7 +31,7 @@ public class Game {
         gameCoordinates.addProperty("center", "-");
         gameCoordinates.addProperty("right", "-");
         gameCoordinates.addProperty("lower_left", "-");
-        gameCoordinates.addProperty("down", "-");
+        gameCoordinates.addProperty("lower", "-");
         gameCoordinates.addProperty("lower_right", "-");
     }
 
@@ -114,4 +114,12 @@ public class Game {
     public int getGameId(){
         return gameId;
     }
+    
+    public int getPlayerXId(){
+        return playerX.getId();
+    }
+    
+    public int getPlayerOId(){
+        return playerO.getId();
+   }
 }

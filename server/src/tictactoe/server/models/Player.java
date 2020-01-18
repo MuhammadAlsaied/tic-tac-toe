@@ -73,9 +73,7 @@ public class Player {
     public void setPoints(int points) {
         this.points = points;
     }
-    public  void incrementPoints(int addition){
-        points += addition;
-    }
+    
     
     public boolean isOnline() {
         return online;
@@ -116,9 +114,7 @@ public class Player {
         obj.addProperty("id", id);
         obj.addProperty("firstName", firstName);
         obj.addProperty("lastName", firstName);
-        obj.addProperty("email", email);        
         obj.addProperty("points", points);
-
 
         return obj;
     }

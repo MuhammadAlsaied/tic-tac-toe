@@ -3,12 +3,8 @@ package tictactoe.client;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.DataInputStream;
-import javafx.application.Platform;
-import javafx.scene.paint.Color;
 import tictactoe.client.gui.InvitationScreen;
 import tictactoe.client.gui.MainScreen;
-import tictactoe.client.gui.MultiOnlinePlayers;
-import tictactoe.client.gui.SigninScreen;
 import tictactoe.client.gui.SignupScreen;
 
 /**
@@ -19,28 +15,19 @@ public class JsonHandler {
 
     private App app;
     private DataInputStream dataInputStream;
-    SignupScreen signupScreen;
-    SigninScreen signinScreen;
     InvitationScreen invitationScreen;
-    MultiOnlinePlayers multiOnlinePlayers;
-    MainScreen mainScreen;
 
     JsonHandler(App a) {
         app = a;
-        signupScreen = (SignupScreen) app.getScreen("signup");
-        signinScreen = (SigninScreen) app.getScreen("signin");
-        invitationScreen = (InvitationScreen) app.getScreen("invitation");
-        multiOnlinePlayers = (MultiOnlinePlayers) app.getScreen("multiOnlinePlayers");
-        mainScreen = (MainScreen) app.getScreen("main");
+        invitationScreen = (InvitationScreen) app.screens.get("invitation");
     }
 
     public void handle(JsonObject request) {
-        System.out.println(request);
         String requestType = request.get("type").getAsString();
         JsonObject requestData = request.getAsJsonObject("data");
-        JsonObject myData = requestData.getAsJsonObject("my-data");
         switch (requestType) {
             case "signup-error":
+                SignupScreen signupScreen = (SignupScreen) app.screens.get("signup");
                 signupScreen.showSignupFailedPopup();
                 break;
             case "signup-success":
@@ -48,25 +35,16 @@ public class JsonHandler {
                 app.setScreen("signin");
                 break;
             case "signin-success":
-
-                app.setCurrentPlayer(new Player(
-                        myData.get("id").getAsInt(),
-                        myData.get("firstName").toString(),
-                        myData.get("email").toString(),
-                        myData.get("points").getAsInt()
-                ));
                 app.setScreen("main");
+                MainScreen mainScreen = (MainScreen) app.screens.get("main");
+                JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");
+//                JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
+                mainScreen.addPlayersToOnlineList(onlinePlayerList);
+//                mainScreen.addPlayersToOfflineList(offlinePlayerList);
+                System.out.println(onlinePlayerList);
                 break;
             case "signin-error":
                 app.showAlert("Could not login", requestData.get("msg").getAsString());
-                signinScreen.showSigninButton();
-                break;
-            case "update-player-list":
-                refreshList(requestData);
-                break;
-            case "online-player":
-//                refreshList(requestData);     /*THROWS NULL POINTER EXCEPTION*/
-
                 break;
             case "invitation":
                 int challengerId = requestData.get("inviter_player_id").getAsInt();
@@ -74,27 +52,10 @@ public class JsonHandler {
 //                String challengerName = ;
                 invitationScreen.setInvitation(challengerId, "Challenger");
                 break;
-            case "invitation-accepted":
-                /*inviter side*/
-                multiOnlinePlayers.invitationAcceptedSetInviterSide("challenger");
-                break;
-            case "game-move":
-                multiOnlinePlayers.setOpponentMoveFromServer(requestData.get("position").getAsString());
+            case "accept-invitation":
+                int ch = requestData.get("invited_player_id").getAsInt();
+                invitationScreen.setInvitation(ch, "challenger");
                 break;
         }
-    }
-
-    public void refreshList(JsonObject requestData) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                mainScreen.clearPlayersListPane();
-                JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");
-                JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
-                mainScreen.setPlayersListCounter(0);
-                mainScreen.addPlayersToList(onlinePlayerList, Color.GREEN);
-                mainScreen.addPlayersToList(offlinePlayerList, Color.RED);
-            }
-        });
     }
 }

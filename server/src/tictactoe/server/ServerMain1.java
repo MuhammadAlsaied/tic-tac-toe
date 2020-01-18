@@ -1,7 +1,11 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package tictactoe.server;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -16,37 +20,24 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
-public class App extends Application {
-
-    private Server server = null;
+public class ServerMain1 extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent e) {
-                Platform.exit();
-                System.exit(0);
-            }
-        });
-
         primaryStage.setTitle("Server Main");
-        ToggleButton toggleButton = new ToggleButton("ON");
+        ToggleButton toggleButton = new ToggleButton("off");
         toggleButton.setId("toggleButton");
-        toggleButton.setOnAction((ActionEvent event) -> {
-            if (server == null) {
-                server = new Server();
-                server.start();
-                toggleButton.setText("OFF");
-            } else {
-                System.out.println("turnning off server");
-                server.turnOff();
-                server.stop();
-                server = null;
-                toggleButton.setText("ON");
+         toggleButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                if(toggleButton.getText()=="off"){
+                   toggleButton.setText("on"); 
+                }
+                else
+                    toggleButton.setText("off"); 
+                
             }
         });
         HBox hbox = new HBox(toggleButton);
@@ -73,7 +64,7 @@ public class App extends Application {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(gr);
         scrollPane.setId("scrolPane");
-
+     
         scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setLayoutX(650.0);
         scrollPane.setLayoutY(100.0);

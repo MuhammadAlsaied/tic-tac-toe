@@ -20,14 +20,13 @@ import tictactoe.client.gui.*;
 
 public class App extends Application {
 
-    private HashMap<String, Pane> screens = new HashMap<>();
-    private Scene mainScene;
+    HashMap<String, Pane> screens = new HashMap<>();
+    Scene mainScene;
     private Socket s;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
     private JsonHandler jsonHandler;
     private Stage pStage;
-    private Player currentPlayer;
 
     public App() {
         addScreens();
@@ -37,28 +36,26 @@ public class App extends Application {
             dataInputStream = new DataInputStream(s.getInputStream());
             dataOutputStream = new DataOutputStream(s.getOutputStream());
         } catch (IOException e) {
-            showAlert("Connection Error.", "Please check your connection and try again.");
+            e.printStackTrace();
         }
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                try {
-                    while (true) {
-
+                while (true) {
+                    try {
                         String line = dataInputStream.readUTF();
                         if (line != null) {
                             JsonObject obj = JsonParser.parseString(line).getAsJsonObject();
                             System.out.println(obj);
                             jsonHandler.handle(obj);
                         }
+                    } catch (IOException ex) {
+                        showAlert("You are disconnected!", "Please check your connection and try again.");
+                        setScreen("signin");
+                        Platform.exit();
+                        ex.printStackTrace();
                     }
-                } catch (IOException ex) {
-                    showAlert("You are disconnected!", "Please check your connection and try again.");
-                    setScreen("signin");
-                    Platform.exit();
-                    ex.printStackTrace();
-
                 }
 
             }
@@ -87,21 +84,8 @@ public class App extends Application {
 
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
     public void setScreen(String screenName) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                mainScene.setRoot(screens.get(screenName));
-            }
-        });
+        mainScene.setRoot(screens.get(screenName));
     }
 
     public Pane getScreen(String screen) {
@@ -124,7 +108,9 @@ public class App extends Application {
 
     public void exit() {
         JsonObject jsonObject = new JsonObject();
+        JsonObject data = new JsonObject();
         jsonObject.addProperty("type", "signout");
+
         try {
             dataOutputStream.writeUTF(jsonObject.toString());
         } catch (IOException ex) {

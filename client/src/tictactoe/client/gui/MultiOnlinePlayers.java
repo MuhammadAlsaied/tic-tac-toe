@@ -9,10 +9,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -31,13 +28,12 @@ import tictactoe.client.App;
  * @author KeR
  */
 public class MultiOnlinePlayers extends Pane {
-
     GridPane stack;
     private final App app;
     Random rand;
     public static boolean turn = true;
     int counter, cpupos;
-    private String line, thisPlayerLetter, opponenetPlayerLetter, challengerName;
+    private String line,player1Letter,player2Letter;
     Vector<Label> l = new Vector<>();
     private boolean isEnded = false;
 
@@ -54,7 +50,14 @@ public class MultiOnlinePlayers extends Pane {
                 stack.add(l.get(x), j, i);
             }
         }
-
+        if(turn){
+            player1Letter = "X";
+            player2Letter = "O";
+        }
+        else{
+            player1Letter = "O";
+            player2Letter = "X";
+        }
         rand = new Random();
         counter = 0;
         resetGame();
@@ -74,8 +77,8 @@ public class MultiOnlinePlayers extends Pane {
                         }
                         Label currentLabel = (Label) event.getSource();
                         if (turn && currentLabel.getText().equals("_")) {
-                            currentLabel.setText(thisPlayerLetter);
-                            currentLabel.setId(thisPlayerLetter);
+                            currentLabel.setText(player1Letter);
+                            currentLabel.setId(player1Letter);
                             turn = false;
                             counter++;
                             stack.requestLayout();
@@ -84,7 +87,7 @@ public class MultiOnlinePlayers extends Pane {
                         }
                     }
                 });
-
+                
             }
         }
         setId("stackGameboard");
@@ -129,7 +132,7 @@ public class MultiOnlinePlayers extends Pane {
                 }
 
             }
-
+            
         });
         send.setLayoutX(1140);
         send.setLayoutY(600);
@@ -176,86 +179,84 @@ public class MultiOnlinePlayers extends Pane {
                     line = l.get(2).getText() + l.get(4).getText() + l.get(6).getText();
                     break;
             }
-            if (line.equals("XXX") || line.equals("OOO")) {
-                isEnded = true;
-                if (line.contains(thisPlayerLetter)) {
-                    app.setScreen("youWin");
-                } else {
-                    app.setScreen("hardLuck");
+            switch (line) {
+                case "XXX": {
+                    turn = true;
+                    isEnded = true;
+                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    pause.setOnFinished((ActionEvent event) -> {
+                        app.setScreen("youWin");
+                        counter = 0;
+                        resetGame();
+                    });
+                    pause.play();
+                    return;
                 }
-                JsonObject request = new JsonObject();
-                JsonObject data = new JsonObject();
-                request.addProperty("type", "multiplayer-game-end");
-                request.add("data", data);
-                data.addProperty("winner-id", app.getCurrentPlayer().getId());
-                try {
-                    app.getDataOutputStream().writeUTF(request.toString());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                case "OOO": {
+                    turn = true;
+                    isEnded = true;
+                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    pause.setOnFinished((ActionEvent event) -> {
+                        app.setScreen("hardLuck");
+                        counter = 0;
+                        resetGame();
+                    });
+                    pause.play();
+                    return;
                 }
-
+            }
+        }
+        if (counter == 9) {
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished((ActionEvent event) -> {
+                app.setScreen("nooneIsTheWinner");
                 counter = 0;
                 resetGame();
-                return;
-            }
-            if (counter == 9) {
-                /*in case of draw*/
-                PauseTransition pause = new PauseTransition(Duration.seconds(2));
-                pause.setOnFinished((ActionEvent event) -> {
-                    app.setScreen("nooneIsTheWinner");
-                    counter = 0;
-                    resetGame();
-                });
-                pause.play();
-            }
+            });
+            pause.play();
         }
     }
 
-    public void setOpponentMoveFromServer(String position) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                int moveFromServer = 0;
-                switch (position) {
-                    case "upper_left":
-                        moveFromServer = 0;
-                        break;
-                    case "up":
-                        moveFromServer = 1;
-                        break;
-                    case "upper_right":
-                        moveFromServer = 2;
-                        break;
-                    case "left":
-                        moveFromServer = 3;
-                        break;
-                    case "center":
-                        moveFromServer = 4;
-                        break;
-                    case "right":
-                        moveFromServer = 5;
-                        break;
-                    case "lower_left":
-                        moveFromServer = 6;
-                        break;
-                    case "down":
-                        moveFromServer = 7;
-                        break;
-                    case "lower_right":
-                        moveFromServer = 8;
-                        break;
-                }
-                if (turn == false) {
-                    counter++;
-                    l.get(moveFromServer).setText(opponenetPlayerLetter);
-                    l.get(moveFromServer).setId(opponenetPlayerLetter);
-                    checkWinner();
-                    turn = true;
-//                    stack.requestLayout();
-                }
-            }
-        });
 
+    public void getMoveFromServer(String position) {
+        int moveFromServer = 0;
+        switch (position) {
+            case "upper_left":
+                moveFromServer = 0;
+                break;
+            case "up":
+                moveFromServer = 1;
+                break;
+            case "upper_righ":
+                moveFromServer = 2;
+                break;
+            case "left":
+                moveFromServer = 3;
+                break;
+            case "center":
+                moveFromServer = 4;
+                break;
+            case "right":
+                moveFromServer = 5;
+                break;
+            case "lower_left":
+                moveFromServer = 6;
+                break;
+            case "down":
+                moveFromServer = 7;
+                break;
+            case "lower_right":
+                moveFromServer = 8;
+                break;
+        }
+        if (turn == false) {
+            counter++;
+            l.get(moveFromServer).setText(player2Letter);
+            l.get(moveFromServer).setId(player2Letter);
+            checkWinner();
+            turn = true;
+            stack.requestLayout();
+        }
     }
 
     private void sendMoveToServer(int position) {
@@ -272,7 +273,7 @@ public class MultiOnlinePlayers extends Pane {
                 moveToServer = "up";
                 break;
             case 2:
-                moveToServer = "upper_right";
+                moveToServer = "upper_righ";
                 break;
             case 3:
                 moveToServer = "left";
@@ -293,39 +294,12 @@ public class MultiOnlinePlayers extends Pane {
                 moveToServer = "lower_right";
                 break;
         }
-        data.addProperty("move", thisPlayerLetter);
-        data.addProperty("position", moveToServer);
+        data.addProperty("move", moveToServer);
         try {
-            System.out.println(request);
-            app.getDataOutputStream().writeUTF(request.toString());
-        } catch (IOException ex) {
+            app.getDataOutputStream().writeUTF(request.getAsString());
+        } 
+        catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    public void invitationAcceptedSetInviterSide(String challengerName) {
-        /*Inviter Side the X*/
-        System.out.println("test 1");
-        this.challengerName = challengerName;
-        System.out.println("test 2");
-        System.out.println("test 3");
-        opponenetPlayerLetter = "O";
-        thisPlayerLetter = "X";
-        System.out.println("test 4" + thisPlayerLetter);
-        MultiOnlinePlayers.turn = true;
-        System.out.println("test 5");
-        System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
-        System.out.println("test 6");
-        app.setScreen("multiOnlinePlayers");
-    }
-
-    public void acceptInvitationInvitedSide(int challengerId, String challengerName) {
-        /*Invited Side the O*/
-        this.challengerName = challengerName;
-        MultiOnlinePlayers.turn = false;
-        opponenetPlayerLetter = "X";
-        thisPlayerLetter = "O";
-        System.out.println("Accept this letter: " + thisPlayerLetter);
-        System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
     }
 }
