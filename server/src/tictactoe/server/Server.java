@@ -32,13 +32,9 @@ public class Server extends Thread {
     public final Set<ClientThread> clientThreads = new HashSet<ClientThread>();
 
     Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
-        int diff = o1.getPoints() - o2.getPoints();
+        int diff = o2.getPoints() - o1.getPoints();
         if (diff == 0) {
-            if (o1.getId() < o2.getId()) {
-                return 1;
-            } else {
-                return -1;
-            }
+            diff = o1.getId() - o2.getId();
         }
         return diff;
     };
@@ -77,7 +73,7 @@ public class Server extends Thread {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                
+
                 ClientThread clientThread = new ClientThread(new User(socket));
                 clientThread.start();
                 clientThreads.add(clientThread);
@@ -145,7 +141,6 @@ public class Server extends Thread {
 
         private final Socket socket;
         private DataInputStream dataInputStream;
-        private DataOutputStream dataOutputStream;
         private User user;
 
         public ClientThread(User user) {
@@ -153,7 +148,6 @@ public class Server extends Thread {
             this.socket = user.socket;
             try {
                 dataInputStream = new DataInputStream(socket.getInputStream());
-                dataOutputStream = new DataOutputStream(socket.getOutputStream());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -186,8 +180,11 @@ public class Server extends Thread {
                     }
                 }
             } catch (IOException ex) {
-
                 ex.printStackTrace();
+                if (user.player != null) {
+                    System.out.println(user.player.getFirstName() + " forcing logging off");
+                    removeFromOnlinePlayers(user.player.getId());
+                }
             }
         }
 
@@ -221,23 +218,14 @@ public class Server extends Thread {
     }
 
     public void addToOnlinePlayers(int id, User newUser) {
-
         User user = offlinePlayers.remove(id);
-
-        JsonObject response = new JsonObject();
-        JsonObject data = new JsonObject();
-        response.addProperty("type", "online-player");
-
-        response.add("data", data);
-        JsonArray onlineUsers = getSortedOnlinePlayersAsJson();
-        JsonArray offlineUsers = getSortedOfflinePlayersAsJson();
-        data.add("online-players", onlineUsers);
-        data.add("offline-players", offlineUsers);
+        newUser.player.setOnline(true);
         onlinePlayers.put(id, newUser);
         sortedOfflinePlayersbyPoints.remove(user.player);
         sortedOnlinePlayersbyPoints.add(newUser.player);
         newUser.player.setOnline(true);
-        sendToAllOnlinePlayers(response);
+        sendUpdatedPlayerList();
+        System.out.println("after adding to online players");
     }
 
     public void sendToAllOnlinePlayers(JsonObject req) {
@@ -258,19 +246,23 @@ public class Server extends Thread {
         sortedOnlinePlayersbyPoints.remove(user.player);
         sortedOfflinePlayersbyPoints.add(user.player);
         user.player.setOnline(false);
+        sendUpdatedPlayerList();
+    }
 
-        JsonObject response = new JsonObject();
+    public void sendUpdatedPlayerList() {
         JsonObject data = new JsonObject();
-        response.addProperty("type", "offline-player");
-
+        JsonObject response = new JsonObject();
+        response.addProperty("type", "update-player-list");
         response.add("data", data);
-        data.add("player", user.player.asJson());
+        JsonArray onlineUsers = getSortedOnlinePlayersAsJson();
+        JsonArray offlineUsers = getSortedOfflinePlayersAsJson();
+        data.add("online-players", onlineUsers);
+        data.add("offline-players", offlineUsers);
         sendToAllOnlinePlayers(response);
     }
 
     public void addNewOfflinePlayer(Player player) {
         offlinePlayers.put(player.getId(), new User(player));
-
     }
 
     public User getOnlinePlayerById(int id) {
@@ -278,7 +270,6 @@ public class Server extends Thread {
     }
 
     public void turnOff() {
-
         for (ClientThread clientThread : clientThreads) {
             clientThread.closeClient();
         }

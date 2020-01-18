@@ -18,7 +18,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class ServerMain1 extends Application {
+public class App extends Application {
 
     private Server server = null;
 
