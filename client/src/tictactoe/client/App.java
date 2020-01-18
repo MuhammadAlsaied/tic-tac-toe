@@ -93,6 +93,7 @@ public class App extends Application {
 
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
+        System.out.println("current player"+this.currentPlayer);
     }
 
     public void setScreen(String screenName) {

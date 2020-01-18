@@ -128,13 +128,24 @@ public class JsonHandler {
         if (player == null) {
             response.addProperty("type", "signin-error");
             data.addProperty("msg", "wrong email or password");
+            try {
+                user.getDataOutputStream().writeUTF(response.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         } else {
             user.setPlayer(player);
-            server.addToOnlinePlayers(player.getId(), user);
             response.addProperty("type", "signin-success");
             data.add("my-data", player.asJson());
+            try {
+                user.getDataOutputStream().writeUTF(response.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            server.addToOnlinePlayers(player.getId(), user);
+
         }
-        return response;
+        return null;
     }
 
     private JsonObject handleInvitation(JsonObject requestData, User user) {

@@ -1,20 +1,13 @@
 package tictactoe.client.gui;
 
 import java.util.Vector;
-import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import static javafx.application.Application.launch;
 import tictactoe.client.App;
-import static javafx.application.Application.launch;
-import static javafx.application.Application.launch;
 
 /**
  *

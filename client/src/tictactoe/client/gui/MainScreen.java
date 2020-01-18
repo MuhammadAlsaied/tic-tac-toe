@@ -159,11 +159,10 @@ public class MainScreen extends Pane {
     public void addPlayersToList(JsonArray playerList, Color color) {
         for (int i = 0; i < playerList.size(); i++) {
             JsonObject jsonPlayer = playerList.get(i).getAsJsonObject();
-            System.out.println("list iteration" + jsonPlayer);
-//            if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
-//                /*skips iteration if the player is me*/
-//                continue;
-//            }
+            if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
+                /*skips iteration if the player is me*/
+                continue;
+            }
             Player player = new Player();
             player.setFirstName(jsonPlayer.get("firstName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());

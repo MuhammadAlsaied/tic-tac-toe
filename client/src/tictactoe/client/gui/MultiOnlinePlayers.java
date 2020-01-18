@@ -1,16 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -180,18 +173,18 @@ public class MultiOnlinePlayers extends Pane {
                 isEnded = true;
                 if (line.contains(thisPlayerLetter)) {
                     app.setScreen("youWin");
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.addProperty("type", "multiplayer-game-end");
+                    request.add("data", data);
+                    data.addProperty("winner-id", app.getCurrentPlayer().getId());
+                    try {
+                        app.getDataOutputStream().writeUTF(request.toString());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 } else {
                     app.setScreen("hardLuck");
-                }
-                JsonObject request = new JsonObject();
-                JsonObject data = new JsonObject();
-                request.addProperty("type", "multiplayer-game-end");
-                request.add("data", data);
-                data.addProperty("winner-id", app.getCurrentPlayer().getId());
-                try {
-                    app.getDataOutputStream().writeUTF(request.toString());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
                 }
 
                 counter = 0;
