@@ -41,6 +41,7 @@ public class MainScreen extends Pane {
     };
 
     private int playersListCounter;
+    private final TreeSet<Player> sortedPlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
     private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
     private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
     private GridPane gridPane;
@@ -147,27 +148,26 @@ public class MainScreen extends Pane {
         setId("MainScreenPane");
     }
 
+    public void setPlayersListCounter(int playersListCounter) {
+        this.playersListCounter = playersListCounter;
+    }
+
     public void clearPlayersListPane() {
         gridPane.getChildren().clear();
     }
 
-    public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
-        playersListCounter = 0;
-        for (int i = 0; i < onlinePlayerList.size(); i++) {
-            JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
-            System.out.println("ONLINE iteration" + jsonPlayer);
-
-            if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
-                /*skips iteration if the player is me*/
-                continue;
-            }
+    public void addPlayersToList(JsonArray playerList, Color color) {
+        for (int i = 0; i < playerList.size(); i++) {
+            JsonObject jsonPlayer = playerList.get(i).getAsJsonObject();
+            System.out.println("list iteration" + jsonPlayer);
+//            if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
+//                /*skips iteration if the player is me*/
+//                continue;
+//            }
             Player player = new Player();
             player.setFirstName(jsonPlayer.get("firstName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
-
-            sortedOnlinePlayersbyPoints.add(player);
-
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
             invite2.setOnAction(new EventHandler<ActionEvent>() {
@@ -191,38 +191,7 @@ public class MainScreen extends Pane {
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
             Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
-            cir2.setFill(Color.GREEN);
-            gridPane.add(cir2, 0, playersListCounter);
-            gridPane.add(invite2, 3, playersListCounter);
-            gridPane.add(score2, 2, playersListCounter);
-            gridPane.add(playerName, 1, playersListCounter);
-            playersListCounter++;
-
-        }
-    }
-
-    public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
-        for (int i = 0; i < offlinePlayerList.size(); i++) {
-            JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
-            System.out.println("OFFLINE iteration" + jsonPlayer);
-
-            if (app.getCurrentPlayer().getId() == jsonPlayer.get("id").getAsInt()) {
-                /*skips iteration if the player is me*/
-                continue;
-            }
-            Player player = new Player();
-            player.setFirstName(jsonPlayer.get("firstName").getAsString());
-            player.setPoints(jsonPlayer.get("points").getAsInt());
-            player.setId(jsonPlayer.get("id").getAsInt());
-            sortedOfflinePlayersbyPoints.add(player);
-
-            ToggleButton invite2 = new ToggleButton("Challenge");
-            invite2.setId("offlineChallengeScrolPaneMainScreen");
-            Label score2 = new Label(Integer.toString(player.getPoints()));
-            score2.setId("scoreLabel");
-            Label playerName = new Label(player.getFirstName());
-            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
-            cir2.setFill(Color.RED);
+            cir2.setFill(color);
             gridPane.add(cir2, 0, playersListCounter);
             gridPane.add(invite2, 3, playersListCounter);
             gridPane.add(score2, 2, playersListCounter);

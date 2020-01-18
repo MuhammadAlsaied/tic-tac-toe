@@ -4,9 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.DataInputStream;
 import javafx.application.Platform;
+import javafx.scene.paint.Color;
 import tictactoe.client.gui.InvitationScreen;
 import tictactoe.client.gui.MainScreen;
 import tictactoe.client.gui.MultiOnlinePlayers;
+import tictactoe.client.gui.SigninScreen;
 import tictactoe.client.gui.SignupScreen;
 
 /**
@@ -18,6 +20,7 @@ public class JsonHandler {
     private App app;
     private DataInputStream dataInputStream;
     SignupScreen signupScreen;
+    SigninScreen signinScreen;
     InvitationScreen invitationScreen;
     MultiOnlinePlayers multiOnlinePlayers;
     MainScreen mainScreen;
@@ -25,10 +28,10 @@ public class JsonHandler {
     JsonHandler(App a) {
         app = a;
         signupScreen = (SignupScreen) app.getScreen("signup");
+        signinScreen = (SigninScreen) app.getScreen("signin");
         invitationScreen = (InvitationScreen) app.getScreen("invitation");
         multiOnlinePlayers = (MultiOnlinePlayers) app.getScreen("multiOnlinePlayers");
         mainScreen = (MainScreen) app.getScreen("main");
-
     }
 
     public void handle(JsonObject request) {
@@ -53,10 +56,13 @@ public class JsonHandler {
                         myData.get("points").getAsInt()
                 ));
                 app.setScreen("main");
-                refreshList(requestData);
                 break;
             case "signin-error":
                 app.showAlert("Could not login", requestData.get("msg").getAsString());
+                signinScreen.showSigninButton();
+                break;
+            case "update-player-list":
+                refreshList(requestData);
                 break;
             case "online-player":
 //                refreshList(requestData);     /*THROWS NULL POINTER EXCEPTION*/
@@ -85,8 +91,9 @@ public class JsonHandler {
                 mainScreen.clearPlayersListPane();
                 JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");
                 JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
-                mainScreen.addPlayersToOnlineList(onlinePlayerList);
-                mainScreen.addPlayersToOfflineList(offlinePlayerList);
+                mainScreen.setPlayersListCounter(0);
+                mainScreen.addPlayersToList(onlinePlayerList, Color.GREEN);
+                mainScreen.addPlayersToList(offlinePlayerList, Color.RED);
             }
         });
     }

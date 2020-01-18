@@ -2,6 +2,7 @@ package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -26,6 +27,7 @@ import tictactoe.client.App;
 public class SigninScreen extends StackPane {
 
     private final App app;
+    private ToggleButton signin;
 
     public SigninScreen(App app) {
         this.app = app;
@@ -43,9 +45,9 @@ public class SigninScreen extends StackPane {
         password.setFocusTraversable(false);
         password.setPromptText(" Enter your password");
         //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
-        ToggleButton signin = new ToggleButton("SIGN IN");
+        signin = new ToggleButton("SIGN IN");
         signin.setId("signinButton");
-        
+
         signin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -54,8 +56,7 @@ public class SigninScreen extends StackPane {
                     email.setPromptText("You Cannot Leave E-Mail Empty");
                     email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
                     email.setPrefSize(324, 50);
-                }
-                else if (!email.getText().matches(regex)) {
+                } else if (!email.getText().matches(regex)) {
                     Alert emailValid = new Alert(Alert.AlertType.INFORMATION);
                     emailValid.setTitle("Email Validation");
                     emailValid.setHeaderText("");
@@ -66,8 +67,7 @@ public class SigninScreen extends StackPane {
                     password.setPromptText("You Cannot Leave Password Empty");
                     password.setStyle("-fx-font-size: 16px;");
                     password.setPrefSize(324, 50);
-                }
-                else {
+                } else {
                     signin.setText("Connecting...");
                     signin.setDisable(true);
                     JsonObject jsonObject = new JsonObject();
@@ -98,8 +98,7 @@ public class SigninScreen extends StackPane {
             }
         });
         newUser.setCursor(Cursor.HAND);
-        
-        
+
         //TO MAKE SHADOW
         DropShadow e = new DropShadow();
         e.setOffsetX(0.0f);
@@ -123,6 +122,16 @@ public class SigninScreen extends StackPane {
     public void region(Region rec) {
         rec.setPrefSize(498, 460);
         rec.setId("recSignin");
+    }
+
+    public void showSigninButton() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                signin.setText("SIGN IN");
+                signin.setDisable(false);
+            }
+        });
     }
 
 }

@@ -37,7 +37,7 @@ public class App extends Application {
             dataInputStream = new DataInputStream(s.getInputStream());
             dataOutputStream = new DataOutputStream(s.getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert("Connection Error.", "Please check your connection and try again.");
         }
         new Thread(new Runnable() {
             @Override
@@ -122,9 +122,7 @@ public class App extends Application {
 
     public void exit() {
         JsonObject jsonObject = new JsonObject();
-        JsonObject data = new JsonObject();
         jsonObject.addProperty("type", "signout");
-
         try {
             dataOutputStream.writeUTF(jsonObject.toString());
         } catch (IOException ex) {
