@@ -159,9 +159,8 @@ public class JsonHandler {
         return null;
     }
 
-    private JsonObject handleInvitationAccept(JsonObject request, User user) {
-        JsonObject reqData = request.get("data").getAsJsonObject();
-        User invitingPlayer = server.getOnlinePlayerById(reqData.get("inviting_player_id").getAsInt());
+    private JsonObject handleInvitationAccept(JsonObject requestData, User user) {
+        User invitingPlayer = server.getOnlinePlayerById(requestData.get("inviting_player_id").getAsInt());
 
         if (invitingPlayer.getPlayer().isOnline() && invitingPlayer.getPlayer().getCurrentGame() == null) {
             Game game = new Game(invitingPlayer.getPlayer(), user.getPlayer());

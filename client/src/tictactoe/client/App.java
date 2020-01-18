@@ -43,20 +43,22 @@ public class App extends Application {
             @Override
             public void run() {
 
-                while (true) {
-                    try {
+                try {
+                    while (true) {
+
                         String line = dataInputStream.readUTF();
                         if (line != null) {
                             JsonObject obj = JsonParser.parseString(line).getAsJsonObject();
                             System.out.println(obj);
                             jsonHandler.handle(obj);
                         }
-                    } catch (IOException ex) {
-                        showAlert("You are disconnected!", "Please check your connection and try again.");
-                        setScreen("signin");
-                        Platform.exit();
-                        ex.printStackTrace();
                     }
+                } catch (IOException ex) {
+                    showAlert("You are disconnected!", "Please check your connection and try again.");
+                    setScreen("signin");
+                    Platform.exit();
+                    ex.printStackTrace();
+
                 }
 
             }
