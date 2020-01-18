@@ -31,7 +31,7 @@ public class Game {
         gameCoordinates.addProperty("center", "-");
         gameCoordinates.addProperty("right", "-");
         gameCoordinates.addProperty("lower_left", "-");
-        gameCoordinates.addProperty("lower", "-");
+        gameCoordinates.addProperty("down", "-");
         gameCoordinates.addProperty("lower_right", "-");
     }
 

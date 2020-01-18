@@ -23,12 +23,10 @@ public class InvitationScreen extends StackPane {
 
     private int challengerId;
     private String challengerName;
-    private MultiOnlinePlayers multiOnlinePlayers;
     private App app;
 
     public InvitationScreen(App app) {
         this.app = app;
-        multiOnlinePlayers = (MultiOnlinePlayers) app.getScreen("multiOnlinePlayers");
 
         Region rec = new Region();
         rec.setPrefSize(498, 460);
@@ -49,8 +47,10 @@ public class InvitationScreen extends StackPane {
         accept.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                MultiOnlinePlayers multiOnlinePlayers = (MultiOnlinePlayers) app.getScreen("multiOnlinePlayers");
+                System.out.println(multiOnlinePlayers);
                 app.setScreen("multiOnlinePlayers");
-                multiOnlinePlayers.turn = false;
+                MultiOnlinePlayers.turn = false;
                 JsonObject response = new JsonObject();
                 JsonObject data = new JsonObject();
                 response.add("data", data);
