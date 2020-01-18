@@ -27,6 +27,7 @@ public class App extends Application {
     private DataOutputStream dataOutputStream;
     private JsonHandler jsonHandler;
     private Stage pStage;
+    private Player currentPlayer;
 
     public App() {
         addScreens();
@@ -82,6 +83,14 @@ public class App extends Application {
         screens.put("nooneIsTheWinner", new NooneIsTheWinnerScreen(this));
         screens.put("playerList", new PlayerListScreen(this));
 
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public void setScreen(String screenName) {

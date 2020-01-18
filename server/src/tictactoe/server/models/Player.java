@@ -114,7 +114,9 @@ public class Player {
         obj.addProperty("id", id);
         obj.addProperty("firstName", firstName);
         obj.addProperty("lastName", firstName);
+        obj.addProperty("email", email);        
         obj.addProperty("points", points);
+
 
         return obj;
     }

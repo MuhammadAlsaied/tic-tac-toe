@@ -33,6 +33,7 @@ public class JsonHandler {
     public void handle(JsonObject request) {
         String requestType = request.get("type").getAsString();
         JsonObject requestData = request.getAsJsonObject("data");
+        JsonObject myData = requestData.getAsJsonObject("my-data");
         switch (requestType) {
             case "signup-error":
                 signupScreen.showSignupFailedPopup();
@@ -42,6 +43,13 @@ public class JsonHandler {
                 app.setScreen("signin");
                 break;
             case "signin-success":
+
+                app.setCurrentPlayer(new Player(
+                        myData.get("id").getAsInt(),
+                        myData.get("firstName").toString(),
+                        myData.get("email").toString(),
+                        myData.get("points").getAsInt()
+                ));
                 app.setScreen("main");
                 mainScreen.clearPlayersListPane();
                 JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");

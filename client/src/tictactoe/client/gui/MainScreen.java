@@ -28,7 +28,7 @@ import tictactoe.client.Player;
 
 public class MainScreen extends Pane {
 
-    Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
+    Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
         int diff = o1.getPoints() - o2.getPoints();
         if (diff == 0) {
             if (o1.getId() < o2.getId()) {
@@ -41,8 +41,8 @@ public class MainScreen extends Pane {
     };
 
     private int playersListCounter;
-    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
-    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
+    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
+    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
     private GridPane gridPane;
     private Player player;
     private App app;
@@ -157,6 +157,10 @@ public class MainScreen extends Pane {
             System.out.println(onlinePlayerList.get(i).toString());
             player = new Player();
             JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
+            if (app.getCurrentPlayer().getId() == jsonPlayer.get("id").getAsInt()) {
+                /*skips iteration if the player is me*/
+                continue;
+            }
             player.setFirstName(jsonPlayer.get("firstName").toString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
@@ -188,7 +192,6 @@ public class MainScreen extends Pane {
             gridPane.add(invite2, 3, playersListCounter);
             gridPane.add(score2, 2, playersListCounter);
             gridPane.add(playerName, 1, playersListCounter);
-            i++;
             playersListCounter++;
 
         }
@@ -199,6 +202,10 @@ public class MainScreen extends Pane {
             System.out.println(offlinePlayerList.get(i).toString());
             player = new Player();
             JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
+            if (app.getCurrentPlayer().getId() == jsonPlayer.get("id").getAsInt()) {
+                /*skips iteration if the player is me*/
+                continue;
+            }
             player.setFirstName(jsonPlayer.get("firstName").toString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
@@ -231,7 +238,6 @@ public class MainScreen extends Pane {
             gridPane.add(invite2, 3, playersListCounter);
             gridPane.add(score2, 2, playersListCounter);
             gridPane.add(playerName, 1, playersListCounter);
-            i++;
             playersListCounter++;
         }
     }
