@@ -3,6 +3,7 @@ package tictactoe.client;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.DataInputStream;
+import javafx.application.Platform;
 import tictactoe.client.gui.InvitationScreen;
 import tictactoe.client.gui.MainScreen;
 import tictactoe.client.gui.MultiOnlinePlayers;
@@ -51,15 +52,14 @@ public class JsonHandler {
                         myData.get("points").getAsInt()
                 ));
                 app.setScreen("main");
-                mainScreen.clearPlayersListPane();
-                JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");
-                JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
-                mainScreen.addPlayersToOnlineList(onlinePlayerList);
-                mainScreen.addPlayersToOfflineList(offlinePlayerList);
-                System.out.println(onlinePlayerList);
+                refreshList(requestData);
                 break;
             case "signin-error":
                 app.showAlert("Could not login", requestData.get("msg").getAsString());
+                break;
+            case "online-player":
+//                refreshList(requestData);     /*THROWS NULL POINTER EXCEPTION*/
+
                 break;
             case "invitation":
                 int challengerId = requestData.get("inviter_player_id").getAsInt();
@@ -72,5 +72,19 @@ public class JsonHandler {
                 multiOnlinePlayers.invitationAccepted(ch, "challenger");
                 break;
         }
+    }
+
+    public void refreshList(JsonObject requestData) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                mainScreen.clearPlayersListPane();
+                JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");
+                JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
+                mainScreen.addPlayersToOnlineList(onlinePlayerList);
+                mainScreen.addPlayersToOfflineList(offlinePlayerList);
+                System.out.println(onlinePlayerList);
+            }
+        });
     }
 }

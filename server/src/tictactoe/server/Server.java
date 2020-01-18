@@ -219,13 +219,15 @@ public class Server {
         response.addProperty("type", "online-player");
 
         response.add("data", data);
-        data.add("player", newUser.player.asJson());
-        sendToAllOnlinePlayers(response);
-
+        JsonArray onlineUsers = getSortedOnlinePlayersAsJson();
+        JsonArray offlineUsers = getSortedOfflinePlayersAsJson();
+        data.add("online-players", onlineUsers);
+        data.add("offline-players", offlineUsers);
         onlinePlayers.put(id, newUser);
         sortedOfflinePlayersbyPoints.remove(user.player);
         sortedOnlinePlayersbyPoints.add(newUser.player);
         newUser.player.setOnline(true);
+        sendToAllOnlinePlayers(response);
     }
 
     public void sendToAllOnlinePlayers(JsonObject req) {
