@@ -73,7 +73,9 @@ public class Player {
     public void setPoints(int points) {
         this.points = points;
     }
-    
+    public  void incrementPoints(int addition){
+        points += addition;
+    }
     
     public boolean isOnline() {
         return online;
