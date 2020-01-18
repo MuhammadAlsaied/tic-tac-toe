@@ -56,6 +56,7 @@ public class InvitationScreen extends StackPane {
                 response.add("data", data);
                 response.addProperty("type", "accept-invitation");
                 data.addProperty("inviting_player_id", challengerId);
+                multiOnlinePlayers.acceptInvitationInvitedSide(challengerId, "challenger");
                 try {
                     app.getDataOutputStream().writeUTF(response.toString());
                 } catch (IOException ex) {

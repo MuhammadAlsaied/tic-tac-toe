@@ -9,7 +9,10 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -33,8 +36,9 @@ public class MultiOnlinePlayers extends Pane {
     private final App app;
     Random rand;
     public static boolean turn = true;
+    public static String challengerName;
     int counter, cpupos;
-    private String line, player1Letter, player2Letter, thisPlayerLetter = "X", opponenetPlayerLetter, challengerName;
+    private String line, player1Letter, player2Letter, thisPlayerLetter = "X", opponenetPlayerLetter;
     Vector<Label> l = new Vector<>();
     private boolean isEnded = false;
 
@@ -218,44 +222,51 @@ public class MultiOnlinePlayers extends Pane {
     }
 
     public void setOpponentMoveFromServer(String position) {
-        int moveFromServer = 0;
-        switch (position) {
-            case "upper_left":
-                moveFromServer = 0;
-                break;
-            case "up":
-                moveFromServer = 1;
-                break;
-            case "upper_righ":
-                moveFromServer = 2;
-                break;
-            case "left":
-                moveFromServer = 3;
-                break;
-            case "center":
-                moveFromServer = 4;
-                break;
-            case "right":
-                moveFromServer = 5;
-                break;
-            case "lower_left":
-                moveFromServer = 6;
-                break;
-            case "down":
-                moveFromServer = 7;
-                break;
-            case "lower_right":
-                moveFromServer = 8;
-                break;
-        }
-        if (turn == false) {
-            counter++;
-            l.get(moveFromServer).setText(opponenetPlayerLetter);
-            l.get(moveFromServer).setId(opponenetPlayerLetter);
-            checkWinner();
-            turn = true;
-            stack.requestLayout();
-        }
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                int moveFromServer = 0;
+                switch (position) {
+                    case "upper_left":
+                        moveFromServer = 0;
+                        break;
+                    case "up":
+                        moveFromServer = 1;
+                        break;
+                    case "upper_righ":
+                        moveFromServer = 2;
+                        break;
+                    case "left":
+                        moveFromServer = 3;
+                        break;
+                    case "center":
+                        moveFromServer = 4;
+                        break;
+                    case "right":
+                        moveFromServer = 5;
+                        break;
+                    case "lower_left":
+                        moveFromServer = 6;
+                        break;
+                    case "down":
+                        moveFromServer = 7;
+                        break;
+                    case "lower_right":
+                        moveFromServer = 8;
+                        break;
+                }
+                if (turn == false) {
+                    counter++;
+                    l.get(moveFromServer).setText(opponenetPlayerLetter);
+                    l.get(moveFromServer).setId(opponenetPlayerLetter);
+                    checkWinner();
+                    turn = true;
+//                    stack.requestLayout();
+                }
+            }
+        });
+
     }
 
     private void sendMoveToServer(int position) {
@@ -320,18 +331,33 @@ public class MultiOnlinePlayers extends Pane {
 
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
         System.out.println("test 6");
-                app.setScreen("multiOnlinePlayers");
-
+        app.setScreen("multiOnlinePlayers");
 
     }
 
     public void acceptInvitationInvitedSide(int challengerId, String challengerName) {
         /*Invited Side the O*/
-        app.setScreen("multiOnlinePlayers");
-        this.challengerName = challengerName;
-        MultiOnlinePlayers.turn = false;
-        thisPlayerLetter = "O";
-        opponenetPlayerLetter = "X";
-        System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                app.setScreen("multiOnlinePlayers");
+                MultiOnlinePlayers.challengerName = challengerName;
+                MultiOnlinePlayers.turn = false;
+                thisPlayerLetter = "O";
+                opponenetPlayerLetter = "X";
+                JsonObject response = new JsonObject();
+                JsonObject data = new JsonObject();
+                response.add("data", data);
+                response.addProperty("type", "accept-invitation");
+                data.addProperty("inviting_player_id", challengerId);
+                try {
+                    app.getDataOutputStream().writeUTF(response.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
+            }
+        });
+
     }
 }

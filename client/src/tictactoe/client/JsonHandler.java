@@ -72,6 +72,9 @@ public class JsonHandler {
                 /*inviter side*/
                 multiOnlinePlayers.invitationAcceptedSetInviterSide("challenger");
                 break;
+            case "game-move":
+                multiOnlinePlayers.setOpponentMoveFromServer(requestData.get("position").getAsString());
+                break;
         }
     }
 
