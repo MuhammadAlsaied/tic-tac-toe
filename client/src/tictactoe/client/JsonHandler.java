@@ -32,6 +32,7 @@ public class JsonHandler {
     }
 
     public void handle(JsonObject request) {
+        System.out.println(request);
         String requestType = request.get("type").getAsString();
         JsonObject requestData = request.getAsJsonObject("data");
         JsonObject myData = requestData.getAsJsonObject("my-data");
@@ -83,7 +84,6 @@ public class JsonHandler {
                 JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
                 mainScreen.addPlayersToOnlineList(onlinePlayerList);
                 mainScreen.addPlayersToOfflineList(offlinePlayerList);
-                System.out.println(onlinePlayerList);
             }
         });
     }

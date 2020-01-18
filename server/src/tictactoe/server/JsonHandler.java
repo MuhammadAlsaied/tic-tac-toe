@@ -56,7 +56,7 @@ public class JsonHandler {
                 break;
             case "chat_message":
 //                response = handleMessage(requestData, user);
-                break;           
+                break;
             case "global_chat_message":
                 server.sendToAllOnlinePlayers(request);
                 response = null;
@@ -80,8 +80,8 @@ public class JsonHandler {
         JsonObject data = new JsonObject();
         response.add("data", data);
 //        while (true) {
-            //String message = requestData.get("message").getAsString();
-            server.sendToAllOnlinePlayers(requestData);
+        //String message = requestData.get("message").getAsString();
+        server.sendToAllOnlinePlayers(requestData);
 //        }
         return response;
     }
@@ -144,6 +144,8 @@ public class JsonHandler {
     private JsonObject handleInvitation(JsonObject request, User user) {
         JsonObject reqData = request.get("data").getAsJsonObject();
         User opponentUser = server.getOnlinePlayerById(reqData.get("invited_player_id").getAsInt());
+        System.out.println(server.getSortedOnlinePlayersAsJson());
+        System.out.println(server.getSortedOfflinePlayersAsJson());
         System.out.println("is oponent online" + opponentUser.getPlayer().isOnline());
         System.out.println("does oponent has game" + opponentUser.getPlayer().getCurrentGame());
         // if (opponentUser.getPlayer().isOnline() && opponentUser.getPlayer().getCurrentGame() == null) {
@@ -202,10 +204,12 @@ public class JsonHandler {
             response.addProperty("type", "game-move");
             data.addProperty("position", position.toString());
             data.addProperty("move", move.toString());
-
+            System.out.println("TEST BEFORE HANDLE MOVE TRY");
             try {
-                server.getOnlinePlayerById(opponentPlayer.getId()).
-                        getDataOutputStream().writeUTF(response.toString());
+                System.out.println("TEST AFTER HANDLE MOVE TRY");
+                server.getOnlinePlayerById(opponentPlayer.getId()).getDataOutputStream().writeUTF(response.toString());
+                System.out.println("SERVERSIDE opponentPlayer: " + opponentPlayer);
+                /*getDataOutputStream().writeUTF(response.toString()); */
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

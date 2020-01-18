@@ -31,7 +31,7 @@ public class Server extends Thread {
 
     public final Set<ClientThread> clientThreads = new HashSet<ClientThread>();
 
-    Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
+    Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
         int diff = o1.getPoints() - o2.getPoints();
         if (diff == 0) {
             if (o1.getId() < o2.getId()) {
@@ -43,9 +43,9 @@ public class Server extends Thread {
         return diff;
     };
 
-    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
+    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
 
-    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparbleByPoints);
+    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
 
     // private final HashSet<Socket> unloggedInUsers = new HashSet<>();
     JsonHandler jsonHandler = null;

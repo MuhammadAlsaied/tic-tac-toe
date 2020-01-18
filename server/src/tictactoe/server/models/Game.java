@@ -114,12 +114,4 @@ public class Game {
     public int getGameId(){
         return gameId;
     }
-    
-    public int getPlayerXId(){
-        return playerX.getId();
-    }
-    
-    public int getPlayerOId(){
-        return playerO.getId();
-   }
 }
