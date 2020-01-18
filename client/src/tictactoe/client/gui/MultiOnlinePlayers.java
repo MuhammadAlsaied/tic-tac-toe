@@ -174,43 +174,31 @@ public class MultiOnlinePlayers extends Pane {
                     line = l.get(2).getText() + l.get(4).getText() + l.get(6).getText();
                     break;
             }
-            switch (line) {
-                case "XXX": {
-                    turn = true;
-                    isEnded = true;
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
-                    pause.setOnFinished((ActionEvent event) -> {
-                        app.setScreen("youWin");
-                        counter = 0;
-                        resetGame();
-                    });
-                    pause.play();
-                    return;
+            if (line.equals("XXX") || line.equals("OOO")) {
+                isEnded = true;
+                if (line.contains(thisPlayerLetter)) {
+                    app.setScreen("youWin");
+                } else {
+                    app.setScreen("hardLuck");
                 }
-                case "OOO": {
-                    turn = true;
-                    isEnded = true;
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
-                    pause.setOnFinished((ActionEvent event) -> {
-                        app.setScreen("hardLuck");
-                        counter = 0;
-                        resetGame();
-                    });
-                    pause.play();
-                    return;
-                }
-            }
-        }
-        if (counter == 9) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(2));
-            pause.setOnFinished((ActionEvent event) -> {
-                app.setScreen("nooneIsTheWinner");
                 counter = 0;
                 resetGame();
-            });
-            pause.play();
+                return;
+            }
+            if (counter == 9) { /*in case of draw*/
+                PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                pause.setOnFinished((ActionEvent event) -> {
+                    app.setScreen("nooneIsTheWinner");
+                    counter = 0;
+                    resetGame();
+                });
+                pause.play();
+            }
         }
-    }
+
+    
+
+    
 
     public void setOpponentMoveFromServer(String position) {
 
@@ -328,7 +316,7 @@ public class MultiOnlinePlayers extends Pane {
         MultiOnlinePlayers.turn = false;
         opponenetPlayerLetter = "X";
         thisPlayerLetter = "O";
-        System.out.println("Accept this letter: "+thisPlayerLetter);
+        System.out.println("Accept this letter: " + thisPlayerLetter);
 
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
     }
