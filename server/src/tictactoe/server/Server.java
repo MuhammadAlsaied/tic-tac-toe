@@ -22,14 +22,14 @@ import tictactoe.server.db.DatabaseManager;
  *
  * @author muhammad and Ayman Magdy
  */
-public class Server {
+public class Server extends Thread {
 
     private ServerSocket serverSocket;
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
     private final HashMap<Integer, User> offlinePlayers = new HashMap<>();
 
-    public final Set<ClientThread> arr = new HashSet<ClientThread>();
+    public final Set<ClientThread> clientThreads = new HashSet<ClientThread>();
 
     Comparator<Player> playerComparbleByPoints = (o1, o2) -> {
         int diff = o1.getPoints() - o2.getPoints();
@@ -66,15 +66,25 @@ public class Server {
             }
 
             serverSocket = new ServerSocket(Config.PORT);
-            while (true) {
-                Socket socket = serverSocket.accept();
-                //  unloggedInUsers.add(socket);
-                new ClientThread(new User(socket)).start();
-            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
 
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                Socket socket = serverSocket.accept();
+                
+                ClientThread clientThread = new ClientThread(new User(socket));
+                clientThread.start();
+                clientThreads.add(clientThread);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public DatabaseManager getDatabaseManager() {
@@ -269,20 +279,13 @@ public class Server {
 
     public void turnOff() {
 
-        for (ClientThread clientThread : arr) {
+        for (ClientThread clientThread : clientThreads) {
             clientThread.closeClient();
-            try {
-                serverSocket.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
+        }
+        try {
+            serverSocket.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
-
-    public static Server turnOn() {
-        Server server = new Server();
-        return server;
-    }
-
 }

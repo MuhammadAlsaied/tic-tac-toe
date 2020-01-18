@@ -1,12 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoe.server;
 
-import com.google.gson.JsonObject;
-import java.io.IOException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -27,8 +20,7 @@ import javafx.stage.WindowEvent;
 
 public class ServerMain1 extends Application {
 
-    private Server server;
-    private Thread serverThread;
+    private Server server = null;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -42,26 +34,19 @@ public class ServerMain1 extends Application {
         });
 
         primaryStage.setTitle("Server Main");
-        ToggleButton toggleButton = new ToggleButton("off");
+        ToggleButton toggleButton = new ToggleButton("ON");
         toggleButton.setId("toggleButton");
-        toggleButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                if (toggleButton.getText().equals("off")) {
-                    serverThread = new Thread() {
-                        public void run() {
-                            server = new Server();
-                        }
-                    };
-                    serverThread.start();
-                    toggleButton.setText("on");
-                } else {
-                    server.turnOff();
-                    serverThread.stop();
-                    toggleButton.setText("off");
-                }
-
+        toggleButton.setOnAction((ActionEvent event) -> {
+            if (server == null) {
+                server = new Server();
+                server.start();
+                toggleButton.setText("OFF");
+            } else {
+                System.out.println("turnning off server");
+                server.turnOff();
+                server.stop();
+                server = null;
+                toggleButton.setText("ON");
             }
         });
         HBox hbox = new HBox(toggleButton);
