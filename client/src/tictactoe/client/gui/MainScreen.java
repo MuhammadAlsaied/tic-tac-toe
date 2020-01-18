@@ -211,23 +211,7 @@ public class MainScreen extends Pane {
             sortedOfflinePlayersbyPoints.add(player);
 
             ToggleButton invite2 = new ToggleButton("Challenge");
-            invite2.setId("challengeScrolPaneMainScreen");
-            invite2.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    JsonObject request = new JsonObject();
-                    JsonObject data = new JsonObject();
-                    request.add("data", data);
-                    request.addProperty("type", "invitation");
-                    data.addProperty("invited_player_id", player.getId());
-                    try {
-                        app.getDataOutputStream().writeUTF(request.toString());
-                        System.out.println(request);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
+            invite2.setId("offlineChallengeScrolPaneMainScreen");
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
