@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
@@ -179,37 +174,25 @@ public class MultiOnlinePlayers extends Pane {
                     line = l.get(2).getText() + l.get(4).getText() + l.get(6).getText();
                     break;
             }
-            switch (line) {
-                case "XXX": {
-                    turn = true;
-                    isEnded = true;
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
-                    pause.setOnFinished((ActionEvent event) -> {
-                        app.setScreen("youWin");
-                        counter = 0;
-                        resetGame();
-                    });
-                    pause.play();
-                    return;
+
+            if (line.equals("XXX") || line.equals("OOO")) {
+                isEnded = true;
+                if (line.contains(thisPlayerLetter)) {
+                    app.setScreen("youWin");
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.addProperty("type", "multiplayer-game-end");
+                    request.add("data", data);
+                    data.addProperty("winner-id", app.getCurrentPlayer().getId());
+                    try {
+                        app.getDataOutputStream().writeUTF(request.toString());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    app.setScreen("hardLuck");
                 }
-                case "OOO": {
-                    turn = true;
-                    isEnded = true;
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
-                    pause.setOnFinished((ActionEvent event) -> {
-                        app.setScreen("hardLuck");
-                        counter = 0;
-                        resetGame();
-                    });
-                    pause.play();
-                    return;
-                }
-            }
-        }
-        if (counter == 9) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(2));
-            pause.setOnFinished((ActionEvent event) -> {
-                app.setScreen("nooneIsTheWinner");
+
                 counter = 0;
                 resetGame();
             });

@@ -186,15 +186,17 @@ public class MainScreen extends Pane {
             gridPane.add(playerName, 1, i);
             i++;
 
-        }
-    }
-    
-    public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
-        for(int i=0; i<offlinePlayerList.size(); i++){
-            System.out.println(offlinePlayerList.get(i).toString());
-            player = new Player();
-            JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
-            player.setFirstName(jsonPlayer.get("firstName").toString());
+
+    public void addPlayersToList(JsonArray playerList, Color color) {
+        for (int i = 0; i < playerList.size(); i++) {
+            JsonObject jsonPlayer = playerList.get(i).getAsJsonObject();
+            if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
+                /*skips iteration if the player is me*/
+                continue;
+            }
+            Player player = new Player();
+            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
             sortedOfflinePlayersbyPoints.add(player);
