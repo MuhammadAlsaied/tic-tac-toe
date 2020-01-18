@@ -277,7 +277,7 @@ public class DatabaseManager {
         boolean updated = false;
         PreparedStatement pst;
         int playerXId = gameToUpdate.getPlayerX().getId();
-        int playerOId = gameToUpdate.getPlayerO().getId();
+        int playerOId = gameToUpdate.getPlayerO().getId()    ;
         int gameId = gameToUpdate.getGameId();
         String sessionStatus = gameToUpdate.getGameStatus().toString();
         String coordinates = gameToUpdate.getCoordinates().toString();
