@@ -56,12 +56,10 @@ public class SigninScreen extends StackPane {
                     email.setPromptText("You Cannot Leave E-Mail Empty");
                     email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
                     email.setPrefSize(324, 50);
-                } else if (!email.getText().matches(regex)) {
-                    Alert emailValid = new Alert(Alert.AlertType.INFORMATION);
-                    emailValid.setTitle("Email Validation");
-                    emailValid.setHeaderText("");
-                    emailValid.setContentText("Email Must Be User@email.com!");
-                    emailValid.show();
+                }
+                else if (!email.getText().matches(regex)) {
+                    email.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
+                    showSigninButton();
                 }
                 if (password.getText().isEmpty()) {
                     password.setPromptText("You Cannot Leave Password Empty");
@@ -123,8 +121,7 @@ public class SigninScreen extends StackPane {
         rec.setPrefSize(498, 460);
         rec.setId("recSignin");
     }
-
-    public void showSigninButton() {
+   public void showSigninButton() {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
