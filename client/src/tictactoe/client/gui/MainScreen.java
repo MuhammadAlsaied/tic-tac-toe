@@ -154,13 +154,12 @@ public class MainScreen extends Pane {
     public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
         playersListCounter = 0;
         for (int i = 0; i < onlinePlayerList.size(); i++) {
-            System.out.println(onlinePlayerList.get(i).toString());
-            player = new Player();
             JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
             if (app.getCurrentPlayer().getId() == jsonPlayer.get("id").getAsInt()) {
                 /*skips iteration if the player is me*/
                 continue;
             }
+            player = new Player();
             player.setFirstName(jsonPlayer.get("firstName").toString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
@@ -183,6 +182,7 @@ public class MainScreen extends Pane {
                     }
                 }
             });
+
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
@@ -199,13 +199,12 @@ public class MainScreen extends Pane {
 
     public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
         for (int i = 0; i < offlinePlayerList.size(); i++) {
-            System.out.println(offlinePlayerList.get(i).toString());
-            player = new Player();
             JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
             if (app.getCurrentPlayer().getId() == jsonPlayer.get("id").getAsInt()) {
                 /*skips iteration if the player is me*/
                 continue;
             }
+            player = new Player();
             player.setFirstName(jsonPlayer.get("firstName").toString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
