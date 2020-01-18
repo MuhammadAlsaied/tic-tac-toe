@@ -139,7 +139,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws InterruptedException {
         pStage = primaryStage;
         primaryStage.setTitle("TIC TAC TOE!");
-        mainScene = new Scene(screens.get("signin"), 1350, 700);
+        mainScene = new Scene(screens.get("main"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.initStyle(StageStyle.UNDECORATED);
