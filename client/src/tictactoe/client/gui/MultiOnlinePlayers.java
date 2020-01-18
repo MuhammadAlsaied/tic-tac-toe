@@ -185,7 +185,8 @@ public class MultiOnlinePlayers extends Pane {
                 resetGame();
                 return;
             }
-            if (counter == 9) { /*in case of draw*/
+            if (counter == 9) {
+                /*in case of draw*/
                 PauseTransition pause = new PauseTransition(Duration.seconds(2));
                 pause.setOnFinished((ActionEvent event) -> {
                     app.setScreen("nooneIsTheWinner");
@@ -195,13 +196,9 @@ public class MultiOnlinePlayers extends Pane {
                 pause.play();
             }
         }
-
-    
-
-    
+    }
 
     public void setOpponentMoveFromServer(String position) {
-
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -307,7 +304,6 @@ public class MultiOnlinePlayers extends Pane {
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
         System.out.println("test 6");
         app.setScreen("multiOnlinePlayers");
-
     }
 
     public void acceptInvitationInvitedSide(int challengerId, String challengerName) {
@@ -317,7 +313,6 @@ public class MultiOnlinePlayers extends Pane {
         opponenetPlayerLetter = "X";
         thisPlayerLetter = "O";
         System.out.println("Accept this letter: " + thisPlayerLetter);
-
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
     }
 }
