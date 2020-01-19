@@ -36,7 +36,7 @@ public class Game {
     }
 
     public void setNextMove(Position key, Move value) {
-        if (gameCoordinates.get(key.toString()).toString().equals("-")) {
+        if (gameCoordinates.get(key.toString()).getAsString().equals("-")) {
             gameCoordinates.addProperty(key.toString(), value.toString());
             if (value.equals(Move.O)) {
                 nextMove = Move.X;

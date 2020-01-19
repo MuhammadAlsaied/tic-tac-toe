@@ -1,4 +1,5 @@
 package tictactoe.client.gui;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -19,6 +20,7 @@ import tictactoe.client.App;
 public class HardLuckScreen extends StackPane {
 
     private final App app;
+
     public HardLuckScreen(App app) {
         this.app = app;
         Region rec = new Region();
@@ -43,12 +45,22 @@ public class HardLuckScreen extends StackPane {
         back.setId("back");
         back.setOnAction((event) -> {
             app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
         });
         ToggleButton playAgain = new ToggleButton("Play Again");
         playAgain.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                app.setScreen("levels");
+                if (App.inMultiplayerGame) {
+                    app.sendInvitation(App.opposingPlayerId);
+                } else {
+                    app.setScreen("levels");
+                }
+                App.inMultiplayerGame = false;
+                App.opposingPlayerId = -1;
+                App.opposingPlayerName = "";
             }
         });
         playAgain.setPrefSize(180, 20);
