@@ -82,6 +82,10 @@ public class JsonHandler {
             case "game-move":
                 multiOnlinePlayers.setOpponentMoveFromServer(requestData.get("position").getAsString());
                 break;
+            case "game-message":
+                multiOnlinePlayers.setNewMsg(requestData.get("msg").getAsString());
+                
+                break;
         }
     }
 
