@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import tictactoe.server.db.DatabaseManager;
 import tictactoe.server.models.Game;
 
@@ -48,10 +49,13 @@ public class Server extends Thread {
 
     // private final HashSet<Socket> unloggedInUsers = new HashSet<>();
     JsonHandler jsonHandler = null;
+    
 
     private DatabaseManager databaseManager;
+     private App app;
 
-    public Server() {
+   public Server(App app) {
+        this.app = app;
         try {
             this.databaseManager = new DatabaseManager();
             this.jsonHandler = new JsonHandler(this);
@@ -309,6 +313,13 @@ public class Server extends Thread {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+      public void setPlayerList() {
+        Platform.runLater(() -> {
+          app.addPlayersToOnlineList(getSortedOnlinePlayersAsJson());
+          app.addPlayersToOfflineList(getSortedOfflinePlayersAsJson());
+        });
+
     }
 
 }

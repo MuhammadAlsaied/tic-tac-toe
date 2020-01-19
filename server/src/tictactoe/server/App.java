@@ -1,5 +1,7 @@
 package tictactoe.server;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -17,10 +19,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import tictactoe.server.models.Player;
 
 public class App extends Application {
 
     private Server server = null;
+     private int playersListCounter;
+    private GridPane gridPane;
+    private App app = this;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -38,7 +44,7 @@ public class App extends Application {
         toggleButton.setId("toggleButton");
         toggleButton.setOnAction((ActionEvent event) -> {
             if (server == null) {
-                server = new Server();
+                server = new Server(app);
                 server.start();
                 toggleButton.setText("OFF");
             } else {
@@ -53,23 +59,9 @@ public class App extends Application {
         hbox.setLayoutX(250);
         hbox.setLayoutY(350);
 
-        GridPane gr = new GridPane();
-        gr.setHgap(50);
-        for (int i = 0; i < 9; i++) {
-            ToggleButton invite2 = new ToggleButton("Challenge");
-            invite2.setId("Challenge");
-            Label score2 = new Label("500");
-            score2.setId("scoreLabel");
-            Label imglabel2 = new Label();
-            Image img2 = new Image(getClass().getResourceAsStream("/images/k.png"));
-            imglabel2.setGraphic(new ImageView(img2));
-            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
-            cir2.setFill(Color.GREEN);
-            gr.add(cir2, 0, i);
-            gr.add(invite2, 3, i);
-            gr.add(score2, 2, i);
-            gr.add(imglabel2, 1, i);
-        }
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(50);
+      
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(gr);
         scrollPane.setId("scrolPane");
@@ -87,6 +79,71 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+     public void clearPlayersListPane() {
+        gridPane.getChildren().clear();
+    }
+     public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
+        playersListCounter = 0;
+        for (int i = 0; i < onlinePlayerList.size(); i++) {
+            JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
+            Player player = new Player();
+            player.setFirstName(jsonPlayer.get("firstName").toString());
+            player.setPoints(jsonPlayer.get("points").getAsInt());
+            player.setId(jsonPlayer.get("id").getAsInt());
+    
+
+            ToggleButton invite2 = new ToggleButton("Challenge");
+            invite2.setId("challengeScrolPaneMainScreen");
+            invite2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.add("data", data);
+                    request.addProperty("type", "invitation");
+                    data.addProperty("invited_player_id", player.getId());
+                  //  app.getDataOutputStream().writeUTF(request.toString());
+                }
+            });
+
+            Label score2 = new Label(Integer.toString(player.getPoints()));
+            score2.setId("scoreLabel");
+            Label playerName = new Label(player.getFirstName());
+            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
+            cir2.setFill(Color.GREEN);
+            gridPane.add(cir2, 0, playersListCounter);
+            gridPane.add(invite2, 3, playersListCounter);
+            gridPane.add(score2, 2, playersListCounter);
+            gridPane.add(playerName, 1, playersListCounter);
+            playersListCounter++;
+
+        }
+    }
+     public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
+        for (int i = 0; i < offlinePlayerList.size(); i++) {
+            JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
+           
+           Player player = new Player();
+            player.setFirstName(jsonPlayer.get("firstName").toString());
+            player.setPoints(jsonPlayer.get("points").getAsInt());
+            player.setId(jsonPlayer.get("id").getAsInt());
+       
+
+            ToggleButton invite2 = new ToggleButton("Challenge");
+            invite2.setId("offlineChallengeScrolPaneMainScreen");
+            Label score2 = new Label(Integer.toString(player.getPoints()));
+            score2.setId("scoreLabel");
+            Label playerName = new Label(player.getFirstName());
+            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
+            cir2.setFill(Color.RED);
+            gridPane.add(cir2, 0, playersListCounter);
+            gridPane.add(invite2, 3, playersListCounter);
+            gridPane.add(score2, 2, playersListCounter);
+            gridPane.add(playerName, 1, playersListCounter);
+            playersListCounter++;
+        }
+    }
+    
 
     public static void main(String[] args) {
         Application.launch(args);
