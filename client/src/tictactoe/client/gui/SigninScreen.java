@@ -53,13 +53,12 @@ public class SigninScreen extends StackPane {
         password.setFocusTraversable(false);
         password.setPromptText(" Enter your password");
         //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
-      //  ToggleButton signin = new ToggleButton("SIGN IN");
+        //  ToggleButton signin = new ToggleButton("SIGN IN");
+        Button signin = new Button("SIGN IN");
         signin.setId("signinButton");
-           Button signin = new Button("SIGN IN");
-           signin.setDefaultButton(true);
 
-        
-        
+        signin.setDefaultButton(true);
+
         signin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -75,8 +74,7 @@ public class SigninScreen extends StackPane {
                     password.setPromptText("You Cannot Leave Password Empty");
                     password.setStyle("-fx-font-size: 16px;");
                     password.setPrefSize(324, 50);
-                }
-                else {
+                } else {
                     signin.setText("Connecting...");
                     signin.setDisable(true);
                     JsonObject jsonObject = new JsonObject();
@@ -107,8 +105,7 @@ public class SigninScreen extends StackPane {
             }
         });
         newUser.setCursor(Cursor.HAND);
-        
-        
+
         //TO MAKE SHADOW
         DropShadow e = new DropShadow();
         e.setOffsetX(0.0f);
@@ -140,6 +137,7 @@ public class SigninScreen extends StackPane {
             signin.setDisable(false);
         });
     }
+
     private void error() {
         if (!email.getText().matches(regex)) {
             email.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
