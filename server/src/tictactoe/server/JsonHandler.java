@@ -53,8 +53,8 @@ public class JsonHandler {
             case "multiplayer-game-end":
                 response = handleGameEnd(requestData, user);
                 break;
-            case "chat_message":
-//                response = handleMessage(requestData, user);
+            case "game-message":
+                response = handleGameMessage(request, user);
                 break;
             case "global_chat_message":
                 server.sendToAllOnlinePlayers(request);
@@ -252,6 +252,21 @@ public class JsonHandler {
             ex.printStackTrace();
         }
         server.sendUpdatedPlayerList();
+        return null;
+    }
+
+    private JsonObject handleGameMessage(JsonObject request, User user) {
+        if (user.getPlayer().getCurrentGame() != null) {
+            try {
+                Game game = user.getPlayer().getCurrentGame();
+                Player opponentPlayer = game.getPlayerX().getId() == user.getPlayer().getId()
+                        ? game.getPlayerO() : game.getPlayerX();
+                server.getOnlinePlayerById(opponentPlayer.getId()).getDataOutputStream()
+                        .writeUTF(request.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
         return null;
     }
 }

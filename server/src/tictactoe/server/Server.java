@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import tictactoe.server.db.DatabaseManager;
+import tictactoe.server.models.Game;
 
 /**
  *
@@ -168,11 +169,7 @@ public class Server extends Thread {
                         if (request.get("type").getAsString().equals("signout")) {
 
                             System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
-
-                            if (user.player != null) {
-                                System.out.println(user.player.getFirstName() + " logging off");
-                                removeFromOnlinePlayers(user.player.getId());
-                            }
+                            handleClosedPlayer();
                             break;
                         } else {
                             jsonHandler.handle(request, user);
@@ -181,10 +178,7 @@ public class Server extends Thread {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
-                if (user.player != null) {
-                    System.out.println(user.player.getFirstName() + " forcing logging off");
-                    removeFromOnlinePlayers(user.player.getId());
-                }
+                handleClosedPlayer();
             }
         }
 
@@ -197,6 +191,40 @@ public class Server extends Thread {
 
             } catch (IOException ex) {
                 ex.printStackTrace();
+            }
+        }
+
+        private void handleClosedPlayer() {
+            if (user.player != null) {
+                if (user.player.getCurrentGame() != null) {
+                    Game currentGame = user.player.getCurrentGame();
+                    currentGame.setGameStatus(Game.Status.terminated);
+                    User secondUser = new User();
+                    if (user.player.getId() == currentGame.getPlayerX().getId()) {
+                        secondUser = onlinePlayers.get(currentGame.getPlayerO().getId());
+                    } else {
+                        secondUser = onlinePlayers.get(currentGame.getPlayerX().getId());
+                    }
+
+                    try {
+                        databaseManager.insertGame(currentGame);
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                    JsonObject alertTerminatedGame = new JsonObject();
+                    alertTerminatedGame.addProperty("type", "terminated-game");
+                    JsonObject data = new JsonObject();
+                    alertTerminatedGame.add("data", data);
+                    currentGame.getPlayerX().setCurrentGame(null);
+                    currentGame.getPlayerO().setCurrentGame(null);
+                    try {
+                        secondUser.dataOutputStream.writeUTF(alertTerminatedGame.toString());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                removeFromOnlinePlayers(user.player.getId()); // call here 
             }
         }
     }
@@ -279,4 +307,5 @@ public class Server extends Thread {
             ex.printStackTrace();
         }
     }
+
 }
