@@ -160,9 +160,6 @@ public class App extends Application {
                 makePaneDraggable(primaryStage);
             }
         });
-        if (primaryStage.isFullScreen() == false) {
-            makePaneDraggable(primaryStage);
-        }
         pStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent e) {
