@@ -1,6 +1,5 @@
 package tictactoe.server;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -154,19 +153,20 @@ public class JsonHandler {
         System.out.println(server.getSortedOfflinePlayersAsJson());
         System.out.println("is oponent online" + opponentUser.getPlayer().isOnline());
         System.out.println("does oponent has game" + opponentUser.getPlayer().getCurrentGame());
-        // if (opponentUser.getPlayer().isOnline() && opponentUser.getPlayer().getCurrentGame() == null) {
-        JsonObject response = new JsonObject();
-        JsonObject data = new JsonObject();
-        response.add("data", data);
-        response.addProperty("type", "invitation");
+        if (opponentUser.getPlayer().isOnline() && opponentUser.getPlayer().getCurrentGame() == null) {
+            JsonObject response = new JsonObject();
+            JsonObject data = new JsonObject();
+            response.add("data", data);
+            response.addProperty("type", "invitation");
 
-        data.addProperty("inviter_player_id", user.getPlayer().getId());
-        try {
-            opponentUser.getDataOutputStream().writeUTF(response.toString());
-        } catch (IOException iOException) {
-            iOException.printStackTrace();
+            data.addProperty("inviter_player_id", user.getPlayer().getId());
+            data.addProperty("inviter_player_name", user.getPlayer().getFirstName());
+            try {
+                opponentUser.getDataOutputStream().writeUTF(response.toString());
+            } catch (IOException iOException) {
+                iOException.printStackTrace();
+            }
         }
-        //}
         return null;
     }
 
@@ -183,6 +183,7 @@ public class JsonHandler {
             response.addProperty("type", "invitation-accepted");
 
             data.addProperty("invited_player_id", user.getPlayer().getId());
+            data.addProperty("invited_player_name", user.getPlayer().getFirstName());
             try {
                 invitingPlayer.getDataOutputStream().writeUTF(response.toString());
             } catch (IOException iOException) {
@@ -229,6 +230,7 @@ public class JsonHandler {
         }
         int winnerId = requestData.get("winner-id").getAsInt();
         game.setWinnerId(winnerId);
+        game.setGameStatus(Game.Status.finished);
         try {
             databaseManager.insertGame(game);
         } catch (ClassNotFoundException ex) {

@@ -18,8 +18,9 @@ import tictactoe.client.App;
  * @author KeR
  */
 public class NooneIsTheWinnerScreen extends StackPane {
+
     private final App app;
-    
+
     public NooneIsTheWinnerScreen(App app) {
         this.app = app;
         Region rec = new Region();
@@ -29,7 +30,6 @@ public class NooneIsTheWinnerScreen extends StackPane {
         Region over = new Region();
         over.setId("noOneIsTheWinner");
         over.setPrefSize(130, 130);
-       
 
         DropShadow e = new DropShadow();
         e.setOffsetX(0.0f);
@@ -43,6 +43,10 @@ public class NooneIsTheWinnerScreen extends StackPane {
         ToggleButton back = new ToggleButton("Back");
         back.setOnAction((event) -> {
             app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+
         });
         back.setPrefSize(180, 20);
         back.setId("back");
@@ -50,17 +54,22 @@ public class NooneIsTheWinnerScreen extends StackPane {
         playAgain.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                app.setScreen("levels");
+                if (App.inMultiplayerGame) {
+                    app.sendInvitation(App.opposingPlayerId);
+                } else {
+                    app.setScreen("levels");
+                }
+                App.inMultiplayerGame = false;
+                App.opposingPlayerId = -1;
+                App.opposingPlayerName = "";
             }
         });
         playAgain.setPrefSize(180, 20);
         playAgain.setId("playAgain");
-        HBox buttonBox = new HBox(50,back,playAgain);
-        
+        HBox buttonBox = new HBox(50, back, playAgain);
 
-        VBox vbox = new VBox(30, over, noOneWine,buttonBox);
-                vbox.setId("vbox");
-
+        VBox vbox = new VBox(30, over, noOneWine, buttonBox);
+        vbox.setId("vbox");
 
         getChildren().addAll(rec, vbox);
         setId("stackGameResultScreen");

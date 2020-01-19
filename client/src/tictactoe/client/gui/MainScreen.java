@@ -27,7 +27,7 @@ import tictactoe.client.App;
 import tictactoe.client.Player;
 
 public class MainScreen extends Pane {
-
+    
     Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
         int diff = o1.getPoints() - o2.getPoints();
         if (diff == 0) {
@@ -39,7 +39,7 @@ public class MainScreen extends Pane {
         }
         return diff;
     };
-
+    
     private int playersListCounter;
     private final TreeSet<Player> sortedPlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
     private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
@@ -47,7 +47,7 @@ public class MainScreen extends Pane {
     private GridPane gridPane;
     //private Player player;
     private App app;
-
+    
     public MainScreen(App app) {
         this.app = app;
         ToggleButton challengeComp = new ToggleButton("CHALLENGE COMPUTER");
@@ -69,12 +69,12 @@ public class MainScreen extends Pane {
         gridPane = new GridPane();
         gridPane.setId("GridMain");
         gridPane.setHgap(50);
-
+        
         gridPane.setPrefSize(495.2, 250.0);
         Button send = new Button();
         send.setText("send");
         send.setOnAction(new EventHandler<ActionEvent>() {
-
+            
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Hello World!");
@@ -97,7 +97,7 @@ public class MainScreen extends Pane {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-
+                
             }
         });
         Button exit = new Button("EXIT");
@@ -111,11 +111,11 @@ public class MainScreen extends Pane {
         ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setId("scrollPane1");
         scrollPane.setFocusTraversable(false);
-
+        
         scrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
         scrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-
+        
         VBox v = new VBox();
         v.getChildren().add(scrollPane);
         v.setLayoutX(930);
@@ -125,37 +125,37 @@ public class MainScreen extends Pane {
         ta.setLayoutY(420);
         ta.setMaxWidth(220.0);
         ta.setMaxHeight(250.0);
-
+        
         TextArea text = new TextArea("");
-
+        
         text.setPromptText("Enter your Msg ");
         text.setLayoutX(800);
         text.setLayoutY(700);
         text.setMaxWidth(220.0);
         text.setMaxHeight(10.5);
-
+        
         Image img2 = new Image(getClass().getResourceAsStream("/images/k.png"));
         Label labelk = new Label();
         labelk.setGraphic(new ImageView(img2));
-
+        
         labelk.setLayoutX(760);
         labelk.setLayoutY(20);
         labelk.setMaxSize(50.0, 50.0);
-
+        
         labelk.setFont(new Font("Arial", 24));
-
+        
         getChildren().addAll(buttonBox, text, ta, send, v, labelk, exit);
         setId("MainScreenPane");
     }
-
+    
     public void setPlayersListCounter(int playersListCounter) {
         this.playersListCounter = playersListCounter;
     }
-
+    
     public void clearPlayersListPane() {
         gridPane.getChildren().clear();
     }
-
+    
     public void addPlayersToList(JsonArray playerList, Color color) {
         for (int i = 0; i < playerList.size(); i++) {
             JsonObject jsonPlayer = playerList.get(i).getAsJsonObject();
@@ -172,20 +172,10 @@ public class MainScreen extends Pane {
             invite2.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    JsonObject request = new JsonObject();
-                    JsonObject data = new JsonObject();
-                    request.add("data", data);
-                    request.addProperty("type", "invitation");
-                    data.addProperty("invited_player_id", player.getId());
-                    try {
-                        System.out.println("SENT JSON INVITATION: " + request);
-                        app.getDataOutputStream().writeUTF(request.toString());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                    app.sendInvitation(player.getId());
                 }
             });
-
+            
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
@@ -198,5 +188,5 @@ public class MainScreen extends Pane {
             playersListCounter++;
         }
     }
-
+    
 }

@@ -22,8 +22,9 @@ import tictactoe.client.App;
 public class InvitationScreen extends StackPane {
 
     private int challengerId;
-    private String challengerName;
+    private String challengerName = "";
     private App app;
+    Button invitationMSG;
 
     public InvitationScreen(App app) {
         this.app = app;
@@ -36,10 +37,9 @@ public class InvitationScreen extends StackPane {
         e.setOffsetY(4.0f);
         e.setBlurType(BlurType.GAUSSIAN);
         e.setColor(Color.BLACK);
-        String str = new String("Challenger");
-        Button lose = new Button(str + " Challenges you");
-        lose.setId("playerWantsToChallengeYou");
-        lose.setEffect(e);
+        invitationMSG = new Button(challengerName + " Challenges you");
+        invitationMSG.setId("playerWantsToChallengeYou");
+        invitationMSG.setEffect(e);
         /////////////////accept button//////////////////////
         ToggleButton accept = new ToggleButton("Accept");
         accept.setPrefSize(200, 20);
@@ -56,7 +56,7 @@ public class InvitationScreen extends StackPane {
                 response.add("data", data);
                 response.addProperty("type", "accept-invitation");
                 data.addProperty("inviting_player_id", challengerId);
-                multiOnlinePlayers.acceptInvitationInvitedSide(challengerId, "challenger");
+                multiOnlinePlayers.acceptInvitationInvitedSide(challengerId, challengerName);
                 try {
                     app.getDataOutputStream().writeUTF(response.toString());
                 } catch (IOException ex) {
@@ -86,7 +86,7 @@ public class InvitationScreen extends StackPane {
         ///////////////////////////////////////////////////////////////
         HBox buttonBox = new HBox(20, accept, Decline);
 
-        VBox vbox = new VBox(100, lose, buttonBox);
+        VBox vbox = new VBox(100, invitationMSG, buttonBox);
         vbox.setId("vboxInvitationScreen");
 
         getChildren().addAll(rec, vbox);
@@ -97,6 +97,8 @@ public class InvitationScreen extends StackPane {
         this.challengerId = challengerId;
         this.challengerName = challengerName;
         app.setScreen("invitation");
+        invitationMSG.setText(challengerName + " Challenges you");
+
     }
 
 }

@@ -51,8 +51,8 @@ public class JsonHandler {
 
                 app.setCurrentPlayer(new Player(
                         myData.get("id").getAsInt(),
-                        myData.get("firstName").toString(),
-                        myData.get("email").toString(),
+                        myData.get("firstName").getAsString(),
+                        myData.get("email").getAsString(),
                         myData.get("points").getAsInt()
                 ));
                 app.setScreen("main");
@@ -70,13 +70,14 @@ public class JsonHandler {
                 break;
             case "invitation":
                 int challengerId = requestData.get("inviter_player_id").getAsInt();
-
-//                String challengerName = ;
-                invitationScreen.setInvitation(challengerId, "Challenger");
+                String challengerName = requestData.get("inviter_player_name").getAsString();
+                invitationScreen.setInvitation(challengerId, challengerName);
                 break;
             case "invitation-accepted":
                 /*inviter side*/
-                multiOnlinePlayers.invitationAcceptedSetInviterSide("challenger");
+                int opposingPlayerId = requestData.get("invited_player_id").getAsInt();
+                String opposingPlayerName = requestData.get("invited_player_name").getAsString();
+                multiOnlinePlayers.invitationAcceptedSetInviterSide(opposingPlayerName, opposingPlayerId);
                 break;
             case "game-move":
                 multiOnlinePlayers.setOpponentMoveFromServer(requestData.get("position").getAsString());
