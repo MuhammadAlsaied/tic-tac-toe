@@ -33,6 +33,7 @@ public class MultiOnlinePlayers extends Pane {
     private String line, thisPlayerLetter, opponenetPlayerLetter, challengerName;
     Vector<Label> l = new Vector<>();
     private boolean isEnded = false;
+    Label label1, label2;
 
     public MultiOnlinePlayers(App app) {
         stack = new GridPane();
@@ -81,8 +82,8 @@ public class MultiOnlinePlayers extends Pane {
             }
         }
         setId("stackGameboard");
-        Label label1 = new Label("PLAYER1");
-        Label label2 = new Label("PLAYER2");
+        label1 = new Label("PLAYER1");
+        label2 = new Label("PLAYER2");
 
         HBox hbox = new HBox(385, label1, label2);
         hbox.setLayoutX(70);
@@ -296,7 +297,12 @@ public class MultiOnlinePlayers extends Pane {
         }
     }
 
-    public void invitationAcceptedSetInviterSide(String challengerName) {
+    public void invitationAcceptedSetInviterSide(String challengerName, int opposingPlayerId) {
+        App.inMultiplayerGame = true;
+        App.opposingPlayerId = opposingPlayerId;
+        App.opposingPlayerName = challengerName;
+        label1.setText(app.getCurrentPlayer().getFirstName());
+        label2.setText(challengerName);
         /*Inviter Side the X*/
         System.out.println("test 1");
         this.challengerName = challengerName;
@@ -315,7 +321,12 @@ public class MultiOnlinePlayers extends Pane {
 
     public void acceptInvitationInvitedSide(int challengerId, String challengerName) {
         /*Invited Side the O*/
+        App.inMultiplayerGame = true;
+        App.opposingPlayerName = challengerName;
+        App.opposingPlayerId = challengerId;
         this.challengerName = challengerName;
+        label1.setText(challengerName);
+        label2.setText(app.getCurrentPlayer().getFirstName());
         isEnded = false;
         MultiOnlinePlayers.turn = false;
         opponenetPlayerLetter = "X";

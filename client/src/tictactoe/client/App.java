@@ -28,6 +28,9 @@ public class App extends Application {
     private JsonHandler jsonHandler;
     private Stage pStage;
     private Player currentPlayer;
+    public static boolean inMultiplayerGame = false;
+    public static int opposingPlayerId = -1;
+    public static String opposingPlayerName = "";
 
     public App() {
         addScreens();
@@ -93,7 +96,7 @@ public class App extends Application {
 
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
-        System.out.println("current player"+this.currentPlayer);
+        System.out.println("current player" + this.currentPlayer);
     }
 
     public void setScreen(String screenName) {
@@ -159,6 +162,20 @@ public class App extends Application {
 
     public void init() throws Exception {
         super.init();
+    }
+
+    public void sendInvitation(int playerId) {
+        JsonObject request = new JsonObject();
+        JsonObject data = new JsonObject();
+        request.add("data", data);
+        request.addProperty("type", "invitation");
+        data.addProperty("invited_player_id", playerId);
+        try {
+            System.out.println("SENT JSON INVITATION: " + request);
+            getDataOutputStream().writeUTF(request.toString());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
