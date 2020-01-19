@@ -142,7 +142,7 @@ public class JsonHandler {
                 ex.printStackTrace();
             }
             server.addToOnlinePlayers(player.getId(), user);
-
+            server.setPlayerList();
         }
         return null;
     }
