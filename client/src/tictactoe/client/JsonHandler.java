@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import tictactoe.client.gui.InvitationScreen;
 import tictactoe.client.gui.MainScreen;
 import tictactoe.client.gui.MultiOnlinePlayers;
+import tictactoe.client.gui.PlayerListScreen;
 import tictactoe.client.gui.SigninScreen;
 import tictactoe.client.gui.SignupScreen;
 
@@ -24,6 +25,7 @@ public class JsonHandler {
     InvitationScreen invitationScreen;
     MultiOnlinePlayers multiOnlinePlayers;
     MainScreen mainScreen;
+    PlayerListScreen playerList;
 
     JsonHandler(App a) {
         app = a;
@@ -32,6 +34,7 @@ public class JsonHandler {
         invitationScreen = (InvitationScreen) app.getScreen("invitation");
         multiOnlinePlayers = (MultiOnlinePlayers) app.getScreen("multiOnlinePlayers");
         mainScreen = (MainScreen) app.getScreen("main");
+        playerList = (PlayerListScreen) app.getScreen("playerList");
     }
 
     public void handle(JsonObject request) {
@@ -104,6 +107,8 @@ public class JsonHandler {
                 mainScreen.setPlayersListCounter(0);
                 mainScreen.addPlayersToList(onlinePlayerList, Color.GREEN);
                 mainScreen.addPlayersToList(offlinePlayerList, Color.RED);
+                playerList.addPlayersToList(onlinePlayerList, Color.GREEN);
+                playerList.addPlayersToList(offlinePlayerList, Color.RED);
             }
         });
     }
