@@ -1,6 +1,8 @@
 package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
+import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
+import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -8,10 +10,14 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -25,7 +31,9 @@ import tictactoe.client.App;
 public class SignupScreen extends StackPane {
 
     private final App app;
+    private Label error;
     private ToggleButton signup;
+    private String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
     public SignupScreen(App app) {
         this.app = app;
@@ -34,6 +42,7 @@ public class SignupScreen extends StackPane {
 
     private void init() {
         TextField name = new TextField();
+        error = new Label();
         name.setPromptText("Please Enter your Name");
         name.setFocusTraversable(false);
         name.setId("name");
@@ -64,7 +73,6 @@ public class SignupScreen extends StackPane {
         signup.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
                 if (nickName.getText().isEmpty()) {
                     nickName.setPromptText("You Cannot Leave Name Empty");
                     nickName.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
@@ -80,9 +88,8 @@ public class SignupScreen extends StackPane {
                     email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
                     email.setPrefSize(324, 45);
                 }
-                else if (!email.getText().matches(regex)) {
-                    email.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
-                    showSignupButton();
+                if (!email.getText().matches(regex) && !email.getText().isEmpty()) {
+                    error("Email Must be something@somthing.somthing", email);
                 }
                 if (password.getText().isEmpty()) {
                     password.setPromptText("You Cannot Leave Password Empty");
@@ -90,15 +97,19 @@ public class SignupScreen extends StackPane {
                     password.setPrefSize(324, 45);
                     showSignupButton();
                 }
-                if(repassword.getText().isEmpty()){
+                if (!password.getText().equals(repassword.getText())) {
+                    error("The Two Feilds are not Matching", repassword);
+                } else if (password.getText().equals(repassword.getText())) {
+                    errorRelese(repassword);
+                }
+                if (repassword.getText().isEmpty()) {
                     repassword.setPromptText("You Must Retype Your Password");
                     repassword.setStyle("-fx-font-size: 16px;");
                     repassword.setPrefSize(324, 45);
                 }
-                else if (!password.getText().equals(repassword.getText())) {
-                    repassword.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
-                    showSignupButton();
-                } else if (password.getText().equals(repassword.getText())) {
+                if (password.getText().equals(repassword.getText()) && !nickName.getText().isEmpty()
+                        && !name.getText().isEmpty() && !email.getText().isEmpty() && !password.getText().isEmpty()
+                        && !repassword.getText().isEmpty() && email.getText().matches(regex)) {
                     signup.setText("Loading...");
                     signup.setDisable(true);
                     JsonObject jsonObject = new JsonObject();
@@ -119,6 +130,36 @@ public class SignupScreen extends StackPane {
                 }
             }
         });
+//        ============Email And Repassowrd Event Handeler==================
+        email.setOnKeyReleased(ke -> {
+            if (!email.getText().matches(regex)) {
+                error("Email Must be something@somthing.somthing", email);
+            } else if (email.getText().matches(regex)) {
+                errorRelese(email);
+            }
+        });
+        email.setOnKeyTyped(ke -> {
+            if (!email.getText().matches(regex)) {
+                error("Email Must be something@somthing.somthing", email);
+            } else if (email.getText().matches(regex)) {
+                errorRelese(email);
+            }
+        });
+        repassword.setOnKeyReleased(ke -> {
+            if (!password.getText().equals(repassword.getText())) {
+                error("The Two Feilds are not Matched", repassword);
+            } else if (password.getText().equals(repassword.getText())) {
+                errorRelese(repassword);
+            }
+        });
+        repassword.setOnKeyTyped(ke -> {
+            if (!password.getText().equals(repassword.getText())) {
+                error("The Two Feilds are not Matched", repassword);
+            } else if (password.getText().equals(repassword.getText())) {
+                errorRelese(repassword);
+            }
+        });
+
 //        =================================================================
         Region rec = new Region();
         rec.prefHeight(600);
@@ -133,8 +174,10 @@ public class SignupScreen extends StackPane {
             }
         });
         alreadyRegistered.setCursor(Cursor.HAND);
-        VBox box1 = new VBox(25, repassword, signup);
-        VBox box = new VBox(18, label1, name, nickName, email, password, box1, alreadyRegistered);
+        VBox box1 = new VBox(18, repassword, signup);
+        box1.setStyle("-fx-border-width: 0px;");
+        VBox box = new VBox(14, label1, name, nickName, email, password, box1, alreadyRegistered, error);
+        box.setStyle("-fx-border-width: 0px;");
         box.setId("vbox");
         box1.setId("vbox");
         setId("stackSignin");
@@ -162,6 +205,17 @@ public class SignupScreen extends StackPane {
                 signup.setDisable(false);
             }
         });
+    }
+
+    private void error(String errorMessage, TextField node) {
+        node.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
+        error.setText(errorMessage);
+        error.setStyle("-fx-text-fill: RED; -fx-font-size: 16px;");
+    }
+
+    private void errorRelese(TextField node) {
+        node.setStyle("-fx-border-color: WHITE; -fx-alignment: CENTER; -fx-border-width: 3px;");
+        error.setText("");
     }
 //        =================================================================
 
