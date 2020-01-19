@@ -10,8 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -24,7 +22,7 @@ import tictactoe.server.models.Player;
 public class App extends Application {
 
     private Server server = null;
-     private int playersListCounter;
+    private int playersListCounter;
     private GridPane gridPane;
     private App app = this;
 
@@ -59,9 +57,9 @@ public class App extends Application {
         hbox.setLayoutX(250);
         hbox.setLayoutY(350);
 
-        GridPane gridPane = new GridPane();
+        gridPane = new GridPane();
         gridPane.setHgap(50);
-      
+
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(gridPane);
         scrollPane.setId("scrolPane");
@@ -79,18 +77,19 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-     public void clearPlayersListPane() {
+
+    public void clearPlayersListPane() {
         gridPane.getChildren().clear();
     }
-     public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
+
+    public void addPlayersToOnlineList(JsonArray onlinePlayerList) {
         playersListCounter = 0;
         for (int i = 0; i < onlinePlayerList.size(); i++) {
             JsonObject jsonPlayer = onlinePlayerList.get(i).getAsJsonObject();
             Player player = new Player();
-            player.setFirstName(jsonPlayer.get("firstName").toString());
+            player.setFirstName(jsonPlayer.get("firstName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
-    
 
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("challengeScrolPaneMainScreen");
@@ -102,7 +101,7 @@ public class App extends Application {
                     request.add("data", data);
                     request.addProperty("type", "invitation");
                     data.addProperty("invited_player_id", player.getId());
-                  //  app.getDataOutputStream().writeUTF(request.toString());
+                    //  app.getDataOutputStream().writeUTF(request.toString());
                 }
             });
 
@@ -119,15 +118,15 @@ public class App extends Application {
 
         }
     }
-     public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
+
+    public void addPlayersToOfflineList(JsonArray offlinePlayerList) {
         for (int i = 0; i < offlinePlayerList.size(); i++) {
             JsonObject jsonPlayer = offlinePlayerList.get(i).getAsJsonObject();
-           
-           Player player = new Player();
-            player.setFirstName(jsonPlayer.get("firstName").toString());
+
+            Player player = new Player();
+            player.setFirstName(jsonPlayer.get("firstName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
-       
 
             ToggleButton invite2 = new ToggleButton("Challenge");
             invite2.setId("offlineChallengeScrolPaneMainScreen");
@@ -143,7 +142,6 @@ public class App extends Application {
             playersListCounter++;
         }
     }
-    
 
     public static void main(String[] args) {
         Application.launch(args);

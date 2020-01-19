@@ -113,7 +113,7 @@ public class SigninScreen extends StackPane {
 
         e.setColor(javafx.scene.paint.Color.BLACK);
 
-        VBox vbox = new VBox(20, header, email, password, signin, error, newUser);
+        VBox vbox = new VBox(20, header, email, password, signin, newUser, error);
         vbox.setId("vbox");
         Region rec = new Region();
 

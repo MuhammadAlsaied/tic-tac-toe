@@ -16,8 +16,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 
 import tictactoe.server.db.DatabaseManager;
@@ -50,12 +48,11 @@ public class Server extends Thread {
 
     // private final HashSet<Socket> unloggedInUsers = new HashSet<>();
     JsonHandler jsonHandler = null;
-    
 
     private DatabaseManager databaseManager;
-     private App app;
+    private App app;
 
-   public Server(App app) {
+    public Server(App app) {
         this.app = app;
         try {
             this.databaseManager = new DatabaseManager();
@@ -68,9 +65,8 @@ public class Server extends Thread {
                 Player player = iterator.next();
                 offlinePlayers.put(player.getId(), new User(player));
             }
-
             serverSocket = new ServerSocket(Config.PORT);
-
+            setPlayerList();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -233,6 +229,7 @@ public class Server extends Thread {
                 }
                 removeFromOnlinePlayers(user.player.getId()); // call here 
             }
+            setPlayerList();
         }
     }
 
@@ -314,12 +311,13 @@ public class Server extends Thread {
             ex.printStackTrace();
         }
     }
-      public void setPlayerList() {
-        Platform.runLater(() -> {
-          app.addPlayersToOnlineList(getSortedOnlinePlayersAsJson());
-          app.addPlayersToOfflineList(getSortedOfflinePlayersAsJson());
-        });
 
+    public void setPlayerList() {
+        Platform.runLater(() -> {
+            app.clearPlayersListPane();
+            app.addPlayersToOnlineList(getSortedOnlinePlayersAsJson());
+            app.addPlayersToOfflineList(getSortedOfflinePlayersAsJson());
+        });
     }
 
 }
