@@ -130,12 +130,9 @@ public class SigninScreen extends StackPane {
     }
 
     public void showSigninButton() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                signin.setText("SIGN IN");
-                signin.setDisable(false);
-            }
+        Platform.runLater(() -> {
+            signin.setText("SIGN IN");
+            signin.setDisable(false);
         });
     }
     private void error() {

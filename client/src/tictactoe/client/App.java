@@ -135,6 +135,7 @@ public class App extends Application {
         jsonObject.addProperty("type", "signout");
         try {
             dataOutputStream.writeUTF(jsonObject.toString());
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -161,6 +162,16 @@ public class App extends Application {
         pStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent e) {
+                if (inMultiplayerGame) {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("type", "terminated-game");
+                    try {
+                        dataOutputStream.writeUTF(jsonObject.toString());
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 exit();
             }
         });
