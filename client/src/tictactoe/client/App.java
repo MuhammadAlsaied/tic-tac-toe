@@ -149,7 +149,7 @@ public class App extends Application {
         pStage = primaryStage;
         makePaneDraggable(primaryStage);
         primaryStage.setTitle("TIC TAC TOE!");
-        mainScene = new Scene(screens.get("signin"), 1350, 700);
+        mainScene = new Scene(screens.get("playWithComputerEasyGameBoard"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.initStyle(StageStyle.UNDECORATED);
