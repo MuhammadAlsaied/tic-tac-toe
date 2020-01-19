@@ -109,6 +109,8 @@ public class MultiOnlinePlayers extends Pane {
         Button send = new Button();
         send.setText("send");
         send.setId("send");
+        send.setDefaultButton(true);
+
         send.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
