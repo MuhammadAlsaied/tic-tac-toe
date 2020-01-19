@@ -305,7 +305,7 @@ public class MultiOnlinePlayers extends Pane {
         opponenetPlayerLetter = "O";
         thisPlayerLetter = "X";
         System.out.println("test 4" + thisPlayerLetter);
-        isEnded = true;
+        isEnded = false;
         MultiOnlinePlayers.turn = true;
         System.out.println("test 5");
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
@@ -316,7 +316,7 @@ public class MultiOnlinePlayers extends Pane {
     public void acceptInvitationInvitedSide(int challengerId, String challengerName) {
         /*Invited Side the O*/
         this.challengerName = challengerName;
-        isEnded = true;
+        isEnded = false;
         MultiOnlinePlayers.turn = false;
         opponenetPlayerLetter = "X";
         thisPlayerLetter = "O";
