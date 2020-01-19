@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -28,8 +29,11 @@ public class App extends Application {
     private JsonHandler jsonHandler;
     private Stage pStage;
     private Player currentPlayer;
+    private double xOffset;
+    private double yOffset;
 
     public App() {
+
         addScreens();
         jsonHandler = new JsonHandler(this);
         try {
@@ -93,7 +97,7 @@ public class App extends Application {
 
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
-        System.out.println("current player"+this.currentPlayer);
+        System.out.println("current player" + this.currentPlayer);
     }
 
     public void setScreen(String screenName) {
@@ -139,12 +143,16 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
         pStage = primaryStage;
+        makePaneDraggable(primaryStage);
         primaryStage.setTitle("TIC TAC TOE!");
-        mainScene = new Scene(screens.get("signin"), 1350, 700);
+        mainScene = new Scene(screens.get("playWithComputerHARDGameBoard"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setFullScreen(true);
+//        if(!primaryStage.isFullScreen()){
+//            primaryStage.initStyle(StageStyle.DECORATED);
+//        }
         primaryStage.show();
 
         pStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -163,6 +171,25 @@ public class App extends Application {
 
     public static void main(String[] args) {
         Application.launch(args);
+    }
+
+    private void makePaneDraggable(Stage primaryStage) {
+        screens.forEach((key, value) -> {
+            value.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+            value.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    primaryStage.setX(event.getScreenX() - xOffset);
+                    primaryStage.setY(event.getScreenY() - yOffset);
+                }
+            });
+        });
     }
 
 }
