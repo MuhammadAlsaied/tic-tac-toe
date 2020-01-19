@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -52,8 +53,12 @@ public class SigninScreen extends StackPane {
         password.setFocusTraversable(false);
         password.setPromptText(" Enter your password");
         //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
-        ToggleButton signin = new ToggleButton("SIGN IN");
+      //  ToggleButton signin = new ToggleButton("SIGN IN");
         signin.setId("signinButton");
+           Button signin = new Button("SIGN IN");
+           signin.setDefaultButton(true);
+
+        
         
         signin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
