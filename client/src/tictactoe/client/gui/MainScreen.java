@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.TreeSet;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -41,9 +40,6 @@ public class MainScreen extends Pane {
     };
     
     private int playersListCounter;
-    private final TreeSet<Player> sortedPlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
-    private final TreeSet<Player> sortedOnlinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
-    private final TreeSet<Player> sortedOfflinePlayersbyPoints = new TreeSet<>(playerComparatorByPoints);
     private GridPane gridPane;
     //private Player player;
     private App app;
@@ -60,6 +56,12 @@ public class MainScreen extends Pane {
         challengeComp.setPrefSize(280, 50);
         challengeComp.setId("compButton");
         ToggleButton challengePlayer = new ToggleButton("CHALLENGE PLAYER");
+        challengePlayer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                app.setScreen("playerList");
+            }
+        });
         challengePlayer.setPrefSize(280, 50);
         challengePlayer.setId("playerButton");
         HBox buttonBox = new HBox(20, challengeComp, challengePlayer);

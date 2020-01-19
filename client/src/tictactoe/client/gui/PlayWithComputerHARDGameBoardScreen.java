@@ -36,6 +36,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
     String line;
     Vector<Label> l = new Vector<>();
     boolean[] textLabelflag;
+    private boolean isEnded = false;
 
     public PlayWithComputerHARDGameBoardScreen(App app) {
         this.app = app;
@@ -60,6 +61,9 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                 l.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
+                        if (isEnded) {
+                            return;
+                        }
                         if (turn && l.get(x).getText() == "_") {
                             l.get(x).setText("X");
                             l.get(x).setId("X");
@@ -107,6 +111,9 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         send.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                if (isEnded) {
+                    return;
+                }
                 JsonObject response = new JsonObject();
                 JsonObject data = new JsonObject();
                 response.add("data", data);
@@ -362,6 +369,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         if (!turn) {
             cpu();
         }
+        isEnded = false;
 
     }
 
@@ -396,6 +404,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
             }
             switch (line) {
                 case "XXX": {
+                    isEnded = true;
                     fullBoardFlag = false;
                     turn = true;
                     for (int i = 0; i < 9; i++) {
@@ -410,9 +419,10 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                         resetGame();
                     });
                     pause.play();
-                    break;
+                    return;
                 }
                 case "OOO": {
+                    isEnded = true;
                     fullBoardFlag = false;
                     turn = true;
                     for (int i = 0; i < 9; i++) {
@@ -427,7 +437,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                         resetGame();
                     });
                     pause.play();
-                    break;
+                    return;
                 }
             }
         }

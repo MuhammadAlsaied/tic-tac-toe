@@ -5,6 +5,10 @@
  */
 package tictactoe.client.gui;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
@@ -16,50 +20,69 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import tictactoe.client.App;
-
+import tictactoe.client.Player;
 
 public class PlayerListScreen extends Pane {
-    
-    
-    public PlayerListScreen(App app) 
-    {  
-        GridPane gr = new GridPane();
-        gr.setHgap(50);
+
+    private App app;
+    private GridPane gridPane;
+    private int playersListCounter;
+
+    public PlayerListScreen(App app) {
+        this.app = app;
+        gridPane = new GridPane();
+        gridPane.setHgap(50);
         Region rectBack = new Region();
         rectBack.setPrefSize(498, 460);
         rectBack.setId("rectBack");
         rectBack.setLayoutX(400.0);
         rectBack.setLayoutY(150.0);
         rectBack.setMaxHeight(450.0);
-        for(int i=0 ; i<9 ; i++)
-        {
-            ToggleButton invite2 = new ToggleButton("Challenge");
-            invite2.setId("ChallengePlayerList");
-            Label score2 = new Label("500");
-            score2.setId("scoreLabel");
-            Label imglabel2 = new Label();
-            Image img2 = new Image(getClass().getResourceAsStream("/images/k.png"));
-            imglabel2.setGraphic(new ImageView(img2));
-            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
-            cir2.setFill(Color.GREEN);
-            gr.add(cir2,0,i);
-            gr.add(invite2, 3, i);
-            gr.add(score2, 2, i);
-            gr.add(imglabel2, 1, i);
-        }
 
-        ScrollPane scrollPane = new ScrollPane(gr);
+        ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setId("scrolPanePlaylistScreen");
         scrollPane.setFocusTraversable(false);
         scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setLayoutX(450.0);
         scrollPane.setLayoutY(150.0);
         scrollPane.setMaxHeight(450.0);
-        
+
         setId("stack");
         getChildren().add(rectBack);
         getChildren().add(scrollPane);
 
-        
+    }
+
+    public void addPlayersToList(JsonArray playerList, Color color) {
+        for (int i = 0; i < playerList.size(); i++) {
+            JsonObject jsonPlayer = playerList.get(i).getAsJsonObject();
+            if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
+                /*skips iteration if the player is me*/
+                continue;
+            }
+            Player player = new Player();
+            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+            player.setPoints(jsonPlayer.get("points").getAsInt());
+            player.setId(jsonPlayer.get("id").getAsInt());
+            ToggleButton invite2 = new ToggleButton("Challenge");
+            invite2.setId("challengeScrolPaneMainScreen");
+            invite2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    app.sendInvitation(player.getId());
+                }
+            });
+
+            Label score2 = new Label(Integer.toString(player.getPoints()));
+            score2.setId("scoreLabel");
+            Label playerName = new Label(player.getFirstName());
+            Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
+            cir2.setFill(color);
+            gridPane.add(cir2, 0, playersListCounter);
+            gridPane.add(invite2, 3, playersListCounter);
+            gridPane.add(score2, 2, playersListCounter);
+            gridPane.add(playerName, 1, playersListCounter);
+            playersListCounter++;
+        }
     }
 }

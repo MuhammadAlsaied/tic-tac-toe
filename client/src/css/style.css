@@ -10,6 +10,10 @@
     font-family: 'digitalNumber';
     src: url('/css/digitalNumber.ttf');
 }
+#playerName{
+    -fx-font-family: "Walter Turncoat";
+    -fx-font-size: 30px;
+}
 #alreadyRegisteredLabel{
     -fx-font-family: "Walter Turncoat";
     -fx-font-size: 20px;

@@ -191,7 +191,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
             switch (line) {
                 case "XXX": {
                     fullBoardFlag = false;
-                    turn = true;
+                    turn = false;
                     for (int i = 0; i < 9; i++) {
                         if (textLabelflag[i]) {
                             textLabelflag[i] = false;
@@ -204,11 +204,11 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                         resetGame();
                     });
                     pause.play();
-                    break;
+                    return;
                 }
                 case "OOO": {
                     fullBoardFlag = false;
-                    turn = true;
+                    turn = false;
                     for (int i = 0; i < 9; i++) {
                         if (textLabelflag[i]) {
                             textLabelflag[i] = false;
@@ -221,7 +221,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                         resetGame();
                     });
                     pause.play();
-                    break;
+                    return;
                 }
             }
         }
