@@ -16,8 +16,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import tictactoe.server.db.DatabaseManager;
 import tictactoe.server.models.Game;
 
@@ -171,7 +169,6 @@ public class Server extends Thread {
                         if (request.get("type").getAsString().equals("signout")) {
 
                             System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
-
                             handleClosedPlayer();
                             break;
                         } else {
@@ -181,13 +178,7 @@ public class Server extends Thread {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
-                try {
-                    handleClosedPlayer();
-                } catch (ClassNotFoundException ex1) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                handleClosedPlayer();
             }
         }
 
@@ -203,7 +194,7 @@ public class Server extends Thread {
             }
         }
 
-        private void handleClosedPlayer() throws ClassNotFoundException {
+        private void handleClosedPlayer() {
             if (user.player != null) {
                 if (user.player.getCurrentGame() != null) {
                     Game currentGame = user.player.getCurrentGame();
@@ -215,9 +206,15 @@ public class Server extends Thread {
                         secondUser = onlinePlayers.get(currentGame.getPlayerX().getId());
                     }
 
-                    boolean insertedTODB = databaseManager.insertGame(currentGame);
+                    try {
+                        databaseManager.insertGame(currentGame);
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
                     JsonObject alertTerminatedGame = new JsonObject();
                     alertTerminatedGame.addProperty("type", "terminated-game");
+                    JsonObject data = new JsonObject();
+                    alertTerminatedGame.add("data", data);
                     currentGame.getPlayerX().setCurrentGame(null);
                     currentGame.getPlayerO().setCurrentGame(null);
                     try {

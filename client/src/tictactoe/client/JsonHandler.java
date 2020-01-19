@@ -38,7 +38,6 @@ public class JsonHandler {
         System.out.println(request);
         String requestType = request.get("type").getAsString();
         JsonObject requestData = request.getAsJsonObject("data");
-        JsonObject myData = requestData.getAsJsonObject("my-data");
         switch (requestType) {
             case "signup-error":
                 signupScreen.showSignupFailedPopup();
@@ -48,7 +47,7 @@ public class JsonHandler {
                 app.setScreen("signin");
                 break;
             case "signin-success":
-
+                JsonObject myData = requestData.getAsJsonObject("my-data");
                 app.setCurrentPlayer(new Player(
                         myData.get("id").getAsInt(),
                         myData.get("firstName").getAsString(),
@@ -84,7 +83,13 @@ public class JsonHandler {
                 break;
             case "game-message":
                 multiOnlinePlayers.setNewMsg(requestData.get("msg").getAsString());
-                
+                break;
+            case "terminated-game":
+                app.showAlert(App.opposingPlayerName + " left the game", "Switching to main screen.");
+                app.setScreen("main");
+                App.inMultiplayerGame = false;
+                App.opposingPlayerId = -1;
+                App.opposingPlayerName = "";
                 break;
         }
     }
