@@ -34,6 +34,8 @@ public class MultiOnlinePlayers extends Pane {
     Vector<Label> l = new Vector<>();
     private boolean isEnded = false;
     Label label1, label2;
+    private TextArea ta;
+    private TextArea text;
 
     public MultiOnlinePlayers(App app) {
         stack = new GridPane();
@@ -89,14 +91,14 @@ public class MultiOnlinePlayers extends Pane {
         hbox.setLayoutX(70);
         hbox.setLayoutY(25);
 
-        TextArea ta = new TextArea(" ");
+        ta = new TextArea(" ");
         ta.setId("ta");
         ta.setLayoutX(890);
         ta.setLayoutY(400);
         ta.setMaxWidth(220.0);
         ta.setMaxHeight(150.0);
 
-        TextArea text = new TextArea("");
+        text = new TextArea("");
         text.setId("text");
         text.setPromptText("Enter your Msg ");
         text.setLayoutX(890);
@@ -111,11 +113,16 @@ public class MultiOnlinePlayers extends Pane {
 
             @Override
             public void handle(ActionEvent event) {
+                if (text.getText().isEmpty()) {
+                    return;
+                }
                 JsonObject response = new JsonObject();
                 JsonObject data = new JsonObject();
                 response.add("data", data);
-                response.addProperty("type", "Message_sent");
-                data.addProperty("msg", ta.getText());
+                response.addProperty("type", "game-message");
+                data.addProperty("msg", text.getText());
+                ta.setText(ta.getText() + "\n" + app.getCurrentPlayer().getFirstName() + ": " + text.getText());
+                text.setText("");
                 try {
                     app.getDataOutputStream().writeUTF(response.toString());
                 } catch (IOException ex) {
@@ -313,6 +320,8 @@ public class MultiOnlinePlayers extends Pane {
         System.out.println("test 4" + thisPlayerLetter);
         isEnded = false;
         MultiOnlinePlayers.turn = true;
+        ta.setText("");
+        text.setText("");
         System.out.println("test 5");
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
         System.out.println("test 6");
@@ -329,9 +338,15 @@ public class MultiOnlinePlayers extends Pane {
         label2.setText(app.getCurrentPlayer().getFirstName());
         isEnded = false;
         MultiOnlinePlayers.turn = false;
+        ta.setText("");
+        text.setText("");
         opponenetPlayerLetter = "X";
         thisPlayerLetter = "O";
         System.out.println("Accept this letter: " + thisPlayerLetter);
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
+    }
+
+    public void setNewMsg(String msg) {
+        ta.setText(ta.getText() + "\n" + challengerName + ": " + msg);
     }
 }

@@ -63,7 +63,7 @@ public class App extends Application {
         gridPane.setHgap(50);
       
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(gr);
+        scrollPane.setContent(gridPane);
         scrollPane.setId("scrolPane");
 
         scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
