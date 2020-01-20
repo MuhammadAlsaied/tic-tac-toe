@@ -33,6 +33,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
     Vector<Label> l = new Vector<>();
     boolean[] textLabelflag;
     private boolean isEnded = false;
+    Label label1;
 
     public PlayWithComputerHARDGameBoardScreen(App app) {
         this.app = app;
@@ -79,7 +80,8 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         }
         //
         setId("stackGameboard");
-        Label label1 = new Label("PLAYER1");
+        label1 = new Label();
+        label1.setPrefWidth(150);
         Label label2 = new Label("COMPUTER");
 
         HBox hbox = new HBox(385, label1, label2);
