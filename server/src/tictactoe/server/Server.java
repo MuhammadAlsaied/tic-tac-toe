@@ -353,5 +353,8 @@ public class Server extends Thread {
             app.addPlayersToList(getSortedOfflinePlayersAsJson(), Color.RED);
         });
     }
-
+    public void repositionOnlinePlayer(Player player){
+        sortedOnlinePlayersbyPoints.remove(player);
+        sortedOnlinePlayersbyPoints.add(player);
+    }
 }

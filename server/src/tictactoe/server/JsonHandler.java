@@ -284,10 +284,12 @@ public class JsonHandler {
         playerO.setCurrentGame(null);
         if (playerX.getId() == winnerId) {
             playerX.incrementPoints(50);
+            server.repositionOnlinePlayer(playerX);
             winnerPlayer = playerX;
         }
         if (playerO.getId() == winnerId) {
             playerO.incrementPoints(50);
+            server.repositionOnlinePlayer(playerO);
             winnerPlayer = playerO;
 
         }
@@ -311,6 +313,7 @@ public class JsonHandler {
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
+        server.repositionOnlinePlayer(player);
         server.sendUpdatedPlayerList();
         return null;
     }
