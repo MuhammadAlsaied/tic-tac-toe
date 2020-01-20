@@ -347,6 +347,6 @@ public class MultiOnlinePlayers extends Pane {
     }
 
     public void setNewMsg(String msg) {
-        ta.setText(ta.getText() + "\n" + challengerName + ": " + msg);
+        ta.appendText(challengerName + ": " + msg + "\n");
     }
 }

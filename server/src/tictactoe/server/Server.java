@@ -76,7 +76,6 @@ public class Server extends Thread {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-
                 ClientThread clientThread = new ClientThread(new User(socket));
                 clientThread.start();
                 clientThreads.add(clientThread);
