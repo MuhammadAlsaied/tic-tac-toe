@@ -209,7 +209,11 @@ public class Server extends Thread {
                     }
 
                     try {
-                        databaseManager.insertGame(currentGame);
+                        if (currentGame.getGameId() > 0) {
+                            databaseManager.updateGame(currentGame);
+                        } else {
+                            databaseManager.insertGame(currentGame);
+                        }
                     } catch (ClassNotFoundException ex) {
                         ex.printStackTrace();
                     }

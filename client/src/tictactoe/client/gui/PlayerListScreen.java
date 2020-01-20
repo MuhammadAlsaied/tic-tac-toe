@@ -12,8 +12,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -61,7 +59,7 @@ public class PlayerListScreen extends Pane {
                 continue;
             }
             Player player = new Player();
-            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+            player.setLastName(jsonPlayer.get("lastName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
             ToggleButton invite2 = new ToggleButton("Challenge");
@@ -75,7 +73,9 @@ public class PlayerListScreen extends Pane {
 
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
-            Label playerName = new Label(player.getFirstName());
+            Label playerName = new Label(player.getLastName());
+            playerName.setPrefWidth(100);
+            playerName.setId("playerName");
             Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
             cir2.setFill(color);
             gridPane.add(cir2, 0, playersListCounter);

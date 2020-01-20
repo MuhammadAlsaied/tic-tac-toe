@@ -218,36 +218,8 @@ public class MultiOnlinePlayers extends Pane {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                int moveFromServer = 0;
-                switch (position) {
-                    case "upper_left":
-                        moveFromServer = 0;
-                        break;
-                    case "up":
-                        moveFromServer = 1;
-                        break;
-                    case "upper_right":
-                        moveFromServer = 2;
-                        break;
-                    case "left":
-                        moveFromServer = 3;
-                        break;
-                    case "center":
-                        moveFromServer = 4;
-                        break;
-                    case "right":
-                        moveFromServer = 5;
-                        break;
-                    case "lower_left":
-                        moveFromServer = 6;
-                        break;
-                    case "down":
-                        moveFromServer = 7;
-                        break;
-                    case "lower_right":
-                        moveFromServer = 8;
-                        break;
-                }
+                int moveFromServer = getGamePositionAsIndex(position);
+
                 if (turn == false) {
                     counter++;
                     l.get(moveFromServer).setText(opponenetPlayerLetter);
@@ -350,5 +322,71 @@ public class MultiOnlinePlayers extends Pane {
 
     public void setNewMsg(String msg) {
         chatTextArea.appendText(challengerName + ": " + msg + "\n");
+    }
+
+    public void setGameCoordinates(JsonObject gameCoordinates, int playerX_id) {
+        counter = 0;
+        gameCoordinates.keySet().forEach((position) -> {
+            String label = gameCoordinates.get(position).getAsString();
+            int index = getGamePositionAsIndex(position);
+            if (label.equals("-")) {
+                l.get(index).setText("_");
+                l.get(index).setId("label");
+            } else {
+                counter++;
+                l.get(index).setText(label);
+                l.get(index).setId(label);
+            }
+
+        });
+        System.out.println("counter: " + counter);
+        if (playerX_id == app.getCurrentPlayer().getId()) {
+            opponenetPlayerLetter = "O";
+            thisPlayerLetter = "X";
+            label1.setText(app.getCurrentPlayer().getFirstName());
+            label2.setText(challengerName);
+            turn = counter % 2 == 0;
+        } else {
+            opponenetPlayerLetter = "X";
+            thisPlayerLetter = "O";
+            label1.setText(challengerName);
+            label2.setText(app.getCurrentPlayer().getFirstName());
+            turn = counter % 2 != 0;
+        }
+        System.out.println("turn: " + turn);
+    }
+
+    private int getGamePositionAsIndex(String position) {
+        int index = 0;
+        switch (position) {
+            case "upper_left":
+                index = 0;
+                break;
+            case "up":
+                index = 1;
+                break;
+            case "upper_right":
+                index = 2;
+                break;
+            case "left":
+                index = 3;
+                break;
+            case "center":
+                index = 4;
+                break;
+            case "right":
+                index = 5;
+                break;
+            case "lower_left":
+                index = 6;
+                break;
+            case "down":
+                index = 7;
+                break;
+            case "lower_right":
+                index = 8;
+                break;
+        }
+        return index;
     }
 }

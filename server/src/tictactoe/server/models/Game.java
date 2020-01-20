@@ -10,15 +10,17 @@ public class Game {
 
     private Player playerX;
     private Player playerO;
+
+    private int playerXId;
+    private int playerOId;
     private int winnerId;
     private JsonObject gameCoordinates;
     private Status gameStatus;
     private Move nextMove;
 
     private int gameId;
-    
-    
-    public Game(Player player1, Player player2){
+
+    public Game(Player player1, Player player2) {
         this.playerX = player1;
         this.playerO = player2;
         nextMove = Move.X;
@@ -94,7 +96,6 @@ public class Game {
         return gameCoordinates.toString();
     }
 
-
     public static enum Status {
         inProgress, terminated, finished;
     }
@@ -106,12 +107,28 @@ public class Game {
     public static enum Move {
         X, O
     }
-    
-    public void setGameId(int gameId){
+
+    public void setGameId(int gameId) {
         this.gameId = gameId;
     }
-    
-    public int getGameId(){
+
+    public int getGameId() {
         return gameId;
+    }
+
+    public int getPlayerXId() {
+        return playerXId;
+    }
+
+    public int getPlayerOId() {
+        return playerOId;
+    }
+
+    public void setPlayerXId(int playerXId) {
+        this.playerXId = playerXId;
+    }
+
+    public void setPlayerOId(int playerOId) {
+        this.playerOId = playerOId;
     }
 }

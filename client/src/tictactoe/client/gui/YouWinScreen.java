@@ -67,8 +67,15 @@ public class YouWinScreen extends StackPane {
         playAgain.setPrefSize(180, 20);
         playAgain.setId("playAgain");
         HBox buttonBox = new HBox(50, back, playAgain);
-
-        VBox vbox = new VBox(30, over, lose, buttonBox);
+        Button exit = new Button("EXIT");
+        exit.setId("back");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(150, 50);
+        exit.setOnAction((t) -> {
+            app.exit();
+        });
+        VBox vbox = new VBox(30, over, lose, buttonBox,exit);
         vbox.setId("vbox");
 
         getChildren().addAll(rec, vbox);

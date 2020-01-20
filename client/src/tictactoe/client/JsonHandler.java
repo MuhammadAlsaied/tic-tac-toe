@@ -93,6 +93,14 @@ public class JsonHandler {
                 App.opposingPlayerId = -1;
                 App.opposingPlayerName = "";
                 break;
+            case "terminated-game-data":
+                JsonObject gameCoordinates = requestData.get("game-coordinates").getAsJsonObject();
+                Platform.runLater(() -> {
+                    multiOnlinePlayers.setGameCoordinates(gameCoordinates,
+                            requestData.get("playerX_id").getAsInt());
+                });
+
+                break;
         }
     }
 
