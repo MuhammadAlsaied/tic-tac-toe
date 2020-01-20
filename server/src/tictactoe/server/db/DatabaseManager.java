@@ -17,17 +17,17 @@ import tictactoe.server.models.Player;
  * @author Ayman Magdy
  */
 public class DatabaseManager {
-
+    
     private Connection connection;
     private Statement statment;
     private ResultSet resultSet;
     private Vector<Player> usersVecDetails = new Vector();
-
+    
     public DatabaseManager() throws ClassNotFoundException, SQLException {
         // Here to establish the connecection once creating an instance.
         establishConnection();
     }
-
+    
     private void establishConnection() throws ClassNotFoundException {
         try {
             // to start the connection;
@@ -44,21 +44,21 @@ public class DatabaseManager {
     // Done and tested.
     public Player signUp(String first_name, String last_name, String email, String password) throws SQLException, ClassNotFoundException {
         Player newPlayer = null;
-
+        
         if (isEmailExists(email)) {
             System.out.println("Your email is already registered..");
         } else {
             establishConnection();
-
+            
             PreparedStatement preparedStatment = connection.prepareStatement("INSERT INTO player (first_name, last_name, email, password) VALUES (?, ?, ?, ?);");
             preparedStatment.setString(1, first_name);
             preparedStatment.setString(2, last_name);
             preparedStatment.setString(3, email);
             preparedStatment.setString(4, password);
             preparedStatment.executeUpdate();
-
+            
             newPlayer = getLastPlayer();
-
+            
             preparedStatment.close();
             connection.close();
         }
@@ -68,12 +68,12 @@ public class DatabaseManager {
     // Done and tested
     public Player getLastPlayer() {
         Player lastPlayer = new Player();
-
+        
         try {
             establishConnection();
             statment = connection.createStatement();
             resultSet = statment.executeQuery("SELECT * FROM player ORDER BY id DESC LIMIT 0, 1");
-
+            
             if (resultSet.first()) {
                 int newUserId = Integer.parseInt(resultSet.getString("id"));
                 lastPlayer.setId(newUserId);
@@ -86,19 +86,19 @@ public class DatabaseManager {
                 lastPlayer = null;
                 throw new SQLException("Getting the last user failed");
             }
-
+            
             statment.close();
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
         return lastPlayer;
     }
 
     //chcek if the email exists in the DB, done and tested;
     public boolean isEmailExists(String email) throws SQLException {
-
+        
         try {
             establishConnection();
             statment = connection.createStatement();
@@ -126,7 +126,7 @@ public class DatabaseManager {
                 establishConnection();
                 statment = connection.createStatement();
                 resultSet = statment.executeQuery("SELECT * FROM player WHERE email='" + email + "' AND password='" + password + "';");
-
+                
                 if (resultSet.first() == true) {
                     System.out.println("Login successed..");
                     playerSignIn = new Player();
@@ -162,46 +162,46 @@ public class DatabaseManager {
         Integer playerOId = gameToSave.getPlayerO().getId();
         String gameStatus = gameToSave.getStatus();
         String coordinatesToSave = gameToSave.getCoordinates().toString();
-
+        
         try {
             establishConnection();
-
+            
             PreparedStatement preparedStatment = connection.prepareStatement("INSERT INTO game (player1_id, player2_id, session_status, coordinates) VALUES (?, ?, ?, ?);");
             preparedStatment.setString(1, playerXId.toString());
             preparedStatment.setString(2, playerOId.toString());
             preparedStatment.setString(3, gameStatus);
             preparedStatment.setString(4, coordinatesToSave);
             preparedStatment.executeUpdate();
-
+            
             preparedStatment.close();
             connection.close();
             success = true;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
+        
         return success;
     }
 
     // Done and tested
     public ArrayList<Player> getAllPlayers() throws SQLException {
         ArrayList<Player> allPlayers = new ArrayList<>();
-
+        
         try {
             establishConnection();
             statment = connection.createStatement();
             resultSet = statment.executeQuery("SELECT * FROM player;");
-
+            
             while (resultSet.next()) {
                 Player tempPlayer = new Player();
-
+                
                 tempPlayer.setId(resultSet.getInt("id"));
                 tempPlayer.setFirstName(resultSet.getString("first_name"));
                 tempPlayer.setLastName(resultSet.getString("last_name"));
                 tempPlayer.setEmail(resultSet.getString("email"));
                 tempPlayer.setImg(resultSet.getString("image"));
                 tempPlayer.setPoints(resultSet.getInt("points"));
-
+                
                 allPlayers.add(tempPlayer);
             }
         } catch (Exception ex) {
@@ -209,7 +209,7 @@ public class DatabaseManager {
         }
         statment.close();
         connection.close();
-
+        
         return allPlayers;
     }
 
@@ -217,7 +217,7 @@ public class DatabaseManager {
     public Player updatePlayerScore(Player player) throws ClassNotFoundException {
         PreparedStatement pst;
         int playerPoints = player.getPoints();
-
+        
         try {
             establishConnection();
 //            statment = connection.createStatement();
@@ -234,38 +234,44 @@ public class DatabaseManager {
 //            statment.close();
 //            totalPoints += additionalPoints;
             player.setPoints(player.getPoints());
-
+            
             pst = connection.prepareStatement("UPDATE player SET points=? WHERE id=?");
             pst.setInt(1, playerPoints);
             pst.setInt(2, player.getId());
-
+            
             pst.executeUpdate();
             pst.close();
             connection.close();
-
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
+        
         return player;
     }
 
     // Done and tested
     public Game getTerminatedGame(int firstPlayerId, int secondPlayerId) throws SQLException {
         Game terminatedGame = null;
-
+        
         try {
             establishConnection();
             statment = connection.createStatement();
-            resultSet = statment.executeQuery("select * from game where player1_id ='" + firstPlayerId + "' and player2_id ='" + secondPlayerId + "';");
+            resultSet = statment.executeQuery("select * from game where player1_id ='" + firstPlayerId
+                    + "' and player2_id ='" + secondPlayerId + "' and session_status='terminated';");
             if (resultSet.last()) {
                 terminatedGame = new Game(null, null);
                 Status gameStatus = Status.valueOf(resultSet.getString("session_status"));
                 String coordinatesDB = resultSet.getString("coordinates");
+                int playerXId = resultSet.getInt("player1_id");
+                int playerYId = resultSet.getInt("player2_id");
+                int gameId = resultSet.getInt("id");
                 JsonObject request = JsonParser.parseString(coordinatesDB).getAsJsonObject();
                 terminatedGame.setGameStatus(gameStatus);
                 terminatedGame.setGameCoordinates(request);
-
+                terminatedGame.setPlayerXId(playerXId);
+                terminatedGame.setPlayerOId(playerYId);
+                terminatedGame.setGameId(gameId);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -282,24 +288,24 @@ public class DatabaseManager {
         int gameId = gameToUpdate.getGameId();
         String sessionStatus = gameToUpdate.getGameStatus().toString();
         String coordinates = gameToUpdate.getCoordinates().toString();
-
+        
         try {
             establishConnection();
-
+            
             pst = connection.prepareStatement("UPDATE game SET player1_id = ?, player2_id = ?, session_status = ?, coordinates = ? WHERE id = ?;");
             pst.setInt(1, playerXId);
             pst.setInt(2, playerOId);
             pst.setString(3, sessionStatus);
             pst.setString(4, coordinates);
             pst.setInt(5, gameId);
-
+            
             pst.executeUpdate();
             pst.close();
             updated = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
         return updated;
     }
 
