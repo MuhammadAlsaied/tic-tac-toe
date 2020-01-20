@@ -86,9 +86,11 @@ public class MultiOnlinePlayers extends Pane {
         }
         setId("stackGameboard");
         label1 = new Label("PLAYER1");
+        label1.setPrefWidth(150);
         label2 = new Label("PLAYER2");
+        label2.setPrefWidth(150);
 
-        HBox hbox = new HBox(385, label1, label2);
+        HBox hbox = new HBox(350, label1, label2);
         hbox.setLayoutX(70);
         hbox.setLayoutY(25);
 
@@ -96,16 +98,16 @@ public class MultiOnlinePlayers extends Pane {
         chatTextArea.setId("ta");
         chatTextArea.setEditable(false);
         chatTextArea.setLayoutX(890);
-        chatTextArea.setLayoutY(400);
+        chatTextArea.setLayoutY(420);
         chatTextArea.setMaxWidth(220.0);
-        chatTextArea.setMaxHeight(150.0);
+        chatTextArea.setMaxHeight(250.0);
         chatTextArea.setWrapText(true);
 
         chatMessageArea = new TextArea("");
         chatMessageArea.setId("text");
         chatMessageArea.setPromptText("Enter your Msg ");
         chatMessageArea.setLayoutX(890);
-        chatMessageArea.setLayoutY(600);
+        chatMessageArea.setLayoutY(680);
         chatMessageArea.setMaxWidth(220.0);
         chatMessageArea.setMaxHeight(10.5);
         chatMessageArea.setWrapText(true);
@@ -137,7 +139,7 @@ public class MultiOnlinePlayers extends Pane {
 
         });
         send.setLayoutX(1140);
-        send.setLayoutY(600);
+        send.setLayoutY(680);
         ///////////////////////////////////////////////////////////
             Button exit = new Button("EXIT");
         exit.setId("ExitFromGame");

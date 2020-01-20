@@ -155,17 +155,8 @@ public class MainScreen extends Pane {
             }
         });
 
-        Image img2 = new Image(getClass().getResourceAsStream("/images/k.png"));
-        Label labelk = new Label();
-        labelk.setGraphic(new ImageView(img2));
 
-        labelk.setLayoutX(760);
-        labelk.setLayoutY(20);
-        labelk.setMaxSize(50.0, 50.0);
-
-        labelk.setFont(new Font("Arial", 24));
-
-        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, labelk, hBox, welcome, points , playerName2 , points2);
+        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, hBox, welcome, points , playerName2 , points2);
         setId("MainScreenPane");
     }
 

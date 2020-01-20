@@ -87,7 +87,7 @@ public class YouWinScreen extends StackPane {
         hBox.setLayoutX(250);
         hBox.setLayoutY(400);
 
-        VBox v = new VBox(150,vbox, hBox);
+        VBox v = new VBox(100,vbox, hBox);
         v.setId("vbox");
 
         getChildren().addAll(rec,v);

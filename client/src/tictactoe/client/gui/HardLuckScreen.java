@@ -81,7 +81,7 @@ public class HardLuckScreen extends StackPane {
         VBox vbox = new VBox(30, over, lose, buttonBox);
         vbox.setId("vbox");
 
-        VBox v = new VBox(150, vbox, hBox);
+        VBox v = new VBox(100, vbox, hBox);
         v.setId("vbox");
 
         getChildren().addAll(rec, v);
