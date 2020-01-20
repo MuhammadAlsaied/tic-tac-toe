@@ -83,8 +83,7 @@ public class App extends Application {
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("invitation", new InvitationScreen(this));
-        screens.put("multiPlayerGameBoard", new MultiPlayerGameBoardScreen(this));      //old edited by tharwat
-        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));        //new kareem's
+        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));       
         screens.put("levels", new LevelsScreen(this));
         screens.put("youWin", new YouWinScreen(this));
         screens.put("playWithComputerEasyGameBoard", new PlayWithComputerEasyGameBoardScreen(this));

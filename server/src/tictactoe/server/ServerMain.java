@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -25,6 +26,7 @@ public class ServerMain extends Application {
     private int playersListCounter;
     private GridPane gridPane;
     private ServerMain app = this;
+    private TextArea textArea;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -54,9 +56,17 @@ public class ServerMain extends Application {
             }
         });
         HBox hbox = new HBox(toggleButton);
-        hbox.setLayoutX(250);
-        hbox.setLayoutY(350);
+        hbox.setLayoutX(275);
+        hbox.setLayoutY(150);
 
+        textArea = new TextArea(" ");
+        textArea.setId("textArea");
+        textArea.setLayoutX(50);
+        textArea.setLayoutY(300);
+        textArea.setMaxWidth(575.0);
+        textArea.setMaxHeight(300.0);
+        textArea.setEditable(false);
+        textArea.setId("text-area");
         gridPane = new GridPane();
         gridPane.setHgap(50);
 
@@ -71,7 +81,7 @@ public class ServerMain extends Application {
 
         Pane root = new Pane();
         root.setId("stack");
-        root.getChildren().addAll(hbox, scrollPane);
+        root.getChildren().addAll(hbox, scrollPane, textArea);
         Scene scene = new Scene(root, 1350, 700);
         scene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(scene);
@@ -89,9 +99,6 @@ public class ServerMain extends Application {
             player.setFirstName(jsonPlayer.get("firstName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
-
-
-
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
@@ -104,8 +111,13 @@ public class ServerMain extends Application {
 
         }
     }
+
     public void setPlayersListCounter(int playersListCounter) {
         this.playersListCounter = playersListCounter;
+    }
+    
+    public void guiLog(String text){
+        textArea.appendText(text + "\n");
     }
 
     public static void main(String[] args) {

@@ -31,7 +31,6 @@ public class Server extends Thread {
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
     private final HashMap<Integer, User> offlinePlayers = new HashMap<>();
-
     public final Set<ClientThread> clientThreads = new HashSet<ClientThread>();
 
     Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
@@ -169,6 +168,7 @@ public class Server extends Thread {
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
                         System.out.println(line);
+                        app.guiLog(line);
                         if (request.get("type").getAsString().equals("signout")) {
 
                             System.out.println("user" + user.toString() + " player:" + user.player + " logging of");

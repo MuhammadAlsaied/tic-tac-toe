@@ -5,17 +5,13 @@
  */
 package tictactoe.client.gui;
 
-import com.google.gson.JsonObject;
-import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
