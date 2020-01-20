@@ -240,6 +240,17 @@ public class MultiOnlinePlayers extends Pane {
                 /*in case of draw*/
                 PauseTransition pause = new PauseTransition(Duration.seconds(2));
                 pause.setOnFinished((ActionEvent event) -> {
+                    app.setScreen("youWin");
+                    JsonObject request = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    request.addProperty("type", "multiplayer-game-end");
+                    request.add("data", data);
+                    data.addProperty("winner-id", "-1");
+                    try {
+                        app.getDataOutputStream().writeUTF(request.toString());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                     app.setScreen("nooneIsTheWinner");
                     counter = 0;
                     resetGame();
