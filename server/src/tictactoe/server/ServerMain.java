@@ -60,7 +60,7 @@ public class ServerMain extends Application {
         hbox.setLayoutX(275);
         hbox.setLayoutY(150);
 
-        textArea = new TextArea("Kareem");
+        textArea = new TextArea("");
         textArea.setId("textArea");
         textArea.setLayoutX(50);
         textArea.setLayoutY(300);
@@ -104,6 +104,7 @@ public class ServerMain extends Application {
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
             Label playerName = new Label(player.getFirstName());
+            playerName.setId("playerName");
             Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
             cir2.setFill(color);
             gridPane.add(cir2, 0, playersListCounter);
