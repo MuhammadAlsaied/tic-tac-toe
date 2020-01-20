@@ -15,6 +15,11 @@ and open the template in the editor.
     font-family: 'digitalNumber';
     src: url('/css/digitalNumber.ttf');
 }
+#playerName{
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-family: "Walter Turncoat";
+}
 .text-area {
     -fx-background-color: rgba(0,0,0,0.5);
 }
@@ -77,7 +82,7 @@ and open the template in the editor.
         linear-gradient(to bottom, derive(-fx-color,-15%) 0%, derive(-fx-color,-10%) 50%, derive(-fx-color,-8%) 98%, derive(-fx-color,-12%) 100%);
     -fx-border-size: 10px;
     -fx-border-color: #000000;
-    -fx-text-fill:#000000;
+    -fx-text-fill: #000000;
 }
 #toggleButton:focused{
     -fx-background-color: linear-gradient(to left, rgba(255, 255, 255, 0.4018) -3.46%, rgba(255, 211, 105, 0.82) 19.17%, rgba(153, 192, 86, 0.82) 45.04%, rgba(153, 192, 86, 0.82) 78.45%, rgba(255, 255, 255, 0.4838) 100%);
