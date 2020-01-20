@@ -971,7 +971,7 @@ TextField
     -fx-font-size: 27px;
     -fx-line-height: 38px;
   
-
+}
 
 #BackToMain{
     -fx-background-color: linear-gradient(to left, rgba(253, 253, 253, 0) -13.23%, #99C056 18.23%, #99C056 74.23%, rgba(249, 249, 249, 0.6) 107.57%);
@@ -1006,5 +1006,4 @@ TextField
     -fx-border-size: 10px;
     -fx-border-color: #000000;
     -fx-text-fill:#000000;
-}
 }
