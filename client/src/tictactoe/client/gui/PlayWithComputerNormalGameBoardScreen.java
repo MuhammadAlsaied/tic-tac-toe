@@ -74,14 +74,12 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                         if (turn == false) {
                             cpu();
                         }
-                        checkWinner();
                     }
                 });
                 stack.add(l.get(x), j, i);
             }
         }
-      
-  
+
         setId("stackGameboard");
         label1 = new Label();
         label1.setPrefWidth(150);
@@ -92,7 +90,7 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         hbox.setLayoutX(70);
         hbox.setLayoutY(25);
         ///////////////////////////////////////////////////
-         Button exit = new Button("EXIT");
+        Button exit = new Button("EXIT");
         exit.setId("ExitFromGame");
         exit.setLayoutX(280);
         exit.setLayoutY(650);
@@ -110,7 +108,6 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
             App.opposingPlayerName = "";
         });
 
-
         HBox hBox = new HBox(100, back, exit);
 
         VBox v = new VBox(40, hBox);
@@ -119,7 +116,7 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         v.setLayoutY(150);
         ///////////////////////////////////////////////////////
 
-        getChildren().addAll(stack, hbox,v);
+        getChildren().addAll(stack, hbox, v);
         stack.setId("stacklolo");
         if (!turn) {
             cpu();
@@ -328,6 +325,7 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
             pause.play();
         }
     }
+
     public void setPlayerName(String playerName) {
         label1.setText(playerName);
     }
