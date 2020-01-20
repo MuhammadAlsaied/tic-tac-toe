@@ -29,13 +29,9 @@ public class SigninScreen extends StackPane {
     private Label error;
     private ToggleButton signin;
     String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-    PlayWithComputerEasyGameBoardScreen playWithComputerEasy;
-    PlayWithComputerHARDGameBoardScreen playWithComputerHard;
-    PlayWithComputerNormalGameBoardScreen playWithComputerNormal;
 
     public SigninScreen(App app) {
         this.app = app;
-        playWithComputerEasy = (PlayWithComputerEasyGameBoardScreen) app.getScreen("playWithComputerEasyGameBoard");
         error = new Label();
         Label header = new Label("Sign In");
         header.setId("siginLabel");

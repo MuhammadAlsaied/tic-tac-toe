@@ -10,8 +10,16 @@
     font-family: 'digitalNumber';
     src: url('/css/digitalNumber.ttf');
 }
-#B{
-    
+#overHardLuck
+{
+    -fx-background-image: url("/images/lll.png");
+    -fx-background-repeat: no-repeat;   
+    -fx-background-position: center center;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-background-size:cover;
+    -fx-border-radius: 127.5px;
+
 }
 #playerName{
     -fx-font-family: "Walter Turncoat";

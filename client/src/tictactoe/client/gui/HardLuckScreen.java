@@ -28,7 +28,7 @@ public class HardLuckScreen extends StackPane {
         rec.setId("recSignin");
 
         Region over = new Region();
-        over.setId("over");
+        over.setId("overHardLuck");
         over.setPrefSize(130, 130);
 
         DropShadow e = new DropShadow();
