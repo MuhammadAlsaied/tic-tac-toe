@@ -40,15 +40,7 @@ public class YouWinScreen extends StackPane {
         Button lose = new Button("You Are The Winner");
         lose.setId("lose");
         lose.setEffect(e);
-        ToggleButton back = new ToggleButton("Back");
-        back.setPrefSize(180, 20);
-        back.setId("back");
-        back.setOnAction((event) -> {
-            app.setScreen("main");
-            App.inMultiplayerGame = false;
-            App.opposingPlayerId = -1;
-            App.opposingPlayerName = "";
-        });
+
         ToggleButton playAgain = new ToggleButton("Play Again");
         playAgain.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -66,12 +58,39 @@ public class YouWinScreen extends StackPane {
         });
         playAgain.setPrefSize(180, 20);
         playAgain.setId("playAgain");
-        HBox buttonBox = new HBox(50, back, playAgain);
-
+        HBox buttonBox = new HBox(50, playAgain);
+       
         VBox vbox = new VBox(30, over, lose, buttonBox);
         vbox.setId("vbox");
+          
+        
+          Button exit = new Button("EXIT");
+        exit.setId("ExitFromGame");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(110, 10);
+        exit.setOnAction((t) -> {
+            app.exit();
+        });
+        Button back = new Button("Back");
+        back.setPrefSize(110, 10);
+        back.setId("BackToMain");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+        });
 
-        getChildren().addAll(rec, vbox);
+        HBox hBox = new HBox(200, back, exit);
+
+        hBox.setLayoutX(250);
+        hBox.setLayoutY(400);
+
+        VBox v = new VBox(150,vbox, hBox);
+        v.setId("vbox");
+
+        getChildren().addAll(rec,v);
         setId("stackGameResultScreen");
     }
 }

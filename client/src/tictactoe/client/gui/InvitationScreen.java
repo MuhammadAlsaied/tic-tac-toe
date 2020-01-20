@@ -88,8 +88,39 @@ public class InvitationScreen extends StackPane {
 
         VBox vbox = new VBox(100, invitationMSG, buttonBox);
         vbox.setId("vboxInvitationScreen");
+        
+        
+        ////////////////////////////////////////////////////////////////////////////////////////////
+             Button exit = new Button("EXIT");
+        exit.setId("ExitFromGame");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(110, 10);
+        exit.setOnAction((t) -> {
+            app.exit();
+        });
+        Button back = new Button("Back");
+        back.setPrefSize(110, 10);
+        back.setId("BackToMain");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+        });
 
-        getChildren().addAll(rec, vbox);
+        HBox hBox = new HBox(200, back, exit);
+
+  
+        vbox.setId("vbox");
+
+        VBox v = new VBox(120, vbox, hBox);
+        v.setId("vbox");
+
+      
+        ////////////////////////////////////////////////////////////////////////
+
+        getChildren().addAll(rec, v);
         setId("stackInvitation");
     }
 

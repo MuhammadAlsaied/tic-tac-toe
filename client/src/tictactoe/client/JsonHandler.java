@@ -8,6 +8,9 @@ import javafx.scene.paint.Color;
 import tictactoe.client.gui.InvitationScreen;
 import tictactoe.client.gui.MainScreen;
 import tictactoe.client.gui.MultiOnlinePlayers;
+import tictactoe.client.gui.PlayWithComputerEasyGameBoardScreen;
+import tictactoe.client.gui.PlayWithComputerHARDGameBoardScreen;
+import tictactoe.client.gui.PlayWithComputerNormalGameBoardScreen;
 import tictactoe.client.gui.PlayerListScreen;
 import tictactoe.client.gui.SigninScreen;
 import tictactoe.client.gui.SignupScreen;
@@ -26,7 +29,10 @@ public class JsonHandler {
     MultiOnlinePlayers multiOnlinePlayers;
     MainScreen mainScreen;
     PlayerListScreen playerList;
-
+    PlayWithComputerEasyGameBoardScreen playWithComputerEasy;
+    PlayWithComputerHARDGameBoardScreen playWithComputerHard;
+    PlayWithComputerNormalGameBoardScreen playWithComputerNormal;
+    
     JsonHandler(App a) {
         app = a;
         signupScreen = (SignupScreen) app.getScreen("signup");
@@ -35,6 +41,9 @@ public class JsonHandler {
         multiOnlinePlayers = (MultiOnlinePlayers) app.getScreen("multiOnlinePlayers");
         mainScreen = (MainScreen) app.getScreen("main");
         playerList = (PlayerListScreen) app.getScreen("playerList");
+        playWithComputerEasy = (PlayWithComputerEasyGameBoardScreen) app.getScreen("playWithComputerEasyGameBoard");
+        playWithComputerNormal = (PlayWithComputerNormalGameBoardScreen) app.getScreen("playWithComputerNormalGameBoard");
+        playWithComputerHard = (PlayWithComputerHARDGameBoardScreen) app.getScreen("playWithComputerHARDGameBoard");
     }
 
     public void handle(JsonObject request) {
@@ -54,9 +63,17 @@ public class JsonHandler {
                 app.setCurrentPlayer(new Player(
                         myData.get("id").getAsInt(),
                         myData.get("firstName").getAsString(),
+                        myData.get("lastName").getAsString(),
                         myData.get("email").getAsString(),
                         myData.get("points").getAsInt()
                 ));
+
+                mainScreen.setWelcomePlayer(app.getCurrentPlayer().getFirstName(), app.getCurrentPlayer().getPoints());
+
+                playWithComputerEasy.setPlayerName(app.getCurrentPlayer().getLastName());
+                playWithComputerNormal.setPlayerName(app.getCurrentPlayer().getLastName());
+                playWithComputerHard.setPlayerName(app.getCurrentPlayer().getLastName());
+                
                 app.setScreen("main");
                 break;
             case "signin-error":
@@ -92,6 +109,14 @@ public class JsonHandler {
                 App.inMultiplayerGame = false;
                 App.opposingPlayerId = -1;
                 App.opposingPlayerName = "";
+                break;
+            case "terminated-game-data":
+                JsonObject gameCoordinates = requestData.get("game-coordinates").getAsJsonObject();
+                Platform.runLater(() -> {
+                    multiOnlinePlayers.setGameCoordinates(gameCoordinates,
+                            requestData.get("playerX_id").getAsInt());
+                });
+
                 break;
         }
     }

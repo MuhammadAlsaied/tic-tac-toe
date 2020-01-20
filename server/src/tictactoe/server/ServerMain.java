@@ -116,9 +116,9 @@ public class ServerMain extends Application {
     public void setPlayersListCounter(int playersListCounter) {
         this.playersListCounter = playersListCounter;
     }
-
-    public void guiLog(String text) {
-        textArea.appendText(text + "\n");
+    
+    public void guiLog(String text){
+        textArea.appendText(text + '\n');
     }
 
     public static void main(String[] args) {

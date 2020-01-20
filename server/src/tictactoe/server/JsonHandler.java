@@ -37,6 +37,7 @@ public class JsonHandler {
                 break;
             case "signin":
                 response = handleSignin(requestData, user);
+                
                 break;
             case "invitation":
                 response = handleInvitation(requestData, user);
@@ -152,10 +153,9 @@ public class JsonHandler {
 
     private JsonObject handleInvitation(JsonObject requestData, User user) {
         User opponentUser = server.getOnlinePlayerById(requestData.get("invited_player_id").getAsInt());
-        System.out.println(server.getSortedOnlinePlayersAsJson());
-        System.out.println(server.getSortedOfflinePlayersAsJson());
-        System.out.println("is oponent online" + opponentUser.getPlayer().isOnline());
-        System.out.println("does oponent has game" + opponentUser.getPlayer().getCurrentGame());
+        if (opponentUser == null) {
+            return null;
+        }
         if (opponentUser.getPlayer().isOnline() && opponentUser.getPlayer().getCurrentGame() == null) {
             JsonObject response = new JsonObject();
             JsonObject data = new JsonObject();
@@ -177,9 +177,6 @@ public class JsonHandler {
         User invitingPlayer = server.getOnlinePlayerById(requestData.get("inviting_player_id").getAsInt());
 
         if (invitingPlayer.getPlayer().isOnline() && invitingPlayer.getPlayer().getCurrentGame() == null) {
-            Game game = new Game(invitingPlayer.getPlayer(), user.getPlayer());
-            invitingPlayer.getPlayer().setCurrentGame(game);
-            user.getPlayer().setCurrentGame(game);
             JsonObject response = new JsonObject();
             JsonObject data = new JsonObject();
             response.add("data", data);
@@ -187,11 +184,45 @@ public class JsonHandler {
 
             data.addProperty("invited_player_id", user.getPlayer().getId());
             data.addProperty("invited_player_name", user.getPlayer().getFirstName());
+
             try {
                 invitingPlayer.getDataOutputStream().writeUTF(response.toString());
             } catch (IOException iOException) {
                 iOException.printStackTrace();
             }
+
+            Game game = null;
+            try {
+                game = databaseManager.getTerminatedGame(
+                        user.getPlayer().getId(), invitingPlayer.getPlayer().getId());
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            if (game == null) {
+                game = new Game(invitingPlayer.getPlayer(), user.getPlayer());
+            } else {
+                game.setGameStatus(Game.Status.inProgress);
+                game.setPlayerX(server.getOnlinePlayerById(game.getPlayerXId()).getPlayer());
+                game.setPlayerO(server.getOnlinePlayerById(game.getPlayerOId()).getPlayer());
+                JsonObject terminatedGameResponse = new JsonObject();
+                terminatedGameResponse.addProperty("type", "terminated-game-data");
+
+                JsonObject terminatedGameData = new JsonObject();
+                terminatedGameResponse.add("data", terminatedGameData);
+
+                terminatedGameData.add("game-coordinates", game.getGameCoordinates());
+                terminatedGameData.addProperty("playerX_id", game.getPlayerXId());
+                terminatedGameData.addProperty("playerO_id", game.getPlayerOId());
+                try {
+                    user.getDataOutputStream().writeUTF(terminatedGameResponse.toString());
+                    invitingPlayer.getDataOutputStream().writeUTF(terminatedGameResponse.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            invitingPlayer.getPlayer().setCurrentGame(game);
+            user.getPlayer().setCurrentGame(game);
         }
         return null;
     }
@@ -236,7 +267,11 @@ public class JsonHandler {
         game.setWinnerId(winnerId);
         game.setGameStatus(Game.Status.finished);
         try {
-            databaseManager.insertGame(game);
+            if (game.getGameId() > 0) {
+                databaseManager.updateGame(game);
+            } else {
+                databaseManager.insertGame(game);
+            }
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -272,7 +307,6 @@ public class JsonHandler {
         }
         return null;
     }
-
 
     private JsonObject handleGameMessage(JsonObject request, User user) {
         if (user.getPlayer().getCurrentGame() != null) {
