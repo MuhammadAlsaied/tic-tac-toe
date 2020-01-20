@@ -75,7 +75,6 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                         if (turn == false) {
                             cpu();
                         }
-                        checkWinner();
                     }
                 });
                 stack.add(l.get(x), j, i);
