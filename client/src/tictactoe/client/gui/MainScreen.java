@@ -72,15 +72,30 @@ public class MainScreen extends Pane {
         gridPane.setId("GridMain");
         gridPane.setHgap(50);
         gridPane.setPrefSize(495.2, 250.0);
-
+        
+        //////////////////////////////////////////////////////////
         Button exit = new Button("EXIT");
-        exit.setId("back");
-        exit.setLayoutX(280);
-        exit.setLayoutY(650);
-        exit.setPrefSize(150, 50);
+        exit.setId("ExitFromGame");
+        exit.setPrefSize(110, 10);
         exit.setOnAction((t) -> {
             app.exit();
         });
+        Button back = new Button("Back");
+        back.setPrefSize(110, 10);
+        back.setId("BackToMain");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+        });
+
+        HBox hBox = new HBox(150, back, exit);
+        hBox.setLayoutX(200);
+        hBox.setLayoutY(650);
+  /////////////////////////////////////////////////////////////////
+
+     
         ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setId("scrollPane1");
         scrollPane.setFocusTraversable(false);
@@ -133,7 +148,7 @@ public class MainScreen extends Pane {
 
         labelk.setFont(new Font("Arial", 24));
 
-        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, labelk, exit);
+        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, labelk, hBox);
         setId("MainScreenPane");
     }
 
