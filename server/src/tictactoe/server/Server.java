@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import javafx.application.Platform;
-
+import javafx.scene.paint.Color;
 import tictactoe.server.db.DatabaseManager;
 import tictactoe.server.models.Game;
 
@@ -31,7 +31,6 @@ public class Server extends Thread {
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
     private final HashMap<Integer, User> offlinePlayers = new HashMap<>();
-
     public final Set<ClientThread> clientThreads = new HashSet<ClientThread>();
 
     Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
@@ -50,9 +49,9 @@ public class Server extends Thread {
     JsonHandler jsonHandler = null;
 
     private DatabaseManager databaseManager;
-    private App app;
+    private ServerMain app;
 
-    public Server(App app) {
+    public Server(ServerMain app) {
         this.app = app;
         try {
             this.databaseManager = new DatabaseManager();
@@ -77,7 +76,6 @@ public class Server extends Thread {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-
                 ClientThread clientThread = new ClientThread(new User(socket));
                 clientThread.start();
                 clientThreads.add(clientThread);
@@ -169,6 +167,7 @@ public class Server extends Thread {
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
                         System.out.println(line);
+                        app.guiLog(line);
                         if (request.get("type").getAsString().equals("signout")) {
 
                             System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
@@ -315,8 +314,9 @@ public class Server extends Thread {
     public void setPlayerList() {
         Platform.runLater(() -> {
             app.clearPlayersListPane();
-            app.addPlayersToOnlineList(getSortedOnlinePlayersAsJson());
-            app.addPlayersToOfflineList(getSortedOfflinePlayersAsJson());
+            app.setPlayersListCounter(0);
+            app.addPlayersToList(getSortedOnlinePlayersAsJson(), Color.GREEN);
+            app.addPlayersToList(getSortedOfflinePlayersAsJson(), Color.RED);
         });
     }
 

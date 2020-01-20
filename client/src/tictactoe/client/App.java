@@ -83,8 +83,7 @@ public class App extends Application {
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("invitation", new InvitationScreen(this));
-        screens.put("multiPlayerGameBoard", new MultiPlayerGameBoardScreen(this));      //old edited by tharwat
-        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));        //new kareem's
+        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));       
         screens.put("levels", new LevelsScreen(this));
         screens.put("youWin", new YouWinScreen(this));
         screens.put("playWithComputerEasyGameBoard", new PlayWithComputerEasyGameBoardScreen(this));
@@ -198,10 +197,6 @@ public class App extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
-
     private void makePaneDraggable(Stage primaryStage) {
         screens.forEach((key, value) -> {
             value.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -219,6 +214,23 @@ public class App extends Application {
                 }
             });
         });
+    }
+    
+    public void addPointsLocalGame(int points){
+        JsonObject request = new JsonObject();
+        JsonObject data = new JsonObject();
+        request.add("data", data);
+        request.addProperty("type", "won-local-game");
+        data.addProperty("added-points", points);
+        try {
+            getDataOutputStream().writeUTF(request.toString());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        Application.launch(args);
     }
 
 }

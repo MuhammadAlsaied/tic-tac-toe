@@ -15,6 +15,27 @@ and open the template in the editor.
     font-family: 'digitalNumber';
     src: url('/css/digitalNumber.ttf');
 }
+.text-area {
+    -fx-background-color: rgba(0,0,0,0.5);
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.text-area   {
+    -fx-text-fill:white;
+    -fx-font-size: 16px;
+}
 #stack
 {
     -fx-background-image: url(/images/back.jpg);
@@ -88,6 +109,10 @@ and open the template in the editor.
     -fx-border-width: 0;
     -fx-background-radius: 0;
     -fx-background-color: transparent;
+}
+
+#text-area{
+    -fx-font-size: 2em;
 }
 
 

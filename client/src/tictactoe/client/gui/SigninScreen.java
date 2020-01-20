@@ -52,7 +52,7 @@ public class SigninScreen extends StackPane {
         password.setFocusTraversable(false);
         password.setPromptText(" Enter your password");
         //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
-        ToggleButton signin = new ToggleButton("SIGN IN");
+        signin = new ToggleButton("SIGN IN");
         signin.setId("signinButton");
 
         signin.setOnAction(new EventHandler<ActionEvent>() {
