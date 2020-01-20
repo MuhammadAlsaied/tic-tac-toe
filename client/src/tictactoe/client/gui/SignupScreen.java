@@ -1,8 +1,6 @@
 package tictactoe.client.gui;
 
 import com.google.gson.JsonObject;
-import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
-import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -10,14 +8,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -33,6 +27,8 @@ public class SignupScreen extends StackPane {
     private final App app;
     private Label error;
     private ToggleButton signup;
+    private TextField name, nickName, email;
+    private PasswordField password, repassword;
     private String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
     public SignupScreen(App app) {
@@ -41,22 +37,22 @@ public class SignupScreen extends StackPane {
     }
 
     private void init() {
-        TextField name = new TextField();
+        name = new TextField();
         error = new Label();
         name.setPromptText("Please Enter your Name");
         name.setFocusTraversable(false);
         name.setId("name");
         name.setPrefWidth(300);
-        TextField nickName = new TextField();
+        nickName = new TextField();
         nickName.setPromptText("Please Enter your Nickname");
         nickName.setId("name");
-        PasswordField password = new PasswordField();
+        password = new PasswordField();
         password.setPromptText("Please Enter your Password");
         password.setId("name");
-        PasswordField repassword = new PasswordField();
+        repassword = new PasswordField();
         repassword.setPromptText("Please ReEnter your Password");
         repassword.setId("name");
-        TextField email = new TextField();
+        email = new TextField();
         email.setPromptText("Please Enter your Email");
         email.setId("name");
         password.setFocusTraversable(false);
@@ -73,61 +69,7 @@ public class SignupScreen extends StackPane {
         signup.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (nickName.getText().isEmpty()) {
-                    nickName.setPromptText("You Cannot Leave Name Empty");
-                    nickName.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
-                    nickName.setPrefSize(324, 45);
-                }
-                if (name.getText().isEmpty()) {
-                    name.setPromptText("You Cannot Leave Name Empty");
-                    name.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
-                    name.setPrefSize(324, 45);
-                }
-                if (email.getText().isEmpty()) {
-                    email.setPromptText("You Cannot Leave E-Mail Empty");
-                    email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
-                    email.setPrefSize(324, 45);
-                }
-                if (!email.getText().matches(regex) && !email.getText().isEmpty()) {
-                    error("Email Must be something@somthing.somthing", email);
-                }
-                if (password.getText().isEmpty()) {
-                    password.setPromptText("You Cannot Leave Password Empty");
-                    password.setStyle("-fx-font-size: 16px;");
-                    password.setPrefSize(324, 45);
-                    showSignupButton();
-                }
-                if (!password.getText().equals(repassword.getText())) {
-                    error("The Two Feilds are not Matching", repassword);
-                } else if (password.getText().equals(repassword.getText())) {
-                    errorRelese(repassword);
-                }
-                if (repassword.getText().isEmpty()) {
-                    repassword.setPromptText("You Must Retype Your Password");
-                    repassword.setStyle("-fx-font-size: 16px;");
-                    repassword.setPrefSize(324, 45);
-                }
-                if (password.getText().equals(repassword.getText()) && !nickName.getText().isEmpty()
-                        && !name.getText().isEmpty() && !email.getText().isEmpty() && !password.getText().isEmpty()
-                        && !repassword.getText().isEmpty() && email.getText().matches(regex)) {
-                    signup.setText("Loading...");
-                    signup.setDisable(true);
-                    JsonObject jsonObject = new JsonObject();
-                    JsonObject data = new JsonObject();
-                    data.addProperty("firstName", name.getText());
-                    data.addProperty("lastName", nickName.getText());
-                    data.addProperty("email", email.getText());
-                    data.addProperty("password", password.getText());
-                    jsonObject.addProperty("type", "signup");
-                    jsonObject.add("data", data);
-                    try {
-                        System.out.println(jsonObject);
-
-                        app.getDataOutputStream().writeUTF(jsonObject.toString());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
+                signupEvent();
             }
         });
 //        ============Email And Repassowrd Event Handeler==================
@@ -186,6 +128,65 @@ public class SignupScreen extends StackPane {
     }
 //        =====================Signup methods==============================
 
+    public void signupEvent(){
+        
+                if (nickName.getText().isEmpty()) {
+                    nickName.setPromptText("You Cannot Leave Name Empty");
+                    nickName.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+                    nickName.setPrefSize(324, 45);
+                }
+                if (name.getText().isEmpty()) {
+                    name.setPromptText("You Cannot Leave Name Empty");
+                    name.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+                    name.setPrefSize(324, 45);
+                }
+                if (email.getText().isEmpty()) {
+                    email.setPromptText("You Cannot Leave E-Mail Empty");
+                    email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+                    email.setPrefSize(324, 45);
+                }
+                if (!email.getText().matches(regex) && !email.getText().isEmpty()) {
+                    error("Email Must be something@somthing.somthing", email);
+                }
+                if (password.getText().isEmpty()) {
+                    password.setPromptText("You Cannot Leave Password Empty");
+                    password.setStyle("-fx-font-size: 16px;");
+                    password.setPrefSize(324, 45);
+                    showSignupButton();
+                }
+                if (!password.getText().equals(repassword.getText())) {
+                    error("The Two Feilds are not Matching", repassword);
+                } else if (password.getText().equals(repassword.getText())) {
+                    errorRelese(repassword);
+                }
+                if (repassword.getText().isEmpty()) {
+                    repassword.setPromptText("You Must Retype Your Password");
+                    repassword.setStyle("-fx-font-size: 16px;");
+                    repassword.setPrefSize(324, 45);
+                }
+                if (password.getText().equals(repassword.getText()) && !nickName.getText().isEmpty()
+                        && !name.getText().isEmpty() && !email.getText().isEmpty() && !password.getText().isEmpty()
+                        && !repassword.getText().isEmpty() && email.getText().matches(regex)) {
+                    signup.setText("Loading...");
+                    signup.setDisable(true);
+                    JsonObject jsonObject = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    data.addProperty("firstName", name.getText());
+                    data.addProperty("lastName", nickName.getText());
+                    data.addProperty("email", email.getText());
+                    data.addProperty("password", password.getText());
+                    jsonObject.addProperty("type", "signup");
+                    jsonObject.add("data", data);
+                    try {
+                        System.out.println(jsonObject);
+
+                        app.getDataOutputStream().writeUTF(jsonObject.toString());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+    }
+    
     public void showSignupFailedPopup() {
         app.showAlert("Signup failed", "This email is already registered, please enter another email.");
         Platform.runLater(new Runnable() {
