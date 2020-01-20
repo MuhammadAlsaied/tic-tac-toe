@@ -65,9 +65,17 @@ public class HardLuckScreen extends StackPane {
         });
         playAgain.setPrefSize(180, 20);
         playAgain.setId("playAgain");
+        Button exit = new Button("EXIT");
+        exit.setId("back");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(150, 50);
+        exit.setOnAction((t) -> {
+            app.exit();
+        });
         HBox buttonBox = new HBox(50, back, playAgain);
-
-        VBox vbox = new VBox(30, over, lose, buttonBox);
+   
+        VBox vbox = new VBox(30, over, lose, buttonBox,exit);
         vbox.setId("vbox");
 
         getChildren().addAll(rec, vbox);
