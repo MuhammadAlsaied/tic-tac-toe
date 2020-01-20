@@ -61,7 +61,6 @@ public class ServerMain extends Application {
         hbox.setLayoutY(150);
 
         textArea = new TextArea("");
-        textArea.setId("textArea");
         textArea.setLayoutX(50);
         textArea.setLayoutY(300);
         textArea.setMaxWidth(575.0);

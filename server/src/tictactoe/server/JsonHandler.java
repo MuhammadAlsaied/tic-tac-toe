@@ -10,13 +10,13 @@ import tictactoe.server.models.Player;
 
 /**
  *
- * @author muhammad and Ayman Magdy
+ * @author muhammad
  */
 public class JsonHandler {
-    
+
     private DatabaseManager databaseManager;
     private final Server server;
-    
+
     public JsonHandler(Server server) {
         this.server = server;
         try {
@@ -25,10 +25,10 @@ public class JsonHandler {
             ex.printStackTrace();
         }
     }
-    
+
     void handle(JsonObject request, User user) {
         String requestType = request.get("type").getAsString();
-        
+
         JsonObject requestData = request.getAsJsonObject("data");
         JsonObject response = null;
         switch (requestType) {
@@ -66,23 +66,24 @@ public class JsonHandler {
             case "pause-game":
                 handlePauseGame(requestData, user);
                 break;
-            
+
         }
-        
+
         if (response != null) {
             try {
                 user.getDataOutputStream().writeUTF(response.toString());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            
+
         }
     }
+
     private JsonObject handleSignup(JsonObject requestData, User user) {
         JsonObject response = new JsonObject();
         JsonObject data = new JsonObject();
         response.add("data", data);
-        
+
         String firstName = requestData.get("firstName").getAsString();
         String lastName = requestData.get("lastName").getAsString();
         String email = requestData.get("email").getAsString();
@@ -104,16 +105,16 @@ public class JsonHandler {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            
+
         }
         return response;
     }
-    
+
     private JsonObject handleSignin(JsonObject requestData, User user) {
         JsonObject response = new JsonObject();
         JsonObject data = new JsonObject();
         response.add("data", data);
-        
+
         String email = requestData.get("email").getAsString();
         String password = requestData.get("password").getAsString();
         Player player = databaseManager.signIn(email, password);
@@ -149,7 +150,7 @@ public class JsonHandler {
         }
         return null;
     }
-    
+
     private JsonObject handleInvitation(JsonObject requestData, User user) {
         User opponentUser = server.getOnlinePlayerById(requestData.get("invited_player_id").getAsInt());
         if (opponentUser == null) {
@@ -160,7 +161,7 @@ public class JsonHandler {
             JsonObject data = new JsonObject();
             response.add("data", data);
             response.addProperty("type", "invitation");
-            
+
             data.addProperty("inviter_player_id", user.getPlayer().getId());
             data.addProperty("inviter_player_name", user.getPlayer().getFirstName());
             try {
@@ -171,25 +172,25 @@ public class JsonHandler {
         }
         return null;
     }
-    
+
     private JsonObject handleInvitationAccept(JsonObject requestData, User user) {
         User invitingPlayer = server.getOnlinePlayerById(requestData.get("inviting_player_id").getAsInt());
-        
+
         if (invitingPlayer.getPlayer().isOnline() && invitingPlayer.getPlayer().getCurrentGame() == null) {
             JsonObject response = new JsonObject();
             JsonObject data = new JsonObject();
             response.add("data", data);
             response.addProperty("type", "invitation-accepted");
-            
+
             data.addProperty("invited_player_id", user.getPlayer().getId());
             data.addProperty("invited_player_name", user.getPlayer().getFirstName());
-            
+
             try {
                 invitingPlayer.getDataOutputStream().writeUTF(response.toString());
             } catch (IOException iOException) {
                 iOException.printStackTrace();
             }
-            
+
             Game game = null;
             try {
                 game = databaseManager.getTerminatedGame(
@@ -209,10 +210,10 @@ public class JsonHandler {
                 game.setPlayerO(server.getOnlinePlayerById(game.getPlayerOId()).getPlayer());
                 JsonObject terminatedGameResponse = new JsonObject();
                 terminatedGameResponse.addProperty("type", "terminated-game-data");
-                
+
                 JsonObject terminatedGameData = new JsonObject();
                 terminatedGameResponse.add("data", terminatedGameData);
-                
+
                 terminatedGameData.add("game-coordinates", game.getGameCoordinates());
                 terminatedGameData.addProperty("playerX_id", game.getPlayerXId());
                 terminatedGameData.addProperty("playerO_id", game.getPlayerOId());
@@ -228,18 +229,18 @@ public class JsonHandler {
         }
         return null;
     }
-    
+
     private JsonObject handleGameMove(JsonObject request, User user) {
         JsonObject reqData = request.get("data").getAsJsonObject();
-        
+
         if (user.getPlayer().getCurrentGame() != null) {
             Game game = user.getPlayer().getCurrentGame();
             Game.Position position = Game.Position.valueOf(reqData.get("position").getAsString());
             Game.Move move = Game.Move.valueOf(reqData.get("move").getAsString());
-            
+
             Player opponentPlayer = move.equals(Game.Move.X) ? game.getPlayerO() : game.getPlayerX();
             game.setNextMove(position, move);
-            
+
             JsonObject response = new JsonObject();
             JsonObject data = new JsonObject();
             response.add("data", data);
@@ -258,7 +259,7 @@ public class JsonHandler {
         }
         return null;
     }
-    
+
     private JsonObject handleGameEnd(JsonObject requestData, User user) {
         Player winnerPlayer = null;
         Game game = user.getPlayer().getCurrentGame();
@@ -288,7 +289,7 @@ public class JsonHandler {
         if (playerO.getId() == winnerId) {
             playerO.incrementPoints(50);
             winnerPlayer = playerO;
-            
+
         }
         try {
             databaseManager.updatePlayerScore(winnerPlayer);
@@ -298,7 +299,7 @@ public class JsonHandler {
         server.sendUpdatedPlayerList();
         return null;
     }
-    
+
     private JsonObject handleLocalGameWin(JsonObject requestData, User user) {
         Player player = user.getPlayer();
         player.incrementPoints(requestData.get("added-points").getAsInt());
@@ -307,9 +308,10 @@ public class JsonHandler {
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
+        server.sendUpdatedPlayerList();
         return null;
     }
-    
+
     private JsonObject handleGameMessage(JsonObject request, User user) {
         if (user.getPlayer().getCurrentGame() != null) {
             try {
@@ -324,11 +326,10 @@ public class JsonHandler {
         }
         return null;
     }
-    
+
     private void handlePauseGame(JsonObject requestData, User user) {
         if (user.getPlayer().getCurrentGame() != null) {
             server.handleTerminatedGame(user);
         }
     }
-    
 }

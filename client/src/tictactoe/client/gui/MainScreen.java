@@ -13,15 +13,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
 import tictactoe.client.App;
 import tictactoe.client.Player;
 
@@ -103,16 +100,16 @@ public class MainScreen extends Pane {
         v.getChildren().add(scrollPane);
         v.setLayoutX(930);
         v.setLayoutY(0);
-        
+
         playerName2 = new Label();
         playerName2.setLayoutX(200);
         playerName2.setLayoutY(260);
-        
+
         welcome = new Label();
         welcome.setId("welcome");
         welcome.setLayoutX(150);
         welcome.setLayoutY(200);
-        
+
         points2 = new Label();
         points2.setLayoutX(500);
         points2.setLayoutY(250);
@@ -155,8 +152,7 @@ public class MainScreen extends Pane {
             }
         });
 
-
-        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, hBox, welcome, points , playerName2 , points2);
+        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, hBox, welcome, points, playerName2, points2);
         setId("MainScreenPane");
     }
 
@@ -173,6 +169,7 @@ public class MainScreen extends Pane {
             JsonObject jsonPlayer = playerList.get(i).getAsJsonObject();
             if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
                 /*skips iteration if the player is me*/
+                points2.setText(jsonPlayer.get("points").getAsString());
                 continue;
             }
             Player player = new Player();

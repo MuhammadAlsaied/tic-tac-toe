@@ -80,6 +80,9 @@ public class JsonHandler {
                 app.showAlert("Could not login", requestData.get("msg").getAsString());
                 signinScreen.showSigninButton();
                 break;
+            case "server-alert":
+                app.showAlert("Alert!", requestData.get("msg").getAsString());
+                break;
             case "update-player-list":
                 refreshList(requestData);
                 break;
