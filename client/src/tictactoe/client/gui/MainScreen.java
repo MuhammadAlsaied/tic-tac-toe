@@ -72,15 +72,30 @@ public class MainScreen extends Pane {
         gridPane.setId("GridMain");
         gridPane.setHgap(50);
         gridPane.setPrefSize(495.2, 250.0);
-
+        
+        //////////////////////////////////////////////////////////
         Button exit = new Button("EXIT");
-        exit.setId("back");
-        exit.setLayoutX(280);
-        exit.setLayoutY(650);
-        exit.setPrefSize(150, 50);
+        exit.setId("ExitFromGame");
+        exit.setPrefSize(110, 10);
         exit.setOnAction((t) -> {
             app.exit();
         });
+        Button back = new Button("Back");
+        back.setPrefSize(110, 10);
+        back.setId("BackToMain");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+        });
+
+        HBox hBox = new HBox(150, back, exit);
+        hBox.setLayoutX(200);
+        hBox.setLayoutY(650);
+  /////////////////////////////////////////////////////////////////
+
+     
         ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setId("scrollPane1");
         scrollPane.setFocusTraversable(false);
@@ -99,6 +114,7 @@ public class MainScreen extends Pane {
         chatTextArea.setLayoutY(420);
         chatTextArea.setMaxWidth(220.0);
         chatTextArea.setMaxHeight(250.0);
+        chatTextArea.setWrapText(true);
 
         chatMessageArea = new TextArea("");
 
@@ -107,12 +123,14 @@ public class MainScreen extends Pane {
         chatMessageArea.setLayoutY(700);
         chatMessageArea.setMaxWidth(220.0);
         chatMessageArea.setMaxHeight(10.5);
+        chatMessageArea.setWrapText(true);
 
         Button send = new Button();
         send.setText("send");
         send.setId("sendChatMainScreen");
         send.setLayoutX(1050);
         send.setLayoutY(700);
+        
         send.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -131,7 +149,7 @@ public class MainScreen extends Pane {
 
         labelk.setFont(new Font("Arial", 24));
 
-        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, labelk, exit);
+        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, labelk, hBox);
         setId("MainScreenPane");
     }
 
@@ -151,7 +169,7 @@ public class MainScreen extends Pane {
                 continue;
             }
             Player player = new Player();
-            player.setFirstName(jsonPlayer.get("firstName").getAsString());
+            player.setLastName(jsonPlayer.get("lastName").getAsString());
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
             ToggleButton invite2 = new ToggleButton("Challenge");
@@ -165,7 +183,8 @@ public class MainScreen extends Pane {
 
             Label score2 = new Label(Integer.toString(player.getPoints()));
             score2.setId("scoreLabel");
-            Label playerName = new Label(player.getFirstName());
+            Label playerName = new Label(player.getLastName());
+            playerName.setPrefWidth(100);
             Circle cir2 = new Circle(150.0f, 150.0f, 5.f);
             cir2.setFill(color);
             gridPane.add(cir2, 0, playersListCounter);
