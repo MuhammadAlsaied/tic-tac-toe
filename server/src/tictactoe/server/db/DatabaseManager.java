@@ -214,41 +214,40 @@ public class DatabaseManager {
     }
 
     // Done and tested
-    public Player updatePlayerScore(int id, int additionalPoints) throws ClassNotFoundException {
-        Player updatedPlayer = new Player();
+    public Player updatePlayerScore(Player player) throws ClassNotFoundException {
         PreparedStatement pst;
-        int totalPoints = 0;
+        int playerPoints = player.getPoints();
 
         try {
             establishConnection();
-            statment = connection.createStatement();
-            resultSet = statment.executeQuery("SELECT * FROM player WHERE id=" + id + ";");
-            if (resultSet.next()) {
-                updatedPlayer.setId(resultSet.getInt("id"));
-                updatedPlayer.setFirstName(resultSet.getString("first_name"));
-                updatedPlayer.setLastName(resultSet.getString("last_name"));
-                updatedPlayer.setEmail(resultSet.getString("email"));
-                totalPoints = resultSet.getInt("points");
-            }
-
-            resultSet.close();
-            statment.close();
-            totalPoints += additionalPoints;
-            updatedPlayer.setPoints(totalPoints);
+//            statment = connection.createStatement();
+//            resultSet = statment.executeQuery("SELECT * FROM player WHERE id=" + id + ";");
+//            if (resultSet.next()) {
+//                updatedPlayer.setId(resultSet.getInt("id"));
+//                updatedPlayer.setFirstName(resultSet.getString("first_name"));
+//                updatedPlayer.setLastName(resultSet.getString("last_name"));
+//                updatedPlayer.setEmail(resultSet.getString("email"));
+//                totalPoints = resultSet.getInt("points");
+//            }
+//
+//            resultSet.close();
+//            statment.close();
+//            totalPoints += additionalPoints;
+            player.setPoints(player.getPoints());
 
             pst = connection.prepareStatement("UPDATE player SET points=? WHERE id=?");
-            pst.setInt(1, totalPoints);
-            pst.setInt(2, id);
+            pst.setInt(1, playerPoints);
+            pst.setInt(2, player.getId());
 
             pst.executeUpdate();
             pst.close();
             connection.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
 
-        return updatedPlayer;
+        return player;
     }
 
     // Done and tested

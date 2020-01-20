@@ -66,9 +66,8 @@ public class JsonHandler {
             case "update-player-list":
                 refreshList(requestData);
                 break;
-            case "online-player":
-//                refreshList(requestData);     /*THROWS NULL POINTER EXCEPTION*/
-
+            case "global_chat_message":
+                mainScreen.setGlobalMsgFromServer(requestData.get("sender").getAsString(), requestData.get("message").getAsString());
                 break;
             case "invitation":
                 int challengerId = requestData.get("inviter_player_id").getAsInt();

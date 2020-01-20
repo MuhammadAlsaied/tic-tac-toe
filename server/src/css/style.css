@@ -90,6 +90,10 @@ and open the template in the editor.
     -fx-background-color: transparent;
 }
 
+#text-area{
+    -fx-font-size: 2em;
+}
+
 
 
     

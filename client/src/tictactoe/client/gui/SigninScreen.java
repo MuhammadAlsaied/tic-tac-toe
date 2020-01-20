@@ -52,7 +52,7 @@ public class SigninScreen extends StackPane {
         password.setFocusTraversable(false);
         password.setPromptText(" Enter your password");
         //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
-        ToggleButton signin = new ToggleButton("SIGN IN");
+        signin = new ToggleButton("SIGN IN");
         signin.setId("signinButton");
         
         signin.setOnAction(new EventHandler<ActionEvent>() {
@@ -115,7 +115,7 @@ public class SigninScreen extends StackPane {
 
         e.setColor(javafx.scene.paint.Color.BLACK);
 
-        VBox vbox = new VBox(20, header, email, password, signin, error, newUser);
+        VBox vbox = new VBox(20, header, email, password, signin, newUser, error);
         vbox.setId("vbox");
         Region rec = new Region();
 
