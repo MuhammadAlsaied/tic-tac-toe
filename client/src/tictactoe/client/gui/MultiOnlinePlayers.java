@@ -94,6 +94,7 @@ public class MultiOnlinePlayers extends Pane {
 
         chatTextArea = new TextArea(" ");
         chatTextArea.setId("ta");
+        chatTextArea.setEditable(false);
         chatTextArea.setLayoutX(890);
         chatTextArea.setLayoutY(400);
         chatTextArea.setMaxWidth(220.0);
