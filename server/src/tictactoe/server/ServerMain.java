@@ -44,11 +44,12 @@ public class ServerMain extends Application {
         toggleButton.setId("toggleButton");
         toggleButton.setOnAction((ActionEvent event) -> {
             if (server == null) {
+                guiLog("turning on the server");
                 server = new Server(app);
                 server.start();
                 toggleButton.setText("OFF");
             } else {
-                System.out.println("turnning off server");
+                guiLog("turning off the server");
                 server.turnOff();
                 server.stop();
                 server = null;
@@ -59,7 +60,7 @@ public class ServerMain extends Application {
         hbox.setLayoutX(275);
         hbox.setLayoutY(150);
 
-        textArea = new TextArea(" ");
+        textArea = new TextArea("");
         textArea.setId("textArea");
         textArea.setLayoutX(50);
         textArea.setLayoutY(300);
