@@ -85,8 +85,9 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
         label1 = new Label();
         label1.setPrefWidth(150);
         Label label2 = new Label("COMPUTER");
+        label2.setPrefWidth(180);
 
-        HBox hbox = new HBox(385, label1, label2);
+        HBox hbox = new HBox(350, label1, label2);
         hbox.setLayoutX(70);
         hbox.setLayoutY(25);
         ////////////////////////////////////////////////////////////////////
@@ -437,5 +438,8 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
             });
             pause.play();
         }
+    }
+    public void setPlayerName(String playerName) {
+        label1.setText(playerName);
     }
 }

@@ -34,6 +34,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
     String line;
     Vector<Label> l = new Vector<>();
     boolean[] textLabelflag;
+
     private boolean isEnded = false;
     Label label1;
 
@@ -82,12 +83,12 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
         }
         //
         setId("stackGameboard");
-        label1 = new Label();
+        label1 = new Label("Player");
         label1.setPrefWidth(150);
         Label label2 = new Label("COMPUTER");
-        label2.setPrefWidth(150);
+        label2.setPrefWidth(180);
 
-        HBox hbox = new HBox(385, label1, label2);
+        HBox hbox = new HBox(350, label1, label2);
         hbox.setLayoutX(70);
         hbox.setLayoutY(25);
        
@@ -238,5 +239,8 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
             });
             pause.play();
         }
+    }
+    public void setPlayerName(String playerName) {
+        label1.setText(playerName);
     }
 }
