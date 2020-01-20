@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -75,8 +76,35 @@ public class LevelsScreen extends StackPane {
         VBox vbox = new VBox(30,chooseALevel,easy,normal,hard);
                 vbox.setId("vbox");
 
+//////////////////////////////////////////////////////////////////////////
+          Button exit = new Button("EXIT");
+        exit.setId("ExitFromGame");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(110, 10);
+        exit.setOnAction((t) -> {
+            app.exit();
+        });
+        Button back = new Button("Back");
+        back.setPrefSize(110, 10);
+        back.setId("BackToMain");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+        });
 
-        getChildren().addAll(rec, vbox);
+        HBox hBox = new HBox(120, back, exit);
+
+      
+        vbox.setId("vbox");
+
+        VBox v = new VBox(50, vbox, hBox);
+        v.setId("vbox");
+
+        getChildren().addAll(rec, v);
+
         setId("stackGameResultScreen");
 
     }
