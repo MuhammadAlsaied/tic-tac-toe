@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -13,6 +14,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -29,13 +31,9 @@ public class SigninScreen extends StackPane {
     private Label error;
     private ToggleButton signin;
     String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-    PlayWithComputerEasyGameBoardScreen playWithComputerEasy;
-    PlayWithComputerHARDGameBoardScreen playWithComputerHard;
-    PlayWithComputerNormalGameBoardScreen playWithComputerNormal;
 
     public SigninScreen(App app) {
         this.app = app;
-        playWithComputerEasy = (PlayWithComputerEasyGameBoardScreen) app.getScreen("playWithComputerEasyGameBoard");
         error = new Label();
         Label header = new Label("Sign In");
         header.setId("siginLabel");
@@ -57,7 +55,7 @@ public class SigninScreen extends StackPane {
         //        ==================SIGN UP BUTTON AND EVENT HANDLER===============
         signin = new ToggleButton("SIGN IN");
         signin.setId("signinButton");
-        
+
         signin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -73,8 +71,7 @@ public class SigninScreen extends StackPane {
                     password.setPromptText("You Cannot Leave Password Empty");
                     password.setStyle("-fx-font-size: 16px;");
                     password.setPrefSize(324, 50);
-                }
-                else {
+                } else {
                     signin.setText("Connecting...");
                     signin.setDisable(true);
                     JsonObject jsonObject = new JsonObject();
@@ -105,8 +102,7 @@ public class SigninScreen extends StackPane {
             }
         });
         newUser.setCursor(Cursor.HAND);
-        
-        
+
         //TO MAKE SHADOW
         DropShadow e = new DropShadow();
         e.setOffsetX(0.0f);
@@ -123,7 +119,9 @@ public class SigninScreen extends StackPane {
         Region rec = new Region();
 
         region(rec);
-        getChildren().addAll(rec, vbox);
+ 
+        
+        getChildren().addAll(rec,vbox);
         setId("stackSignin");
     }
 
@@ -136,8 +134,17 @@ public class SigninScreen extends StackPane {
         Platform.runLater(() -> {
             signin.setText("SIGN IN");
             signin.setDisable(false);
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    signin.setText("SIGN IN");
+                    signin.setDisable(false);
+                }
+            });
         });
     }
+
     private void error() {
         if (!email.getText().matches(regex)) {
             email.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");

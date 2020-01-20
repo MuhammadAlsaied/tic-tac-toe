@@ -9,12 +9,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import tictactoe.client.App;
@@ -46,8 +49,36 @@ public class PlayerListScreen extends Pane {
         scrollPane.setMaxHeight(450.0);
 
         setId("stack");
-        getChildren().add(rectBack);
+        ////////////////////////////////////////////////////
+          Button exit = new Button("EXIT");
+        exit.setId("ExitFromGame");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(110, 10);
+        exit.setOnAction((t) -> {
+            app.exit();
+        });
+        Button back = new Button("Back");
+        back.setPrefSize(110, 10);
+        back.setId("BackToMain");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+        });
+
+        HBox hBox = new HBox(150, back, exit);
+
+        VBox v = new VBox(100,hBox);
+        v.setId("vbox");
+        v.setLayoutX(460);
+        v.setLayoutY(500);
+        
+        
+        ////////////////////////////////////////////////////
         getChildren().add(scrollPane);
+        getChildren().addAll(rectBack, v);
 
     }
 

@@ -37,6 +37,7 @@ public class JsonHandler {
                 break;
             case "signin":
                 response = handleSignin(requestData, user);
+                
                 break;
             case "invitation":
                 response = handleInvitation(requestData, user);

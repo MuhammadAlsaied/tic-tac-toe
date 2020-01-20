@@ -11,11 +11,13 @@ import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import tictactoe.client.App;
 
@@ -78,17 +80,46 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                 stack.add(l.get(x), j, i);
             }
         }
-        //
+      
+  
         setId("stackGameboard");
         label1 = new Label();
         label1.setPrefWidth(150);
         Label label2 = new Label("COMPUTER");
+        label2.setPrefWidth(180);
 
-        HBox hbox = new HBox(385, label1, label2);
+        HBox hbox = new HBox(350, label1, label2);
         hbox.setLayoutX(70);
         hbox.setLayoutY(25);
+        ///////////////////////////////////////////////////
+         Button exit = new Button("EXIT");
+        exit.setId("ExitFromGame");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(110, 10);
+        exit.setOnAction((t) -> {
+            app.exit();
+        });
+        Button back = new Button("Back");
+        back.setPrefSize(110, 10);
+        back.setId("BackToMain");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+        });
 
-        getChildren().addAll(stack, hbox);
+
+        HBox hBox = new HBox(100, back, exit);
+
+        VBox v = new VBox(40, hBox);
+        v.setId("vbox");
+        v.setLayoutX(1000);
+        v.setLayoutY(150);
+        ///////////////////////////////////////////////////////
+
+        getChildren().addAll(stack, hbox,v);
         stack.setId("stacklolo");
         if (!turn) {
             cpu();
@@ -296,5 +327,8 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
             });
             pause.play();
         }
+    }
+    public void setPlayerName(String playerName) {
+        label1.setText(playerName);
     }
 }
