@@ -4,11 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Comparator;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -48,6 +46,8 @@ public class MainScreen extends Pane {
     private Player currentPlayer;
     private Label welcome;
     private Label points;
+    private Label playerName2;
+    private Label points2;
 
     public MainScreen(App app) {
         this.app = app;
@@ -72,12 +72,12 @@ public class MainScreen extends Pane {
         HBox buttonBox = new HBox(20, challengeComp, challengePlayer);
         buttonBox.setAlignment(Pos.CENTER_LEFT);
         buttonBox.setLayoutX(80);
-        buttonBox.setLayoutY(350);
+        buttonBox.setLayoutY(450);
         gridPane = new GridPane();
         gridPane.setId("GridMain");
-        gridPane.setHgap(50);
+        gridPane.setHgap(30);
         gridPane.setPrefSize(495.2, 250.0);
-        
+
         //////////////////////////////////////////////////////////
         Button exit = new Button("EXIT");
         exit.setId("ExitFromGame");
@@ -85,22 +85,12 @@ public class MainScreen extends Pane {
         exit.setOnAction((t) -> {
             app.exit();
         });
-        Button back = new Button("Back");
-        back.setPrefSize(110, 10);
-        back.setId("BackToMain");
-        back.setOnAction((event) -> {
-            app.setScreen("main");
-            App.inMultiplayerGame = false;
-            App.opposingPlayerId = -1;
-            App.opposingPlayerName = "";
-        });
 
-        HBox hBox = new HBox(150, back, exit);
-        hBox.setLayoutX(200);
-        hBox.setLayoutY(650);
-  /////////////////////////////////////////////////////////////////
+        HBox hBox = new HBox(exit);
+        hBox.setLayoutX(1100);
+        hBox.setLayoutY(300);
+        /////////////////////////////////////////////////////////////////
 
-     
         ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setId("scrollPane1");
         scrollPane.setFocusTraversable(false);
@@ -113,22 +103,31 @@ public class MainScreen extends Pane {
         v.getChildren().add(scrollPane);
         v.setLayoutX(930);
         v.setLayoutY(0);
+        
+        playerName2 = new Label();
+        playerName2.setLayoutX(200);
+        playerName2.setLayoutY(260);
+        
         welcome = new Label();
         welcome.setId("welcome");
-        welcome.setLayoutX(100);
-        welcome.setLayoutY(80);
+        welcome.setLayoutX(150);
+        welcome.setLayoutY(200);
+        
+        points2 = new Label();
+        points2.setLayoutX(500);
+        points2.setLayoutY(250);
 
         points = new Label();
         points.setId("welcome");
-        points.setLayoutX(280);
-        points.setLayoutY(80);
+        points.setLayoutX(450);
+        points.setLayoutY(200);
 
         //String variable="WELCOME " + ;
         chatTextArea = new TextArea("");
         chatTextArea.setId("ta");
         chatTextArea.setLayoutX(800);
         chatTextArea.setLayoutY(420);
-        chatTextArea.setMaxWidth(250.0);
+        chatTextArea.setMaxWidth(220.0);
         chatTextArea.setMaxHeight(250.0);
         chatTextArea.setWrapText(true);
 
@@ -146,7 +145,7 @@ public class MainScreen extends Pane {
         send.setId("sendChatMainScreen");
         send.setLayoutX(1050);
         send.setLayoutY(700);
-        
+
         send.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -164,8 +163,8 @@ public class MainScreen extends Pane {
         labelk.setMaxSize(50.0, 50.0);
 
         labelk.setFont(new Font("Arial", 24));
-        
-        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, labelk, exit, welcome,points);
+
+        getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, labelk, hBox, welcome, points , playerName2 , points2);
         setId("MainScreenPane");
     }
 
@@ -232,8 +231,13 @@ public class MainScreen extends Pane {
     }
 
     public void setWelcomePlayer(String playerName, int totalPoints) {
-        welcome.setText("Welcome,\n" +"\t" +playerName  );
-        points.setText("Points" +"\n" + "\t" +totalPoints);
+        playerName2.setText(playerName);
+        playerName2.setId("welcome1");
+        points2.setText(Integer.toString(totalPoints));
+        points2.setId("scoreLabel");
+
+        welcome.setText("Welcome,");
+        points.setText("Points");
 
     }
 }
