@@ -149,11 +149,9 @@ public class App extends Application {
         pStage = primaryStage;
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TIC TAC TOE!");
-<<<<<<< HEAD
-        mainScene = new Scene(screens.get("playWithComputerEasyGameBoard"), 1350, 700);
-=======
-        mainScene = new Scene(screens.get("signin"), 1350, 700);
->>>>>>> 9e8d1e9cb74780258261dc11dafa0fccdf4d2734
+
+
+        mainScene = new Scene(screens.get("youWin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.initStyle(StageStyle.UNDECORATED);
