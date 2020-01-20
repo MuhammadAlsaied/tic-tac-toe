@@ -139,7 +139,7 @@ public class MultiOnlinePlayers extends Pane {
         send.setLayoutX(1140);
         send.setLayoutY(600);
         ///////////////////////////////////////////////////////////
-            Button exit = new Button("EXIT");
+        Button exit = new Button("EXIT");
         exit.setId("ExitFromGame");
         exit.setLayoutX(280);
         exit.setLayoutY(650);
@@ -151,7 +151,19 @@ public class MultiOnlinePlayers extends Pane {
         pause.setPrefSize(110, 10);
         pause.setId("BackToMain");
         pause.setOnAction((event) -> {
-            
+            JsonObject request = new JsonObject();
+            JsonObject data = new JsonObject();
+            request.addProperty("type", "pause-game");
+            request.add("data", data);
+
+            app.setScreen("main");
+            app.showAlert(App.opposingPlayerName + " left the game", "Switching to main screen.");
+
+            try {
+                app.getDataOutputStream().writeUTF(request.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         });
 
         HBox hBox = new HBox(100, pause, exit);
@@ -161,7 +173,7 @@ public class MultiOnlinePlayers extends Pane {
         v.setLayoutX(1000);
         v.setLayoutY(150);
         ///////////////////////////////////////////////////////////
-        getChildren().addAll(stack, hbox,v, chatMessageArea, chatTextArea, send);
+        getChildren().addAll(stack, hbox, v, chatMessageArea, chatTextArea, send);
         stack.setId("stacklolo");
     }
 
@@ -344,7 +356,6 @@ public class MultiOnlinePlayers extends Pane {
         System.out.println("Accept this letter: " + thisPlayerLetter);
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
     }
-
 
     public void setNewMsg(String msg) {
         chatTextArea.appendText(challengerName + ": " + msg + "\n");

@@ -172,7 +172,7 @@ public class Server extends Thread {
                         if (request.get("type").getAsString().equals("signout")) {
 
                             app.guiLog("user" + user.toString() + " player:" + user.player + " logging off");
-                            
+
                             handleClosedPlayer();
                             break;
                         } else {
@@ -202,40 +202,45 @@ public class Server extends Thread {
         private void handleClosedPlayer() {
             if (user.player != null) {
                 if (user.player.getCurrentGame() != null) {
-                    Game currentGame = user.player.getCurrentGame();
-                    currentGame.setGameStatus(Game.Status.terminated);
-                    User secondUser = new User();
-                    if (user.player.getId() == currentGame.getPlayerX().getId()) {
-                        secondUser = onlinePlayers.get(currentGame.getPlayerO().getId());
-                    } else {
-                        secondUser = onlinePlayers.get(currentGame.getPlayerX().getId());
-                    }
-
-                    try {
-                        if (currentGame.getGameId() > 0) {
-                            databaseManager.updateGame(currentGame);
-                        } else {
-                            databaseManager.insertGame(currentGame);
-                        }
-                    } catch (ClassNotFoundException ex) {
-                        app.guiLog("Connection error with the databse.");
-                    }
-                    JsonObject alertTerminatedGame = new JsonObject();
-                    alertTerminatedGame.addProperty("type", "terminated-game");
-                    JsonObject data = new JsonObject();
-                    alertTerminatedGame.add("data", data);
-                    currentGame.getPlayerX().setCurrentGame(null);
-                    currentGame.getPlayerO().setCurrentGame(null);
-                    try {
-                        secondUser.dataOutputStream.writeUTF(alertTerminatedGame.toString());
-
-                    } catch (Exception e) {
-                        app.guiLog("Issue fitched writing to the output stream");
-                    }
+                    handleTerminatedGame(user);
                 }
                 removeFromOnlinePlayers(user.player.getId()); // call here 
             }
             setPlayerList();
+        }
+
+    }
+
+    public void handleTerminatedGame(User user) {
+        Game currentGame = user.player.getCurrentGame();
+        currentGame.setGameStatus(Game.Status.terminated);
+        User secondUser = new User();
+        if (user.player.getId() == currentGame.getPlayerX().getId()) {
+            secondUser = onlinePlayers.get(currentGame.getPlayerO().getId());
+        } else {
+            secondUser = onlinePlayers.get(currentGame.getPlayerX().getId());
+        }
+
+        try {
+            if (currentGame.getGameId() > 0) {
+                databaseManager.updateGame(currentGame);
+            } else {
+                databaseManager.insertGame(currentGame);
+            }
+        } catch (ClassNotFoundException ex) {
+            app.guiLog("Connection error with the databse.");
+        }
+        JsonObject alertTerminatedGame = new JsonObject();
+        alertTerminatedGame.addProperty("type", "terminated-game");
+        JsonObject data = new JsonObject();
+        alertTerminatedGame.add("data", data);
+        currentGame.getPlayerX().setCurrentGame(null);
+        currentGame.getPlayerO().setCurrentGame(null);
+        try {
+            secondUser.dataOutputStream.writeUTF(alertTerminatedGame.toString());
+
+        } catch (Exception e) {
+            app.guiLog("Issue fitched writing to the output stream");
         }
     }
 
@@ -277,8 +282,8 @@ public class Server extends Thread {
             }
         });
     }
-    
-    public void setChatPlayerStatus(String status, String playerName){
+
+    public void setChatPlayerStatus(String status, String playerName) {
         //    [player is now online.]     
         //    [player is now offline.]
         JsonObject request = new JsonObject();
@@ -286,17 +291,15 @@ public class Server extends Thread {
         request.add("data", data);
         request.addProperty("type", "global_chat_message");
         data.addProperty("sender", "");
-        
+
         if (status.equals("offline")) {
-            data.addProperty("message", "[" + playerName +" is now offline.]");
+            data.addProperty("message", "[" + playerName + " is now offline.]");
+        } else if (status.equals("online")) {
+            data.addProperty("message", "[" + playerName + " is now online.]");
         }
-        else if (status.equals("online")) {
-            data.addProperty("message", "[" + playerName +" is now online.]");
-        }
-        
+
         sendToAllOnlinePlayers(request);
     }
-
 
     public void removeFromOnlinePlayers(int id) {
         User user = onlinePlayers.remove(id);
@@ -310,7 +313,8 @@ public class Server extends Thread {
     }
 
     public void sendUpdatedPlayerList() {
-        setPlayerList();        /*update server gui player list*/
+        setPlayerList();
+        /*update server gui player list*/
         JsonObject data = new JsonObject();
         JsonObject response = new JsonObject();
         response.addProperty("type", "update-player-list");
