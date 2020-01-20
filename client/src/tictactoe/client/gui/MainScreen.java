@@ -13,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -147,11 +148,16 @@ public class MainScreen extends Pane {
         send.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                sendGlobalMsg(chatMessageArea.getText());
-                chatMessageArea.clear();
+                sendEvent();
             }
         });
-
+        setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                sendEvent();
+            }
+        }
+        );
         getChildren().addAll(buttonBox, chatMessageArea, chatTextArea, send, v, hBox, welcome, points, playerName2, points2);
         setId("MainScreenPane");
     }
@@ -177,10 +183,9 @@ public class MainScreen extends Pane {
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
             ToggleButton invite2 = new ToggleButton("Challenge");
-            if(type.equals("online")){
-            invite2.setId("challengeScrolPaneMainScreen");
-            }
-            else if (type.equals("offline")){
+            if (type.equals("online")) {
+                invite2.setId("challengeScrolPaneMainScreen");
+            } else if (type.equals("offline")) {
                 invite2.setId("offlineChallengeScrolPaneMainScreen");
             }
             invite2.setOnAction(new EventHandler<ActionEvent>() {
@@ -202,6 +207,11 @@ public class MainScreen extends Pane {
             gridPane.add(playerName, 1, playersListCounter);
             playersListCounter++;
         }
+    }
+
+    public void sendEvent() {
+        sendGlobalMsg(chatMessageArea.getText());
+        chatMessageArea.clear();
     }
 
     public void sendGlobalMsg(String msg) {

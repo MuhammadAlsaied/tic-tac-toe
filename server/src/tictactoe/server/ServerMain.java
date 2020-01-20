@@ -2,6 +2,9 @@ package tictactoe.server;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -117,7 +120,7 @@ public class ServerMain extends Application {
     public void setPlayersListCounter(int playersListCounter) {
         this.playersListCounter = playersListCounter;
     }
-    
+
     public void guiLog(String text){
         textArea.appendText(text + '\n');
     }
