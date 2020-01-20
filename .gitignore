@@ -4,6 +4,7 @@ server/nbproject/private/
 server/build/
 server/nbbuild/
 server/dist/
+server/store/
 server/nbdist/
 server/nbactions.xml
 server/nb-configuration.xml
@@ -13,6 +14,7 @@ client/nbproject/private/
 client/build/
 client/nbbuild/
 client/dist/
+client/store/
 client/nbdist/
 client/nbactions.xml
 client/nb-configuration.xml
