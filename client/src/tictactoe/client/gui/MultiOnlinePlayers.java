@@ -147,17 +147,14 @@ public class MultiOnlinePlayers extends Pane {
         exit.setOnAction((t) -> {
             app.exit();
         });
-        Button back = new Button("Back");
-        back.setPrefSize(110, 10);
-        back.setId("BackToMain");
-        back.setOnAction((event) -> {
-            app.setScreen("main");
-            App.inMultiplayerGame = false;
-            App.opposingPlayerId = -1;
-            App.opposingPlayerName = "";
+        Button pause = new Button("PAUSE");
+        pause.setPrefSize(110, 10);
+        pause.setId("BackToMain");
+        pause.setOnAction((event) -> {
+            
         });
 
-        HBox hBox = new HBox(100, back, exit);
+        HBox hBox = new HBox(100, pause, exit);
 
         VBox v = new VBox(40, hBox);
         v.setId("vbox");

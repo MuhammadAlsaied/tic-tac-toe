@@ -83,7 +83,7 @@ public class App extends Application {
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("invitation", new InvitationScreen(this));
-        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));       
+        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));
         screens.put("levels", new LevelsScreen(this));
         screens.put("youWin", new YouWinScreen(this));
         screens.put("playWithComputerEasyGameBoard", new PlayWithComputerEasyGameBoardScreen(this));
@@ -149,7 +149,6 @@ public class App extends Application {
         pStage = primaryStage;
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TIC TAC TOE!");
-
 
         mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
@@ -217,8 +216,8 @@ public class App extends Application {
             });
         });
     }
-    
-    public void addPointsLocalGame(int points){
+
+    public void addPointsLocalGame(int points) {
         JsonObject request = new JsonObject();
         JsonObject data = new JsonObject();
         request.add("data", data);
