@@ -166,8 +166,7 @@ public class Server extends Thread {
                     String line = dataInputStream.readUTF();
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
-                        System.out.println(line);
-                        app.guiLog(line);
+                        app.guiLog("Incoming JSON:\t" + line);
                         if (request.get("type").getAsString().equals("signout")) {
 
                             System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
@@ -281,6 +280,7 @@ public class Server extends Thread {
     }
 
     public void sendUpdatedPlayerList() {
+        setPlayerList();        /*update server gui player list*/
         JsonObject data = new JsonObject();
         JsonObject response = new JsonObject();
         response.addProperty("type", "update-player-list");
