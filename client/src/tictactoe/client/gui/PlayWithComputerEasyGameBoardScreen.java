@@ -36,6 +36,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
     String line;
     Vector<Label> l = new Vector<>();
     boolean[] textLabelflag;
+    private boolean isEnded = false;
 
     public PlayWithComputerEasyGameBoardScreen(App app) {
         this.app = app;
@@ -60,6 +61,9 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                 l.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
+                        if (isEnded) {
+                            return;
+                        }
                         if (turn && textLabelflag[x]) {
                             l.get(x).setText("X");
                             l.get(x).setId("X");
@@ -120,12 +124,15 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                 }
 
             }
-            
+
         });
         send.setLayoutX(1140);
         send.setLayoutY(600);
         getChildren().addAll(stack, hbox, text, ta, send);
         stack.setId("stacklolo");
+        if (!turn) {
+            cpu();
+        }
     }
 
     void cpu() {
@@ -154,6 +161,10 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
         textLabelflag = new boolean[]{true, true, true, true, true, true, true, true, true};
         counter = 0;
         fullBoardFlag = true;
+        isEnded = false;
+        if (!turn) {
+            cpu();
+        }
 
     }
 
@@ -192,6 +203,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                 case "XXX": {
                     fullBoardFlag = false;
                     turn = true;
+                    isEnded = true;
                     for (int i = 0; i < 9; i++) {
                         if (textLabelflag[i]) {
                             textLabelflag[i] = false;
@@ -205,11 +217,12 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                         resetGame();
                     });
                     pause.play();
-                    break;
+                    return;
                 }
                 case "OOO": {
                     fullBoardFlag = false;
                     turn = true;
+                    isEnded = true;
                     for (int i = 0; i < 9; i++) {
                         if (textLabelflag[i]) {
                             textLabelflag[i] = false;
@@ -222,7 +235,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                         resetGame();
                     });
                     pause.play();
-                    break;
+                    return;
                 }
             }
         }

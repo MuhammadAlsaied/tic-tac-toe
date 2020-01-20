@@ -36,7 +36,8 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
     String line;
     Vector<Label> l = new Vector<>();
     boolean[] textLabelflag;
-
+    private boolean isEnded = false;
+    
     public PlayWithComputerNormalGameBoardScreen(App app) {
         this.app = app;
         setId("stackGameboard");
@@ -60,6 +61,9 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                 l.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
+                        if (isEnded) {
+                            return;
+                        }
                         if (turn && textLabelflag[x]) {
                             l.get(x).setText("X");
                             l.get(x).setId("X");
@@ -126,6 +130,9 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         send.setLayoutY(600);
         getChildren().addAll(stack, hbox, text, ta, send);
         stack.setId("stacklolo");
+        if (!turn) {
+            cpu();
+        }
     }
 
     void cpu() {
@@ -240,10 +247,10 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         textLabelflag = new boolean[]{true, true, true, true, true, true, true, true, true};
         counter = 0;
         fullBoardFlag = true;
-        if (turn) {
+        isEnded = false;
+        if (!turn) {
             cpu();
         }
-
     }
 
     private void checkWinner() {
@@ -281,6 +288,7 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                 case "XXX": {
                     fullBoardFlag = false;
                     turn = true;
+                    isEnded = true;
                     for (int i = 0; i < 9; i++) {
                         if (textLabelflag[i]) {
                             textLabelflag[i] = false;
@@ -294,11 +302,12 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                         resetGame();
                     });
                     pause.play();
-                    break;
+                    return;
                 }
                 case "OOO": {
                     fullBoardFlag = false;
                     turn = true;
+                    isEnded = true;
                     for (int i = 0; i < 9; i++) {
                         if (textLabelflag[i]) {
                             textLabelflag[i] = false;
@@ -311,11 +320,12 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                         resetGame();
                     });
                     pause.play();
-                    break;
+                    return;
                 }
             }
         }
         if (counter == 9 && fullBoardFlag) {
+            
             PauseTransition pause = new PauseTransition(Duration.seconds(2));
             pause.setOnFinished((ActionEvent event) -> {
                 app.setScreen("nooneIsTheWinner");

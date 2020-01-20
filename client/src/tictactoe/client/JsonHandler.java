@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import tictactoe.client.gui.InvitationScreen;
 import tictactoe.client.gui.MainScreen;
 import tictactoe.client.gui.MultiOnlinePlayers;
+import tictactoe.client.gui.PlayerListScreen;
 import tictactoe.client.gui.SigninScreen;
 import tictactoe.client.gui.SignupScreen;
 
@@ -24,6 +25,7 @@ public class JsonHandler {
     InvitationScreen invitationScreen;
     MultiOnlinePlayers multiOnlinePlayers;
     MainScreen mainScreen;
+    PlayerListScreen playerList;
 
     JsonHandler(App a) {
         app = a;
@@ -32,13 +34,13 @@ public class JsonHandler {
         invitationScreen = (InvitationScreen) app.getScreen("invitation");
         multiOnlinePlayers = (MultiOnlinePlayers) app.getScreen("multiOnlinePlayers");
         mainScreen = (MainScreen) app.getScreen("main");
+        playerList = (PlayerListScreen) app.getScreen("playerList");
     }
 
     public void handle(JsonObject request) {
         System.out.println(request);
         String requestType = request.get("type").getAsString();
         JsonObject requestData = request.getAsJsonObject("data");
-        JsonObject myData = requestData.getAsJsonObject("my-data");
         switch (requestType) {
             case "signup-error":
                 signupScreen.showSignupFailedPopup();
@@ -48,7 +50,7 @@ public class JsonHandler {
                 app.setScreen("signin");
                 break;
             case "signin-success":
-
+                JsonObject myData = requestData.getAsJsonObject("my-data");
                 app.setCurrentPlayer(new Player(
                         myData.get("id").getAsInt(),
                         myData.get("firstName").getAsString(),
@@ -82,6 +84,16 @@ public class JsonHandler {
             case "game-move":
                 multiOnlinePlayers.setOpponentMoveFromServer(requestData.get("position").getAsString());
                 break;
+            case "game-message":
+                multiOnlinePlayers.setNewMsg(requestData.get("msg").getAsString());
+                break;
+            case "terminated-game":
+                app.showAlert(App.opposingPlayerName + " left the game", "Switching to main screen.");
+                app.setScreen("main");
+                App.inMultiplayerGame = false;
+                App.opposingPlayerId = -1;
+                App.opposingPlayerName = "";
+                break;
         }
     }
 
@@ -95,6 +107,8 @@ public class JsonHandler {
                 mainScreen.setPlayersListCounter(0);
                 mainScreen.addPlayersToList(onlinePlayerList, Color.GREEN);
                 mainScreen.addPlayersToList(offlinePlayerList, Color.RED);
+                playerList.addPlayersToList(onlinePlayerList, Color.GREEN);
+                playerList.addPlayersToList(offlinePlayerList, Color.RED);
             }
         });
     }

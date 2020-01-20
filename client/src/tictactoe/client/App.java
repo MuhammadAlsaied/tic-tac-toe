@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -135,6 +136,7 @@ public class App extends Application {
         jsonObject.addProperty("type", "signout");
         try {
             dataOutputStream.writeUTF(jsonObject.toString());
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -146,21 +148,31 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
         pStage = primaryStage;
-        makePaneDraggable(primaryStage);
+        primaryStage.setFullScreen(true);
         primaryStage.setTitle("TIC TAC TOE!");
         mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setFullScreen(true);
-//        if(!primaryStage.isFullScreen()){
-//            primaryStage.initStyle(StageStyle.DECORATED);
-//        }
         primaryStage.show();
-
+        mainScene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                makePaneDraggable(primaryStage);
+            }
+        });
         pStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent e) {
+                if (inMultiplayerGame) {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("type", "terminated-game");
+                    try {
+                        dataOutputStream.writeUTF(jsonObject.toString());
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 exit();
             }
         });

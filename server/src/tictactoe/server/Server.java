@@ -16,7 +16,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+import javafx.application.Platform;
 import tictactoe.server.db.DatabaseManager;
+import tictactoe.server.models.Game;
 
 /**
  *
@@ -47,8 +49,10 @@ public class Server extends Thread {
     JsonHandler jsonHandler = null;
 
     private DatabaseManager databaseManager;
+    private App app;
 
-    public Server() {
+    public Server(App app) {
+        this.app = app;
         try {
             this.databaseManager = new DatabaseManager();
             this.jsonHandler = new JsonHandler(this);
@@ -60,9 +64,8 @@ public class Server extends Thread {
                 Player player = iterator.next();
                 offlinePlayers.put(player.getId(), new User(player));
             }
-
             serverSocket = new ServerSocket(Config.PORT);
-
+            setPlayerList();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -167,12 +170,8 @@ public class Server extends Thread {
                         System.out.println(line);
                         if (request.get("type").getAsString().equals("signout")) {
 
-                            System.out.println("user" + user.toString() + " player:" + user.player + " logging off");
-
-                            if (user.player != null) {
-                                System.out.println("'" + user.player.getFirstName() + "' logging off");
-                                removeFromOnlinePlayers(user.player.getId());
-                            }
+                            System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
+                            handleClosedPlayer();
                             break;
                         } else {
                             jsonHandler.handle(request, user);
@@ -181,10 +180,7 @@ public class Server extends Thread {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
-                if (user.player != null) {
-                    System.out.println(user.player.getFirstName() + " forcing logging off");
-                    removeFromOnlinePlayers(user.player.getId());
-                }
+                handleClosedPlayer();
             }
         }
 
@@ -198,6 +194,41 @@ public class Server extends Thread {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+
+        private void handleClosedPlayer() {
+            if (user.player != null) {
+                if (user.player.getCurrentGame() != null) {
+                    Game currentGame = user.player.getCurrentGame();
+                    currentGame.setGameStatus(Game.Status.terminated);
+                    User secondUser = new User();
+                    if (user.player.getId() == currentGame.getPlayerX().getId()) {
+                        secondUser = onlinePlayers.get(currentGame.getPlayerO().getId());
+                    } else {
+                        secondUser = onlinePlayers.get(currentGame.getPlayerX().getId());
+                    }
+
+                    try {
+                        databaseManager.insertGame(currentGame);
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                    JsonObject alertTerminatedGame = new JsonObject();
+                    alertTerminatedGame.addProperty("type", "terminated-game");
+                    JsonObject data = new JsonObject();
+                    alertTerminatedGame.add("data", data);
+                    currentGame.getPlayerX().setCurrentGame(null);
+                    currentGame.getPlayerO().setCurrentGame(null);
+                    try {
+                        secondUser.dataOutputStream.writeUTF(alertTerminatedGame.toString());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                removeFromOnlinePlayers(user.player.getId()); // call here 
+            }
+            setPlayerList();
         }
     }
 
@@ -279,4 +310,13 @@ public class Server extends Thread {
             ex.printStackTrace();
         }
     }
+
+    public void setPlayerList() {
+        Platform.runLater(() -> {
+            app.clearPlayersListPane();
+            app.addPlayersToOnlineList(getSortedOnlinePlayersAsJson());
+            app.addPlayersToOfflineList(getSortedOfflinePlayersAsJson());
+        });
+    }
+
 }

@@ -115,7 +115,7 @@ public class SigninScreen extends StackPane {
 
         e.setColor(javafx.scene.paint.Color.BLACK);
 
-        VBox vbox = new VBox(20, header, email, password, signin, error, newUser);
+        VBox vbox = new VBox(20, header, email, password, signin, newUser, error);
         vbox.setId("vbox");
         Region rec = new Region();
 
@@ -130,12 +130,9 @@ public class SigninScreen extends StackPane {
     }
 
     public void showSigninButton() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                signin.setText("SIGN IN");
-                signin.setDisable(false);
-            }
+        Platform.runLater(() -> {
+            signin.setText("SIGN IN");
+            signin.setDisable(false);
         });
     }
     private void error() {
