@@ -110,6 +110,7 @@ public class MainScreen extends Pane {
         v.setLayoutY(0);
         chatTextArea = new TextArea("");
         chatTextArea.setId("ta");
+        chatTextArea.setEditable(false);
         chatTextArea.setLayoutX(800);
         chatTextArea.setLayoutY(420);
         chatTextArea.setMaxWidth(220.0);

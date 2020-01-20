@@ -117,7 +117,7 @@ public class ServerMain extends Application {
     }
     
     public void guiLog(String text){
-        textArea.appendText(text + "\n");
+        textArea.appendText(text + '\n');
     }
 
     public static void main(String[] args) {

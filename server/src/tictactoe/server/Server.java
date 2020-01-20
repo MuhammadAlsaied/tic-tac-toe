@@ -67,7 +67,7 @@ public class Server extends Thread {
             serverSocket = new ServerSocket(Config.PORT);
             setPlayerList();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            app.guiLog("issue has been fitched with the server connection.");
         }
     }
 
@@ -80,7 +80,7 @@ public class Server extends Thread {
                 clientThread.start();
                 clientThreads.add(clientThread);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                app.guiLog("issue has been fitched with server socket.");
             }
         }
     }
@@ -100,8 +100,9 @@ public class Server extends Thread {
             this.player = player;
             try {
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                app.guiLog("A new player has logged on.");
             } catch (IOException ex) {
-                ex.printStackTrace();
+                app.guiLog("issue has been fitched with establishing the data output stream.");
             }
         }
 
@@ -111,9 +112,10 @@ public class Server extends Thread {
         public User(Socket socket) {
             this.socket = socket;
             try {
+                app.guiLog("A new connection has been established.");
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
             } catch (IOException ex) {
-                ex.printStackTrace();
+                app.guiLog("issue has been fetched with establishing the data output stream.");
             }
         }
 
@@ -151,7 +153,7 @@ public class Server extends Thread {
             try {
                 dataInputStream = new DataInputStream(socket.getInputStream());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                app.guiLog("issue has been fitched with establishing the data input stream.");
             }
         }
 
@@ -166,11 +168,11 @@ public class Server extends Thread {
                     String line = dataInputStream.readUTF();
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
-                        System.out.println(line);
                         app.guiLog(line);
                         if (request.get("type").getAsString().equals("signout")) {
 
-                            System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
+                            app.guiLog("user" + user.toString() + " player:" + user.player + " logging off");
+                            
                             handleClosedPlayer();
                             break;
                         } else {
@@ -179,20 +181,21 @@ public class Server extends Thread {
                     }
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                app.guiLog("NO DATA.");
                 handleClosedPlayer();
             }
         }
 
         public void closeClient() {
             try {
+                app.guiLog("one of the users has logged off");
                 dataInputStream.close();
                 user.dataOutputStream.close();
                 socket.close();
                 stop();
 
             } catch (IOException ex) {
-                ex.printStackTrace();
+                app.guiLog("issue has been fetched with closing the data output/input stream.");
             }
         }
 
@@ -215,7 +218,7 @@ public class Server extends Thread {
                             databaseManager.insertGame(currentGame);
                         }
                     } catch (ClassNotFoundException ex) {
-                        ex.printStackTrace();
+                        app.guiLog("Connection error with the databse.");
                     }
                     JsonObject alertTerminatedGame = new JsonObject();
                     alertTerminatedGame.addProperty("type", "terminated-game");
@@ -227,7 +230,7 @@ public class Server extends Thread {
                         secondUser.dataOutputStream.writeUTF(alertTerminatedGame.toString());
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        app.guiLog("Issue fitched writing to the output stream");
                     }
                 }
                 removeFromOnlinePlayers(user.player.getId()); // call here 
@@ -260,19 +263,40 @@ public class Server extends Thread {
         sortedOnlinePlayersbyPoints.add(newUser.player);
         newUser.player.setOnline(true);
         sendUpdatedPlayerList();
-        System.out.println("after adding to online players");
+        app.guiLog("New player has been added to the online players list");
+        setChatPlayerStatus("online", user.getPlayer().getFirstName());
     }
 
     public void sendToAllOnlinePlayers(JsonObject req) {
         onlinePlayers.forEach((key, value) -> {
             try {
-                System.out.println("k:" + key + " v:" + value);
+                app.guiLog("k:" + key + " v:" + value);
                 value.dataOutputStream.writeUTF(req.toString());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                app.guiLog("Issue fitched with writing into the output stream");
             }
         });
     }
+    
+    public void setChatPlayerStatus(String status, String playerName){
+        //    [player is now online.]     
+        //    [player is now offline.]
+        JsonObject request = new JsonObject();
+        JsonObject data = new JsonObject();
+        request.add("data", data);
+        request.addProperty("type", "global_chat_message");
+        data.addProperty("sender", "");
+        
+        if (status.equals("offline")) {
+            data.addProperty("message", "[" + playerName +" is now offline.]");
+        }
+        else if (status.equals("online")) {
+            data.addProperty("message", "[" + playerName +" is now online.]");
+        }
+        
+        sendToAllOnlinePlayers(request);
+    }
+
 
     public void removeFromOnlinePlayers(int id) {
         User user = onlinePlayers.remove(id);
@@ -282,6 +306,7 @@ public class Server extends Thread {
         sortedOfflinePlayersbyPoints.add(user.player);
         user.player.setOnline(false);
         sendUpdatedPlayerList();
+        setChatPlayerStatus("offline", user.getPlayer().getFirstName());
     }
 
     public void sendUpdatedPlayerList() {
@@ -311,7 +336,7 @@ public class Server extends Thread {
         try {
             serverSocket.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            app.guiLog("Issue has been fetched closing the server socket.");
         }
     }
 
