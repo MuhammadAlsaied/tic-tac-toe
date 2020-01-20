@@ -60,7 +60,7 @@ public class ServerMain extends Application {
         hbox.setLayoutX(275);
         hbox.setLayoutY(150);
 
-        textArea = new TextArea("");
+        textArea = new TextArea("Kareem");
         textArea.setId("textArea");
         textArea.setLayoutX(50);
         textArea.setLayoutY(300);
@@ -68,6 +68,7 @@ public class ServerMain extends Application {
         textArea.setMaxHeight(300.0);
         textArea.setEditable(false);
         textArea.setId("text-area");
+        textArea.setWrapText(true);
         gridPane = new GridPane();
         gridPane.setHgap(50);
 

@@ -78,7 +78,7 @@ public class NooneIsTheWinnerScreen extends StackPane {
             App.opposingPlayerName = "";
         });
 
-        HBox hBox = new HBox(200, back, exit);
+        HBox hBox = new HBox(100, back, exit);
         
         
 /////////////////////////////////////////////////////

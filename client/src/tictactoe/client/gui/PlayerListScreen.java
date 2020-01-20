@@ -32,7 +32,7 @@ public class PlayerListScreen extends Pane {
     public PlayerListScreen(App app) {
         this.app = app;
         gridPane = new GridPane();
-        gridPane.setHgap(50);
+        gridPane.setHgap(30);
         Region rectBack = new Region();
         rectBack.setPrefSize(498, 460);
         rectBack.setId("rectBack");
@@ -70,15 +70,14 @@ public class PlayerListScreen extends Pane {
 
         HBox hBox = new HBox(150, back, exit);
 
-        VBox v = new VBox(100,hBox);
+        VBox v = new VBox(hBox);
         v.setId("vbox");
         v.setLayoutX(460);
-        v.setLayoutY(500);
+        v.setLayoutY(530);
         
         
         ////////////////////////////////////////////////////
-        getChildren().add(scrollPane);
-        getChildren().addAll(rectBack, v);
+        getChildren().addAll(rectBack, v,scrollPane);
 
     }
 
