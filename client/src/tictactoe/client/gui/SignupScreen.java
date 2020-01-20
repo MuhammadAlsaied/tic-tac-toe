@@ -12,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -72,6 +74,24 @@ public class SignupScreen extends StackPane {
                 signupEvent();
             }
         });
+
+        setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    signupEvent();
+                }
+            }
+        });
+
+        setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.TAB) {
+                    
+                }
+            }
+        });
 //        ============Email And Repassowrd Event Handeler==================
         email.setOnKeyReleased(ke -> {
             if (!email.getText().matches(regex)) {
@@ -128,65 +148,65 @@ public class SignupScreen extends StackPane {
     }
 //        =====================Signup methods==============================
 
-    public void signupEvent(){
-        
-                if (nickName.getText().isEmpty()) {
-                    nickName.setPromptText("You Cannot Leave Name Empty");
-                    nickName.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
-                    nickName.setPrefSize(324, 45);
-                }
-                if (name.getText().isEmpty()) {
-                    name.setPromptText("You Cannot Leave Name Empty");
-                    name.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
-                    name.setPrefSize(324, 45);
-                }
-                if (email.getText().isEmpty()) {
-                    email.setPromptText("You Cannot Leave E-Mail Empty");
-                    email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
-                    email.setPrefSize(324, 45);
-                }
-                if (!email.getText().matches(regex) && !email.getText().isEmpty()) {
-                    error("Email Must be something@somthing.somthing", email);
-                }
-                if (password.getText().isEmpty()) {
-                    password.setPromptText("You Cannot Leave Password Empty");
-                    password.setStyle("-fx-font-size: 16px;");
-                    password.setPrefSize(324, 45);
-                    showSignupButton();
-                }
-                if (!password.getText().equals(repassword.getText())) {
-                    error("The Two Feilds are not Matching", repassword);
-                } else if (password.getText().equals(repassword.getText())) {
-                    errorRelese(repassword);
-                }
-                if (repassword.getText().isEmpty()) {
-                    repassword.setPromptText("You Must Retype Your Password");
-                    repassword.setStyle("-fx-font-size: 16px;");
-                    repassword.setPrefSize(324, 45);
-                }
-                if (password.getText().equals(repassword.getText()) && !nickName.getText().isEmpty()
-                        && !name.getText().isEmpty() && !email.getText().isEmpty() && !password.getText().isEmpty()
-                        && !repassword.getText().isEmpty() && email.getText().matches(regex)) {
-                    signup.setText("Loading...");
-                    signup.setDisable(true);
-                    JsonObject jsonObject = new JsonObject();
-                    JsonObject data = new JsonObject();
-                    data.addProperty("firstName", name.getText());
-                    data.addProperty("lastName", nickName.getText());
-                    data.addProperty("email", email.getText());
-                    data.addProperty("password", password.getText());
-                    jsonObject.addProperty("type", "signup");
-                    jsonObject.add("data", data);
-                    try {
-                        System.out.println(jsonObject);
+    public void signupEvent() {
 
-                        app.getDataOutputStream().writeUTF(jsonObject.toString());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
+        if (nickName.getText().isEmpty()) {
+            nickName.setPromptText("You Cannot Leave Name Empty");
+            nickName.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+            nickName.setPrefSize(324, 45);
+        }
+        if (name.getText().isEmpty()) {
+            name.setPromptText("You Cannot Leave Name Empty");
+            name.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+            name.setPrefSize(324, 45);
+        }
+        if (email.getText().isEmpty()) {
+            email.setPromptText("You Cannot Leave E-Mail Empty");
+            email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+            email.setPrefSize(324, 45);
+        }
+        if (!email.getText().matches(regex) && !email.getText().isEmpty()) {
+            error("Email Must be something@somthing.somthing", email);
+        }
+        if (password.getText().isEmpty()) {
+            password.setPromptText("You Cannot Leave Password Empty");
+            password.setStyle("-fx-font-size: 16px;");
+            password.setPrefSize(324, 45);
+            showSignupButton();
+        }
+        if (!password.getText().equals(repassword.getText())) {
+            error("The Two Feilds are not Matching", repassword);
+        } else if (password.getText().equals(repassword.getText())) {
+            errorRelese(repassword);
+        }
+        if (repassword.getText().isEmpty()) {
+            repassword.setPromptText("You Must Retype Your Password");
+            repassword.setStyle("-fx-font-size: 16px;");
+            repassword.setPrefSize(324, 45);
+        }
+        if (password.getText().equals(repassword.getText()) && !nickName.getText().isEmpty()
+                && !name.getText().isEmpty() && !email.getText().isEmpty() && !password.getText().isEmpty()
+                && !repassword.getText().isEmpty() && email.getText().matches(regex)) {
+            signup.setText("Loading...");
+            signup.setDisable(true);
+            JsonObject jsonObject = new JsonObject();
+            JsonObject data = new JsonObject();
+            data.addProperty("firstName", name.getText());
+            data.addProperty("lastName", nickName.getText());
+            data.addProperty("email", email.getText());
+            data.addProperty("password", password.getText());
+            jsonObject.addProperty("type", "signup");
+            jsonObject.add("data", data);
+            try {
+                System.out.println(jsonObject);
+
+                app.getDataOutputStream().writeUTF(jsonObject.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
-    
+
     public void showSignupFailedPopup() {
         app.showAlert("Signup failed", "This email is already registered, please enter another email.");
         Platform.runLater(new Runnable() {

@@ -12,6 +12,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -119,25 +121,18 @@ public class MultiOnlinePlayers extends Pane {
 
             @Override
             public void handle(ActionEvent event) {
-                if (chatMessageArea.getText().isEmpty()) {
-                    return;
-                }
-                JsonObject response = new JsonObject();
-                JsonObject data = new JsonObject();
-                response.add("data", data);
-                response.addProperty("type", "game-message");
-                data.addProperty("msg", chatMessageArea.getText());
-                chatTextArea.setText(chatTextArea.getText()
-                        + app.getCurrentPlayer().getFirstName() + ": " + chatMessageArea.getText() + "\n");
-                chatMessageArea.setText("");
-                try {
-                    app.getDataOutputStream().writeUTF(response.toString());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
+                sendEvent();
             }
 
+        });
+
+        setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    sendEvent();
+                }
+            }
         });
         send.setLayoutX(1140);
         send.setLayoutY(680);
@@ -439,5 +434,24 @@ public class MultiOnlinePlayers extends Pane {
                 break;
         }
         return index;
+    }
+
+    private void sendEvent() {
+
+        if (chatMessageArea.getText().isEmpty()) {
+            return;
+        }
+        JsonObject response = new JsonObject();
+        JsonObject data = new JsonObject();
+        response.add("data", data);
+        response.addProperty("type", "game-message");
+        data.addProperty("msg", chatMessageArea.getText());
+        chatTextArea.setText(chatTextArea.getText() + "\n" + app.getCurrentPlayer().getFirstName() + ": " + chatMessageArea.getText());
+        chatMessageArea.setText("");
+        try {
+            app.getDataOutputStream().writeUTF(response.toString());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
