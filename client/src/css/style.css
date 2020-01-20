@@ -66,7 +66,9 @@
 {
     -fx-background-color: linear-gradient(to left, rgba(255, 255, 255, 0.8) -20.08%, #FFD369 22.14%, #FFD369 79.16%, rgba(255, 255, 255, 0.58) 117.68%);
     
-    -fx-opacity: 0.76;
+    
+    
+   -fx-opacity: 0.76;
     -fx-border-radius: 22px;
     -fx-alignment: BASELINE_CENTER;
     -fx-background-radius: 22px;
@@ -948,4 +950,13 @@ TextField
     -fx-border-size: 10px;
     -fx-border-color: #000000;
     -fx-text-fill:#000000;
+}
+#welcome{
+    -fx-text-fill:#ffffff;    
+        -fx-font-family: "Walter Turncoat";
+    -fx-font-style: normal;
+    -fx-font-weight: normal;
+    -fx-font-size: 27px;
+    -fx-line-height: 38px;
+  
 }

@@ -57,6 +57,7 @@ public class JsonHandler {
                         myData.get("email").getAsString(),
                         myData.get("points").getAsInt()
                 ));
+                mainScreen.setWelcomePlayer(app.getCurrentPlayer().getFirstName(), app.getCurrentPlayer().getPoints());
                 app.setScreen("main");
                 break;
             case "signin-error":
