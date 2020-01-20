@@ -99,6 +99,7 @@ public class MainScreen extends Pane {
         chatTextArea.setLayoutY(420);
         chatTextArea.setMaxWidth(220.0);
         chatTextArea.setMaxHeight(250.0);
+        chatTextArea.setWrapText(true);
 
         chatMessageArea = new TextArea("");
 
@@ -107,6 +108,7 @@ public class MainScreen extends Pane {
         chatMessageArea.setLayoutY(700);
         chatMessageArea.setMaxWidth(220.0);
         chatMessageArea.setMaxHeight(10.5);
+        chatMessageArea.setWrapText(true);
 
         Button send = new Button();
         send.setText("send");
