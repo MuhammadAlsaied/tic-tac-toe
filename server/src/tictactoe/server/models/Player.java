@@ -115,7 +115,7 @@ public class Player {
         JsonObject obj = new JsonObject();
         obj.addProperty("id", id);
         obj.addProperty("firstName", firstName);
-        obj.addProperty("lastName", firstName);
+        obj.addProperty("lastName", lastName);
         obj.addProperty("email", email);        
         obj.addProperty("points", points);
 

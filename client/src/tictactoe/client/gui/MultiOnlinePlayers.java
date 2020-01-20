@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import tictactoe.client.App;
 
@@ -93,6 +94,7 @@ public class MultiOnlinePlayers extends Pane {
 
         chatTextArea = new TextArea(" ");
         chatTextArea.setId("ta");
+        chatTextArea.setEditable(false);
         chatTextArea.setLayoutX(890);
         chatTextArea.setLayoutY(400);
         chatTextArea.setMaxWidth(220.0);
@@ -136,7 +138,33 @@ public class MultiOnlinePlayers extends Pane {
         });
         send.setLayoutX(1140);
         send.setLayoutY(600);
-        getChildren().addAll(stack, hbox, chatMessageArea, chatTextArea, send);
+        ///////////////////////////////////////////////////////////
+            Button exit = new Button("EXIT");
+        exit.setId("ExitFromGame");
+        exit.setLayoutX(280);
+        exit.setLayoutY(650);
+        exit.setPrefSize(110, 10);
+        exit.setOnAction((t) -> {
+            app.exit();
+        });
+        Button back = new Button("Back");
+        back.setPrefSize(110, 10);
+        back.setId("BackToMain");
+        back.setOnAction((event) -> {
+            app.setScreen("main");
+            App.inMultiplayerGame = false;
+            App.opposingPlayerId = -1;
+            App.opposingPlayerName = "";
+        });
+
+        HBox hBox = new HBox(100, back, exit);
+
+        VBox v = new VBox(40, hBox);
+        v.setId("vbox");
+        v.setLayoutX(1000);
+        v.setLayoutY(150);
+        ///////////////////////////////////////////////////////////
+        getChildren().addAll(stack, hbox,v, chatMessageArea, chatTextArea, send);
         stack.setId("stacklolo");
     }
 
@@ -319,6 +347,7 @@ public class MultiOnlinePlayers extends Pane {
         System.out.println("Accept this letter: " + thisPlayerLetter);
         System.out.println("turn: " + turn + "thisPlayerLetter: " + thisPlayerLetter + "opponentPlayerLetter: " + opponenetPlayerLetter);
     }
+
 
     public void setNewMsg(String msg) {
         chatTextArea.appendText(challengerName + ": " + msg + "\n");

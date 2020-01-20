@@ -217,26 +217,12 @@ public class DatabaseManager {
     public Player updatePlayerScore(Player player) throws ClassNotFoundException {
         PreparedStatement pst;
         int playerPoints = player.getPoints();
-        
         try {
             establishConnection();
-//            statment = connection.createStatement();
-//            resultSet = statment.executeQuery("SELECT * FROM player WHERE id=" + id + ";");
-//            if (resultSet.next()) {
-//                updatedPlayer.setId(resultSet.getInt("id"));
-//                updatedPlayer.setFirstName(resultSet.getString("first_name"));
-//                updatedPlayer.setLastName(resultSet.getString("last_name"));
-//                updatedPlayer.setEmail(resultSet.getString("email"));
-//                totalPoints = resultSet.getInt("points");
-//            }
-//
-//            resultSet.close();
-//            statment.close();
-//            totalPoints += additionalPoints;
             player.setPoints(player.getPoints());
             
             pst = connection.prepareStatement("UPDATE player SET points=? WHERE id=?");
-            pst.setInt(1, playerPoints);
+            pst.setInt(1, player.getPoints());
             pst.setInt(2, player.getId());
             
             pst.executeUpdate();
