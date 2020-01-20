@@ -50,9 +50,9 @@ public class Server extends Thread {
     JsonHandler jsonHandler = null;
 
     private DatabaseManager databaseManager;
-    private App app;
+    private ServerMain app;
 
-    public Server(App app) {
+    public Server(ServerMain app) {
         this.app = app;
         try {
             this.databaseManager = new DatabaseManager();

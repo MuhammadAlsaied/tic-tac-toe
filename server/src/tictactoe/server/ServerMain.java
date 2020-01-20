@@ -19,12 +19,12 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import tictactoe.server.models.Player;
 
-public class App extends Application {
+public class ServerMain extends Application {
 
     private Server server = null;
     private int playersListCounter;
     private GridPane gridPane;
-    private App app = this;
+    private ServerMain app = this;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
