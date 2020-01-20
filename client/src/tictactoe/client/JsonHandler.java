@@ -134,6 +134,7 @@ public class JsonHandler {
                 mainScreen.setPlayersListCounter(0);
                 mainScreen.addPlayersToList(onlinePlayerList, Color.GREEN);
                 mainScreen.addPlayersToList(offlinePlayerList, Color.RED);
+                playerList.setPlayersListCounter(0);
                 playerList.addPlayersToList(onlinePlayerList, Color.GREEN);
                 playerList.addPlayersToList(offlinePlayerList, Color.RED);
             }
