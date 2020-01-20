@@ -83,15 +83,6 @@ public class SignupScreen extends StackPane {
                 }
             }
         });
-
-        setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode() == KeyCode.TAB) {
-                    
-                }
-            }
-        });
 //        ============Email And Repassowrd Event Handeler==================
         email.setOnKeyReleased(ke -> {
             if (!email.getText().matches(regex)) {
