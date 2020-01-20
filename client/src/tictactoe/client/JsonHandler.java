@@ -132,11 +132,11 @@ public class JsonHandler {
                 JsonArray onlinePlayerList = requestData.getAsJsonArray("online-players");
                 JsonArray offlinePlayerList = requestData.getAsJsonArray("offline-players");
                 mainScreen.setPlayersListCounter(0);
-                mainScreen.addPlayersToList(onlinePlayerList, Color.GREEN);
-                mainScreen.addPlayersToList(offlinePlayerList, Color.RED);
+                mainScreen.addPlayersToList(onlinePlayerList, "online", Color.GREEN);
+                mainScreen.addPlayersToList(offlinePlayerList, "offline", Color.RED);
                 playerList.setPlayersListCounter(0);
-                playerList.addPlayersToList(onlinePlayerList, Color.GREEN);
-                playerList.addPlayersToList(offlinePlayerList, Color.RED);
+                playerList.addPlayersToList(onlinePlayerList, "online", Color.GREEN);
+                playerList.addPlayersToList(offlinePlayerList, "offline", Color.RED);
             }
         });
     }

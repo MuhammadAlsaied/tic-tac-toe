@@ -164,7 +164,7 @@ public class MainScreen extends Pane {
         gridPane.getChildren().clear();
     }
 
-    public void addPlayersToList(JsonArray playerList, Color color) {
+    public void addPlayersToList(JsonArray playerList, String type, Color color) {
         for (int i = 0; i < playerList.size(); i++) {
             JsonObject jsonPlayer = playerList.get(i).getAsJsonObject();
             if (jsonPlayer.get("id").getAsInt() == app.getCurrentPlayer().getId()) {
@@ -177,7 +177,12 @@ public class MainScreen extends Pane {
             player.setPoints(jsonPlayer.get("points").getAsInt());
             player.setId(jsonPlayer.get("id").getAsInt());
             ToggleButton invite2 = new ToggleButton("Challenge");
+            if(type.equals("online")){
             invite2.setId("challengeScrolPaneMainScreen");
+            }
+            else if (type.equals("offline")){
+                invite2.setId("offlineChallengeScrolPaneMainScreen");
+            }
             invite2.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {

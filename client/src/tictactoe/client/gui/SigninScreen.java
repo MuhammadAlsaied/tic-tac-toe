@@ -13,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -30,6 +32,7 @@ public class SigninScreen extends StackPane {
     private TextField email;
     private Label error;
     private ToggleButton signin;
+    private PasswordField password;
     String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 
     public SigninScreen(App app) {
@@ -48,7 +51,7 @@ public class SigninScreen extends StackPane {
         email.setOnKeyTyped(ke -> {
             error();
         });
-        PasswordField password = new PasswordField();
+        password = new PasswordField();
         password.setPrefSize(324, 36);
         password.setFocusTraversable(false);
         password.setPromptText(" Enter your password");
@@ -59,34 +62,14 @@ public class SigninScreen extends StackPane {
         signin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (email.getText().isEmpty()) {
-                    email.setPromptText("You Cannot Leave E-Mail Empty");
-                    email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
-                    email.setPrefSize(324, 50);
-                } else if (!email.getText().matches(regex)) {
-                    email.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
-                    showSigninButton();
-                }
-                if (password.getText().isEmpty()) {
-                    password.setPromptText("You Cannot Leave Password Empty");
-                    password.setStyle("-fx-font-size: 16px;");
-                    password.setPrefSize(324, 50);
-                } else {
-                    signin.setText("Connecting...");
-                    signin.setDisable(true);
-                    JsonObject jsonObject = new JsonObject();
-                    JsonObject data = new JsonObject();
-                    data.addProperty("email", email.getText());
-                    data.addProperty("password", password.getText());
-                    jsonObject.addProperty("type", "signin");
-                    jsonObject.add("data", data);
-                    System.out.println(jsonObject);
-                    try {
-                        System.out.println(jsonObject);
-                        app.getDataOutputStream().writeUTF(jsonObject.toString());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                signinEvent();
+            }
+        });
+        setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    signinEvent();
                 }
             }
         });
@@ -119,9 +102,8 @@ public class SigninScreen extends StackPane {
         Region rec = new Region();
 
         region(rec);
- 
-        
-        getChildren().addAll(rec,vbox);
+
+        getChildren().addAll(rec, vbox);
         setId("stackSignin");
     }
 
@@ -154,6 +136,38 @@ public class SigninScreen extends StackPane {
             email.setStyle("-fx-border-color: WHITE; -fx-alignment: CENTER; -fx-border-width: 3px;");
             error.setText("");
         }
+    }
+    
+    private void signinEvent(){
+                        if (email.getText().isEmpty()) {
+                    email.setPromptText("You Cannot Leave E-Mail Empty");
+                    email.setStyle("-fx-font-size: 16px; -fx-alignment: CENTER");
+                    email.setPrefSize(324, 50);
+                } else if (!email.getText().matches(regex)) {
+                    email.setStyle("-fx-border-color: RED; -fx-alignment: CENTER; -fx-border-width: 3px;");
+                    showSigninButton();
+                }
+                if (password.getText().isEmpty()) {
+                    password.setPromptText("You Cannot Leave Password Empty");
+                    password.setStyle("-fx-font-size: 16px;");
+                    password.setPrefSize(324, 50);
+                } else {
+                    signin.setText("Connecting...");
+                    signin.setDisable(true);
+                    JsonObject jsonObject = new JsonObject();
+                    JsonObject data = new JsonObject();
+                    data.addProperty("email", email.getText());
+                    data.addProperty("password", password.getText());
+                    jsonObject.addProperty("type", "signin");
+                    jsonObject.add("data", data);
+                    System.out.println(jsonObject);
+                    try {
+                        System.out.println(jsonObject);
+                        app.getDataOutputStream().writeUTF(jsonObject.toString());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
     }
 
 }
