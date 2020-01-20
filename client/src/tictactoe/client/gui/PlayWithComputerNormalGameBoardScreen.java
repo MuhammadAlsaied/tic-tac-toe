@@ -33,7 +33,8 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
     Vector<Label> l = new Vector<>();
     boolean[] textLabelflag;
     private boolean isEnded = false;
-    
+    Label label1;
+
     public PlayWithComputerNormalGameBoardScreen(App app) {
         this.app = app;
         setId("stackGameboard");
@@ -79,10 +80,12 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         }
         //
         setId("stackGameboard");
-       Label label1 = new Label("PLAYER1");
+        label1 = new Label();
+        label1.setPrefWidth(150);
         Label label2 = new Label("COMPUTER");
+        label2.setPrefWidth(180);
 
-        HBox hbox = new HBox(385, label1, label2);
+        HBox hbox = new HBox(350, label1, label2);
         hbox.setLayoutX(70);
         hbox.setLayoutY(25);
 
@@ -96,11 +99,12 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
     void cpu() {
         PauseTransition pause = new PauseTransition(Duration.seconds(.5));
         pause.setOnFinished((ActionEvent event) -> {
-            if(counter == 1 && textLabelflag[4]){
+            if (counter == 1 && textLabelflag[4]) {
                 cpupos = 4;
-            }
-            else while (!textLabelflag[cpupos] && counter < 9) {
-                cpupos = generateCpuPos();
+            } else {
+                while (!textLabelflag[cpupos] && counter < 9) {
+                    cpupos = generateCpuPos();
+                }
             }
             if (turn == false && textLabelflag[cpupos]) {
                 counter++;
@@ -130,6 +134,7 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         System.out.println(index);
         return index;
     }
+
     private int generateCpuPos() {
         String lineGenerator;
         int cpu = rand.nextInt(9);
@@ -283,7 +288,7 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
             }
         }
         if (counter == 9 && fullBoardFlag) {
-            
+
             PauseTransition pause = new PauseTransition(Duration.seconds(.5));
             pause.setOnFinished((ActionEvent event) -> {
                 app.setScreen("nooneIsTheWinner");
@@ -292,5 +297,8 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
             });
             pause.play();
         }
+    }
+    public void setPlayerName(String playerName) {
+        label1.setText(playerName);
     }
 }

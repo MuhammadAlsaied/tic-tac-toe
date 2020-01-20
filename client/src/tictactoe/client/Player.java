@@ -37,6 +37,12 @@ public class Player {
         this.firstName = firstName;
         this.email = email;
         this.points = points;
+    }    public Player(int id, String firstName,String lastName, String email, int points) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.points = points;
     }
 
     Player(String firstName, String lastName, String email, String password) {
