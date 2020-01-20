@@ -148,7 +148,7 @@ public class App extends Application {
         pStage = primaryStage;
         makePaneDraggable(primaryStage);
         primaryStage.setTitle("TIC TAC TOE!");
-        mainScene = new Scene(screens.get("playWithComputerHARDGameBoard"), 1350, 700);
+        mainScene = new Scene(screens.get("signin"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -186,10 +186,6 @@ public class App extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
-
     private void makePaneDraggable(Stage primaryStage) {
         screens.forEach((key, value) -> {
             value.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -207,6 +203,23 @@ public class App extends Application {
                 }
             });
         });
+    }
+    
+    public void addPointsLocalGame(int points){
+        JsonObject request = new JsonObject();
+        JsonObject data = new JsonObject();
+        request.add("data", data);
+        request.addProperty("type", "won-local-game");
+        data.addProperty("added-points", points);
+        try {
+            getDataOutputStream().writeUTF(request.toString());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        Application.launch(args);
     }
 
 }

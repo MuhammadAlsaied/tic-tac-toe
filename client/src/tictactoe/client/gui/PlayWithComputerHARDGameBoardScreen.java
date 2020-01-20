@@ -403,8 +403,9 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                             textLabelflag[i] = false;
                         }
                     }
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    PauseTransition pause = new PauseTransition(Duration.seconds(1));
                     pause.setOnFinished((ActionEvent event) -> {
+                        app.addPointsLocalGame(20);
                         app.setScreen("youWin");
                         counter = 0;
                         resetGame();
@@ -420,7 +421,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
                             textLabelflag[i] = false;
                         }
                     }
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    PauseTransition pause = new PauseTransition(Duration.seconds(1));
                     pause.setOnFinished((ActionEvent event) -> {
                         app.setScreen("hardLuck");
                         counter = 0;
@@ -432,7 +433,7 @@ public class PlayWithComputerHARDGameBoardScreen extends Pane {
             }
         }
         if (counter == 9 && fullBoardFlag) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
             pause.setOnFinished((ActionEvent event) -> {
                 app.setScreen("nooneIsTheWinner");
                 counter = 0;

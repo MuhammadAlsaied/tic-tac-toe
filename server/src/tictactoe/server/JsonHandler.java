@@ -61,6 +61,9 @@ public class JsonHandler {
                 response = null;
                 //respone = handleGlobalMessage(requestData, user);
                 break;
+            case "won-local-game":
+                handleLocalGameWin(requestData, user);
+                break;
 
         }
 
@@ -224,6 +227,7 @@ public class JsonHandler {
     }
 
     private JsonObject handleGameEnd(JsonObject requestData, User user) {
+        Player winnerPlayer = null;
         Game game = user.getPlayer().getCurrentGame();
         if (game == null) {
             return null;
@@ -242,16 +246,31 @@ public class JsonHandler {
         playerO.setCurrentGame(null);
         if (playerX.getId() == winnerId) {
             playerX.incrementPoints(50);
+            winnerPlayer = playerX;
         }
         if (playerO.getId() == winnerId) {
             playerO.incrementPoints(50);
+            winnerPlayer = playerO;
+
         }
         try {
-            databaseManager.updatePlayerScore(winnerId, 50);
+            databaseManager.updatePlayerScore(winnerPlayer);
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
         server.sendUpdatedPlayerList();
         return null;
     }
+
+    private JsonObject handleLocalGameWin(JsonObject requestData, User user) {
+        Player player = user.getPlayer();
+        player.incrementPoints(requestData.get("added-points").getAsInt());
+        try {
+            databaseManager.updatePlayerScore(player);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -167,10 +167,10 @@ public class Server extends Thread {
                         System.out.println(line);
                         if (request.get("type").getAsString().equals("signout")) {
 
-                            System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
+                            System.out.println("user" + user.toString() + " player:" + user.player + " logging off");
 
                             if (user.player != null) {
-                                System.out.println(user.player.getFirstName() + " logging off");
+                                System.out.println("'" + user.player.getFirstName() + "' logging off");
                                 removeFromOnlinePlayers(user.player.getId());
                             }
                             break;

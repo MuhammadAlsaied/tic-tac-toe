@@ -288,6 +288,7 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                     }
                     PauseTransition pause = new PauseTransition(Duration.seconds(2));
                     pause.setOnFinished((ActionEvent event) -> {
+                        app.addPointsLocalGame(10);
                         app.setScreen("youWin");
                         counter = 0;
                         resetGame();

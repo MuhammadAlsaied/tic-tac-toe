@@ -197,8 +197,9 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                             textLabelflag[i] = false;
                         }
                     }
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    PauseTransition pause = new PauseTransition(Duration.seconds(1));
                     pause.setOnFinished((ActionEvent event) -> {
+                        app.addPointsLocalGame(5);
                         app.setScreen("youWin");
                         counter = 0;
                         resetGame();
@@ -214,7 +215,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
                             textLabelflag[i] = false;
                         }
                     }
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    PauseTransition pause = new PauseTransition(Duration.seconds(1));
                     pause.setOnFinished((ActionEvent event) -> {
                         app.setScreen("hardLuck");
                         counter = 0;
@@ -226,7 +227,7 @@ public class PlayWithComputerEasyGameBoardScreen extends Pane {
             }
         }
         if (counter == 9 && fullBoardFlag) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
             pause.setOnFinished((ActionEvent event) -> {
                 app.setScreen("nooneIsTheWinner");
                 counter = 0;
