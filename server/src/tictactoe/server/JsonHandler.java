@@ -37,7 +37,6 @@ public class JsonHandler {
                 break;
             case "signin":
                 response = handleSignin(requestData, user);
-                
                 break;
             case "invitation":
                 response = handleInvitation(requestData, user);
@@ -60,7 +59,6 @@ public class JsonHandler {
             case "global_chat_message":
                 server.sendToAllOnlinePlayers(request);
                 response = null;
-                //respone = handleGlobalMessage(requestData, user);
                 break;
             case "won-local-game":
                 handleLocalGameWin(requestData, user);
@@ -76,17 +74,6 @@ public class JsonHandler {
             }
 
         }
-    }
-
-    private JsonObject handleGlobalMessage(JsonObject requestData, User user) {
-        JsonObject response = new JsonObject();
-        JsonObject data = new JsonObject();
-        response.add("data", data);
-//        while (true) {
-        //String message = requestData.get("message").getAsString();
-        server.sendToAllOnlinePlayers(requestData);
-//        }
-        return response;
     }
 
     private JsonObject handleSignup(JsonObject requestData, User user) {
