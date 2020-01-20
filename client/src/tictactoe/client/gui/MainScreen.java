@@ -227,7 +227,6 @@ public class MainScreen extends Pane {
         playerName2.setId("welcome1");
         points2.setText(Integer.toString(totalPoints));
         points2.setId("scoreLabel");
-
         welcome.setText("Welcome,");
         points.setText("Points");
 

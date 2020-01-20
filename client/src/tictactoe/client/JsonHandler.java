@@ -32,7 +32,7 @@ public class JsonHandler {
     PlayWithComputerEasyGameBoardScreen playWithComputerEasy;
     PlayWithComputerHARDGameBoardScreen playWithComputerHard;
     PlayWithComputerNormalGameBoardScreen playWithComputerNormal;
-    
+
     JsonHandler(App a) {
         app = a;
         signupScreen = (SignupScreen) app.getScreen("signup");
@@ -73,7 +73,7 @@ public class JsonHandler {
                 playWithComputerEasy.setPlayerName(app.getCurrentPlayer().getLastName());
                 playWithComputerNormal.setPlayerName(app.getCurrentPlayer().getLastName());
                 playWithComputerHard.setPlayerName(app.getCurrentPlayer().getLastName());
-                
+
                 app.setScreen("main");
                 break;
             case "signin-error":
@@ -131,6 +131,7 @@ public class JsonHandler {
                 mainScreen.setPlayersListCounter(0);
                 mainScreen.addPlayersToList(onlinePlayerList, Color.GREEN);
                 mainScreen.addPlayersToList(offlinePlayerList, Color.RED);
+                playerList.setPlayersListCounter(0);
                 playerList.addPlayersToList(onlinePlayerList, Color.GREEN);
                 playerList.addPlayersToList(offlinePlayerList, Color.RED);
             }

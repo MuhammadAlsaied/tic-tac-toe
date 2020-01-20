@@ -50,7 +50,7 @@ public class PlayerListScreen extends Pane {
 
         setId("stack");
         ////////////////////////////////////////////////////
-          Button exit = new Button("EXIT");
+        Button exit = new Button("EXIT");
         exit.setId("ExitFromGame");
         exit.setLayoutX(280);
         exit.setLayoutY(650);
@@ -74,11 +74,14 @@ public class PlayerListScreen extends Pane {
         v.setId("vbox");
         v.setLayoutX(460);
         v.setLayoutY(530);
-        
-        
-        ////////////////////////////////////////////////////
-        getChildren().addAll(rectBack, v,scrollPane);
 
+        ////////////////////////////////////////////////////
+        getChildren().addAll(rectBack, v, scrollPane);
+
+    }
+
+    public void setPlayersListCounter(int playersListCounter) {
+        this.playersListCounter = playersListCounter;
     }
 
     public void addPlayersToList(JsonArray playerList, Color color) {
