@@ -10,7 +10,7 @@ import tictactoe.server.models.Player;
 
 /**
  *
- * @author muhammad and Ayman Magdy
+ * @author muhammad
  */
 public class JsonHandler {
 
@@ -332,5 +332,4 @@ public class JsonHandler {
             server.handleTerminatedGame(user);
         }
     }
-
 }

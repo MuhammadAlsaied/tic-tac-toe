@@ -23,7 +23,7 @@ import tictactoe.server.models.Game;
 
 /**
  *
- * @author muhammad and Ayman Magdy
+ * @author muhammad
  */
 public class Server extends Thread {
 
