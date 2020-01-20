@@ -292,7 +292,10 @@ public class JsonHandler {
 
         }
         try {
-            databaseManager.updatePlayerScore(winnerPlayer);
+            System.out.println("winner playwer:" + winnerPlayer + " id:" + winnerId);
+            if (winnerPlayer != null) {
+                databaseManager.updatePlayerScore(winnerPlayer);
+            }
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
