@@ -5,17 +5,13 @@
  */
 package tictactoe.client.gui;
 
-import com.google.gson.JsonObject;
-import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -36,7 +32,8 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
     String line;
     Vector<Label> l = new Vector<>();
     boolean[] textLabelflag;
-
+    private boolean isEnded = false;
+    
     public PlayWithComputerNormalGameBoardScreen(App app) {
         this.app = app;
         setId("stackGameboard");
@@ -60,6 +57,9 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                 l.get(x).setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
+                        if (isEnded) {
+                            return;
+                        }
                         if (turn && textLabelflag[x]) {
                             l.get(x).setText("X");
                             l.get(x).setId("X");
@@ -86,46 +86,11 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         hbox.setLayoutX(70);
         hbox.setLayoutY(25);
 
-        TextArea ta = new TextArea(" ");
-        ta.setId("ta");
-        ta.setLayoutX(890);
-        ta.setLayoutY(400);
-        ta.setMaxWidth(220.0);
-        ta.setMaxHeight(150.0);
-
-        TextArea text = new TextArea("");
-        text.setId("text");
-        text.setPromptText("Enter your Msg ");
-        text.setLayoutX(890);
-        text.setLayoutY(600);
-        text.setMaxWidth(220.0);
-        text.setMaxHeight(10.5);
-
-        Button send = new Button();
-        send.setText("send");
-        send.setId("send");
-        send.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                JsonObject response = new JsonObject();
-                JsonObject data = new JsonObject();
-                response.add("data", data);
-                response.addProperty("type", "Message_sent");
-                data.addProperty("msg", ta.getText());
-                try {
-                    app.getDataOutputStream().writeUTF(response.toString());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-            }
-            
-        });
-        send.setLayoutX(1140);
-        send.setLayoutY(600);
-        getChildren().addAll(stack, hbox, text, ta, send);
+        getChildren().addAll(stack, hbox);
         stack.setId("stacklolo");
+        if (!turn) {
+            cpu();
+        }
     }
 
     void cpu() {
@@ -240,10 +205,10 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
         textLabelflag = new boolean[]{true, true, true, true, true, true, true, true, true};
         counter = 0;
         fullBoardFlag = true;
-        if (turn) {
+        isEnded = false;
+        if (!turn) {
             cpu();
         }
-
     }
 
     private void checkWinner() {
@@ -280,14 +245,16 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
             switch (line) {
                 case "XXX": {
                     fullBoardFlag = false;
-                    turn = false;
+                    turn = true;
+                    isEnded = true;
                     for (int i = 0; i < 9; i++) {
                         if (textLabelflag[i]) {
                             textLabelflag[i] = false;
                         }
                     }
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    PauseTransition pause = new PauseTransition(Duration.seconds(.5));
                     pause.setOnFinished((ActionEvent event) -> {
+                        app.addPointsLocalGame(10);
                         app.setScreen("youWin");
                         counter = 0;
                         resetGame();
@@ -297,13 +264,14 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
                 }
                 case "OOO": {
                     fullBoardFlag = false;
-                    turn = false;
+                    turn = true;
+                    isEnded = true;
                     for (int i = 0; i < 9; i++) {
                         if (textLabelflag[i]) {
                             textLabelflag[i] = false;
                         }
                     }
-                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    PauseTransition pause = new PauseTransition(Duration.seconds(.5));
                     pause.setOnFinished((ActionEvent event) -> {
                         app.setScreen("hardLuck");
                         counter = 0;
@@ -315,7 +283,8 @@ public class PlayWithComputerNormalGameBoardScreen extends Pane {
             }
         }
         if (counter == 9 && fullBoardFlag) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            
+            PauseTransition pause = new PauseTransition(Duration.seconds(.5));
             pause.setOnFinished((ActionEvent event) -> {
                 app.setScreen("nooneIsTheWinner");
                 counter = 0;

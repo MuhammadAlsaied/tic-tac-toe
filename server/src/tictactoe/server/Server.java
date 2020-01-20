@@ -16,10 +16,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
-
+import javafx.scene.paint.Color;
 import tictactoe.server.db.DatabaseManager;
 import tictactoe.server.models.Game;
 
@@ -33,7 +31,6 @@ public class Server extends Thread {
 
     private final HashMap<Integer, User> onlinePlayers = new HashMap<>();
     private final HashMap<Integer, User> offlinePlayers = new HashMap<>();
-
     public final Set<ClientThread> clientThreads = new HashSet<ClientThread>();
 
     Comparator<Player> playerComparatorByPoints = (o1, o2) -> {
@@ -50,12 +47,11 @@ public class Server extends Thread {
 
     // private final HashSet<Socket> unloggedInUsers = new HashSet<>();
     JsonHandler jsonHandler = null;
-    
 
     private DatabaseManager databaseManager;
-     private App app;
+    private ServerMain app;
 
-   public Server(App app) {
+    public Server(ServerMain app) {
         this.app = app;
         try {
             this.databaseManager = new DatabaseManager();
@@ -68,9 +64,8 @@ public class Server extends Thread {
                 Player player = iterator.next();
                 offlinePlayers.put(player.getId(), new User(player));
             }
-
             serverSocket = new ServerSocket(Config.PORT);
-
+            setPlayerList();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -81,7 +76,6 @@ public class Server extends Thread {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-
                 ClientThread clientThread = new ClientThread(new User(socket));
                 clientThread.start();
                 clientThreads.add(clientThread);
@@ -173,6 +167,7 @@ public class Server extends Thread {
                     if (line != null) {
                         JsonObject request = JsonParser.parseString(line).getAsJsonObject();
                         System.out.println(line);
+                        app.guiLog(line);
                         if (request.get("type").getAsString().equals("signout")) {
 
                             System.out.println("user" + user.toString() + " player:" + user.player + " logging of");
@@ -233,6 +228,7 @@ public class Server extends Thread {
                 }
                 removeFromOnlinePlayers(user.player.getId()); // call here 
             }
+            setPlayerList();
         }
     }
 
@@ -314,12 +310,14 @@ public class Server extends Thread {
             ex.printStackTrace();
         }
     }
-      public void setPlayerList() {
-        Platform.runLater(() -> {
-          app.addPlayersToOnlineList(getSortedOnlinePlayersAsJson());
-          app.addPlayersToOfflineList(getSortedOfflinePlayersAsJson());
-        });
 
+    public void setPlayerList() {
+        Platform.runLater(() -> {
+            app.clearPlayersListPane();
+            app.setPlayersListCounter(0);
+            app.addPlayersToList(getSortedOnlinePlayersAsJson(), Color.GREEN);
+            app.addPlayersToList(getSortedOfflinePlayersAsJson(), Color.RED);
+        });
     }
 
 }

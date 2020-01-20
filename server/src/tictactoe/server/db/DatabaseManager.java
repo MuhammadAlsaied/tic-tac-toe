@@ -212,41 +212,40 @@ public class DatabaseManager {
     }
 
     // Done and tested
-    public Player updatePlayerScore(int id, int additionalPoints) throws ClassNotFoundException {
-        Player updatedPlayer = new Player();
+    public Player updatePlayerScore(Player player) throws ClassNotFoundException {
         PreparedStatement pst;
-        int totalPoints = 0;
+        int playerPoints = player.getPoints();
 
         try {
             establishConnection();
-            statment = connection.createStatement();
-            resultSet = statment.executeQuery("SELECT * FROM player WHERE id=" + id + ";");
-            if (resultSet.next()) {
-                updatedPlayer.setId(resultSet.getInt("id"));
-                updatedPlayer.setFirstName(resultSet.getString("first_name"));
-                updatedPlayer.setLastName(resultSet.getString("last_name"));
-                updatedPlayer.setEmail(resultSet.getString("email"));
-                totalPoints = resultSet.getInt("points");
-            }
-
-            resultSet.close();
-            statment.close();
-            totalPoints += additionalPoints;
-            updatedPlayer.setPoints(totalPoints);
+//            statment = connection.createStatement();
+//            resultSet = statment.executeQuery("SELECT * FROM player WHERE id=" + id + ";");
+//            if (resultSet.next()) {
+//                updatedPlayer.setId(resultSet.getInt("id"));
+//                updatedPlayer.setFirstName(resultSet.getString("first_name"));
+//                updatedPlayer.setLastName(resultSet.getString("last_name"));
+//                updatedPlayer.setEmail(resultSet.getString("email"));
+//                totalPoints = resultSet.getInt("points");
+//            }
+//
+//            resultSet.close();
+//            statment.close();
+//            totalPoints += additionalPoints;
+            player.setPoints(player.getPoints());
 
             pst = connection.prepareStatement("UPDATE player SET points=? WHERE id=?");
-            pst.setInt(1, totalPoints);
-            pst.setInt(2, id);
+            pst.setInt(1, playerPoints);
+            pst.setInt(2, player.getId());
 
             pst.executeUpdate();
             pst.close();
             connection.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
 
-        return updatedPlayer;
+        return player;
     }
 
     // Done and tested
@@ -271,40 +270,37 @@ public class DatabaseManager {
         }
         return terminatedGame;
     }
-    
+
     // Done and tested..
-    public boolean updateGame(Game gameToUpdate){
+    public boolean updateGame(Game gameToUpdate) {
         boolean updated = false;
         PreparedStatement pst;
         int playerXId = gameToUpdate.getPlayerX().getId();
-        int playerOId = gameToUpdate.getPlayerO().getId()    ;
+        int playerOId = gameToUpdate.getPlayerO().getId();
         int gameId = gameToUpdate.getGameId();
         String sessionStatus = gameToUpdate.getGameStatus().toString();
         String coordinates = gameToUpdate.getCoordinates().toString();
-        
-        
-        try{
+
+        try {
             establishConnection();
-            
+
             pst = connection.prepareStatement("UPDATE game SET player1_id = ?, player2_id = ?, session_status = ?, coordinates = ? WHERE id = ?;");
             pst.setInt(1, playerXId);
             pst.setInt(2, playerOId);
             pst.setString(3, sessionStatus);
             pst.setString(4, coordinates);
             pst.setInt(5, gameId);
-            
+
             pst.executeUpdate();
             pst.close();
             updated = true;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
-                
+
         return updated;
     }
-    
-    
+
     /* to test the database connetion and getting some data.
      public void check(){
      try{

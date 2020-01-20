@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -82,8 +83,7 @@ public class App extends Application {
         screens.put("signup", new SignupScreen(this));
         screens.put("hardLuck", new HardLuckScreen(this));
         screens.put("invitation", new InvitationScreen(this));
-        screens.put("multiPlayerGameBoard", new MultiPlayerGameBoardScreen(this));      //old edited by tharwat
-        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));        //new kareem's
+        screens.put("multiOnlinePlayers", new MultiOnlinePlayers(this));       
         screens.put("levels", new LevelsScreen(this));
         screens.put("youWin", new YouWinScreen(this));
         screens.put("playWithComputerEasyGameBoard", new PlayWithComputerEasyGameBoardScreen(this));
@@ -147,18 +147,18 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws InterruptedException {
         pStage = primaryStage;
-        makePaneDraggable(primaryStage);
+        primaryStage.setFullScreen(true);
         primaryStage.setTitle("TIC TAC TOE!");
         mainScene = new Scene(screens.get("nooneIsTheWinner"), 1350, 700);
         mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toString());
         primaryStage.setScene(mainScene);
         primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setFullScreen(true);
-//        if(!primaryStage.isFullScreen()){
-//            primaryStage.initStyle(StageStyle.DECORATED);
-//        }
         primaryStage.show();
-
+        mainScene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                makePaneDraggable(primaryStage);
+            }
+        });
         pStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent e) {
@@ -197,10 +197,6 @@ public class App extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
-
     private void makePaneDraggable(Stage primaryStage) {
         screens.forEach((key, value) -> {
             value.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -218,6 +214,23 @@ public class App extends Application {
                 }
             });
         });
+    }
+    
+    public void addPointsLocalGame(int points){
+        JsonObject request = new JsonObject();
+        JsonObject data = new JsonObject();
+        request.add("data", data);
+        request.addProperty("type", "won-local-game");
+        data.addProperty("added-points", points);
+        try {
+            getDataOutputStream().writeUTF(request.toString());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        Application.launch(args);
     }
 
 }
