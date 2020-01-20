@@ -37,7 +37,7 @@ public class JsonHandler {
                 break;
             case "signin":
                 response = handleSignin(requestData, user);
-                
+
                 break;
             case "invitation":
                 response = handleInvitation(requestData, user);
@@ -195,7 +195,10 @@ public class JsonHandler {
             try {
                 game = databaseManager.getTerminatedGame(
                         user.getPlayer().getId(), invitingPlayer.getPlayer().getId());
-
+                if (game == null) {
+                    game = databaseManager.getTerminatedGame(invitingPlayer.getPlayer().getId(),
+                            user.getPlayer().getId());
+                }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
