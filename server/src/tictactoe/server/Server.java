@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import javafx.application.Platform;
+import javafx.scene.paint.Color;
 import tictactoe.server.db.DatabaseManager;
 import tictactoe.server.models.Game;
 
@@ -314,8 +315,9 @@ public class Server extends Thread {
     public void setPlayerList() {
         Platform.runLater(() -> {
             app.clearPlayersListPane();
-            app.addPlayersToOnlineList(getSortedOnlinePlayersAsJson());
-            app.addPlayersToOfflineList(getSortedOfflinePlayersAsJson());
+            app.setPlayersListCounter(0);
+            app.addPlayersToList(getSortedOnlinePlayersAsJson(), Color.GREEN);
+            app.addPlayersToList(getSortedOfflinePlayersAsJson(), Color.RED);
         });
     }
 
