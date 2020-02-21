@@ -99,6 +99,7 @@ public class JsonHandler {
                 if (player != null) {
                     response.addProperty("type", "signup-success");
                     server.addNewOfflinePlayer(player);
+                    server.setPlayerList();
                 } else {
                     response.addProperty("type", "signup-error");
                 }

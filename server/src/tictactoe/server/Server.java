@@ -228,7 +228,7 @@ public class Server extends Thread {
                 databaseManager.insertGame(currentGame);
             }
         } catch (ClassNotFoundException ex) {
-            app.guiLog("Connection error with the databse.");
+            app.guiLog("Connection error with the database.");
         }
         JsonObject alertTerminatedGame = new JsonObject();
         alertTerminatedGame.addProperty("type", "terminated-game");
@@ -240,7 +240,7 @@ public class Server extends Thread {
             secondUser.dataOutputStream.writeUTF(alertTerminatedGame.toString());
 
         } catch (Exception e) {
-            app.guiLog("Issue fitched writing to the output stream");
+            app.guiLog("An issue occurred while attempting to write to the output stream");
         }
     }
 
@@ -328,6 +328,7 @@ public class Server extends Thread {
 
     public void addNewOfflinePlayer(Player player) {
         offlinePlayers.put(player.getId(), new User(player));
+        sortedOfflinePlayersbyPoints.add(player);
     }
 
     public User getOnlinePlayerById(int id) {
@@ -341,7 +342,7 @@ public class Server extends Thread {
         try {
             serverSocket.close();
         } catch (IOException ex) {
-            app.guiLog("Issue has been fetched closing the server socket.");
+            app.guiLog("An issue has occurred while trying to turn off the server.");
         }
     }
 
@@ -353,6 +354,7 @@ public class Server extends Thread {
             app.addPlayersToList(getSortedOfflinePlayersAsJson(), Color.RED);
         });
     }
+    
     public void repositionOnlinePlayer(Player player){
         sortedOnlinePlayersbyPoints.remove(player);
         sortedOnlinePlayersbyPoints.add(player);

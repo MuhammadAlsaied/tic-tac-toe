@@ -32,7 +32,7 @@ public class DatabaseManager {
         try {
             // to start the connection;
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"
+            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/"
                     + Config.DB_NAME
                     + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
                     Config.DB_USERNAME, Config.DB_PASSWORD);
